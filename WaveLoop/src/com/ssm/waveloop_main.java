@@ -3,8 +3,12 @@ package com.ssm;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TabActivity;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore.Audio;
 import android.view.View;
 import android.widget.TabHost;
  
@@ -13,8 +17,8 @@ public class waveloop_main extends TabActivity {
     
     Dialog dialog;
     AlertDialog.Builder builder;
-    boolean[] mSelect = { false, false, false, false };
-    final CharSequence[] files = {"a.mp3", "b.mp3", "c.mp3"};
+    boolean[] mSelect;// = { false, false, false, false };
+    CharSequence[] files;// = {"a.mp3", "b.mp3", "c.mp3"};
 	
 
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +59,39 @@ public class waveloop_main extends TabActivity {
     public void mOnClick(View v) {
     	
     	// TODO 여기서 전체 mp3 파일 목록을 스캔하고 files에 채워줘야 한다.
-    	// mSelect를 초기화 시켜줘야 한다.
+    	
+    	ContentResolver mCr;
+    	mCr = getContentResolver();
+    	
+    	Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;//Audio.Media.INTERNAL_CONTENT_URI;
+    	Uri uriInternal = Audio.Media.INTERNAL_CONTENT_URI;//Audio.Media.INTERNAL_CONTENT_URI;
+    	 
+    	
+    	Cursor cursorInt = mCr.query(uriInternal, null, null, null, null);
+    	Cursor cursorExt = mCr.query(uriExternal, null, null, null, null);
+    	
+    	
+    	int nCountInt = cursorInt.getCount();
+    	int nCountExt = cursorExt.getCount();
+    	int nCountTotal = nCountInt + nCountExt;
+    	
+    	files = new CharSequence[nCountTotal];
+    	mSelect = new boolean[nCountTotal];
+    	
+    	for (int i = 0; i < nCountInt; i++) {
+
+        	cursorInt.moveToPosition(i);
+            files[i] = cursorInt.getString(cursorInt.getColumnIndex(Audio.AudioColumns.DISPLAY_NAME));
+        }
+    	
+    	
+        for (int i = 0; i < nCountExt; i++) {
+
+            cursorExt.moveToPosition(i);
+            files[i + nCountInt] = cursorExt.getString(cursorExt.getColumnIndex(Audio.AudioColumns.DISPLAY_NAME));
+        }
+        
+        
     	
     	
     	
