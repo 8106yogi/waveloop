@@ -17,8 +17,8 @@ public class waveloop_main extends TabActivity {
     
     Dialog dialog;
     AlertDialog.Builder builder;
-    boolean[] mSelect;// = { false, false, false, false };
-    CharSequence[] files;// = {"a.mp3", "b.mp3", "c.mp3"};
+    boolean[] mSelect;
+    CharSequence[] mFiles;
 	
 
     public void onCreate(Bundle savedInstanceState) {
@@ -58,13 +58,13 @@ public class waveloop_main extends TabActivity {
     
     public void mOnClick(View v) {
     	
-    	// TODO 여기서 전체 mp3 파일 목록을 스캔하고 files에 채워줘야 한다.
-    	
+    	////////////////////////////////////////////////////////////////////
+    	// db를 검색하여 오디오 파일을 전부 나열하기
     	ContentResolver mCr;
     	mCr = getContentResolver();
     	
-    	Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;//Audio.Media.INTERNAL_CONTENT_URI;
-    	Uri uriInternal = Audio.Media.INTERNAL_CONTENT_URI;//Audio.Media.INTERNAL_CONTENT_URI;
+    	Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
+    	Uri uriInternal = Audio.Media.INTERNAL_CONTENT_URI;
     	 
     	
     	Cursor cursorInt = mCr.query(uriInternal, null, null, null, null);
@@ -75,23 +75,23 @@ public class waveloop_main extends TabActivity {
     	int nCountExt = cursorExt.getCount();
     	int nCountTotal = nCountInt + nCountExt;
     	
-    	files = new CharSequence[nCountTotal];
+    	mFiles = new CharSequence[nCountTotal];
     	mSelect = new boolean[nCountTotal];
     	
     	for (int i = 0; i < nCountInt; i++) {
 
         	cursorInt.moveToPosition(i);
-            files[i] = cursorInt.getString(cursorInt.getColumnIndex(Audio.AudioColumns.DISPLAY_NAME));
+            mFiles[i] = cursorInt.getString(cursorInt.getColumnIndex(Audio.AudioColumns.DISPLAY_NAME));
         }
     	
     	
         for (int i = 0; i < nCountExt; i++) {
 
             cursorExt.moveToPosition(i);
-            files[i + nCountInt] = cursorExt.getString(cursorExt.getColumnIndex(Audio.AudioColumns.DISPLAY_NAME));
+            mFiles[i + nCountInt] = cursorExt.getString(cursorExt.getColumnIndex(Audio.AudioColumns.DISPLAY_NAME));
         }
         
-        
+        ////////////////////////////////////////////////////////////////////
     	
     	
     	
@@ -99,7 +99,7 @@ public class waveloop_main extends TabActivity {
     	new AlertDialog.Builder(this)
     	.setTitle("추가할 파일을 선택하세요")
     	.setIcon(R.drawable.icon)
-    	.setMultiChoiceItems(files, mSelect, 
+    	.setMultiChoiceItems(mFiles, mSelect, 
     			new DialogInterface.OnMultiChoiceClickListener(){
     		public void onClick(DialogInterface dialog, int which, 
     				boolean isChecked){
