@@ -54,6 +54,11 @@ public class waveloop_main extends TabActivity {
     
     public void mOnClick(View v) {
     	
+    	// TODO 여기서 전체 mp3 파일 목록을 스캔하고 files에 채워줘야 한다.
+    	// mSelect를 초기화 시켜줘야 한다.
+    	
+    	
+    	
     	// TODO Auto-generated method stub
     	new AlertDialog.Builder(this)
     	.setTitle("추가할 파일을 선택하세요")
