@@ -30,18 +30,19 @@ public class waveloop_main extends TabActivity {
     	  	 
     	
     	mTabHost.addTab(mTabHost.newTabSpec("tab_test1")
-    	  	.setIndicator("재생목록")
+    	  	.setIndicator("재생목록", getResources().getDrawable(R.drawable.ic_tab_playlist ))
     	    .setContent(R.id.view1)
     	);
+    	
     	
     	//Button launch = (Button)findViewById(R.id.AddButton);
     	//launch.setOnClickListener(new Button.OnClickListener(){
     	
     	
     	
-    	
+    	//android.R.drawable.ic_menu_crop
     	mTabHost.addTab(mTabHost.newTabSpec("tab_test2")
-    	   	.setIndicator("문장노트")
+    	   	.setIndicator("문장노트", getResources().getDrawable(R.drawable.ic_tab_sentencenote ))
     	    .setContent(R.id.view2)
     	);
     	
@@ -49,7 +50,7 @@ public class waveloop_main extends TabActivity {
     	
     	
     	mTabHost.addTab(mTabHost.newTabSpec("tab_test3")
-        	   	.setIndicator("옵션")
+        	   	.setIndicator("옵션", getResources().getDrawable(R.drawable.ic_tab_option ))
         	  	.setContent(R.id.view3)
         );
     	 
@@ -68,11 +69,11 @@ public class waveloop_main extends TabActivity {
     	 
     	
     	Cursor cursorInt = mCr.query(uriInternal, null, null, null, null);
-    	Cursor cursorExt = mCr.query(uriExternal, null, null, null, null);
+    	Cursor cursorExt = mCr.query(uriExternal, null, null, null, null);// sd카드가 없으면 cursorExt == null
     	
     	
-    	int nCountInt = cursorInt.getCount();
-    	int nCountExt = cursorExt.getCount();
+    	int nCountInt = (null == cursorInt)?0:cursorInt.getCount();
+    	int nCountExt = (null == cursorExt)?0:cursorExt.getCount();
     	int nCountTotal = nCountInt + nCountExt;
     	
     	mFiles = new CharSequence[nCountTotal];
