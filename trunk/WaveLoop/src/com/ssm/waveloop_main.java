@@ -30,7 +30,7 @@ public class waveloop_main extends TabActivity {
     	  	 
     	
     	mTabHost.addTab(mTabHost.newTabSpec("tab_test1")
-    	  	.setIndicator("재생목록", getResources().getDrawable(R.drawable.ic_tab_playlist ))
+    	  	.setIndicator("재생목록", getResources().getDrawable(R.drawable.ic_tab_playlist))
     	    .setContent(R.id.view1)
     	);
     	
@@ -42,7 +42,7 @@ public class waveloop_main extends TabActivity {
     	
     	//android.R.drawable.ic_menu_crop
     	mTabHost.addTab(mTabHost.newTabSpec("tab_test2")
-    	   	.setIndicator("문장노트", getResources().getDrawable(R.drawable.ic_tab_sentencenote ))
+    	   	.setIndicator("문장노트", getResources().getDrawable(R.drawable.ic_tab_sentencenote))
     	    .setContent(R.id.view2)
     	);
     	
@@ -50,7 +50,7 @@ public class waveloop_main extends TabActivity {
     	
     	
     	mTabHost.addTab(mTabHost.newTabSpec("tab_test3")
-        	   	.setIndicator("옵션", getResources().getDrawable(R.drawable.ic_tab_option ))
+        	   	.setIndicator("옵션", getResources().getDrawable(R.drawable.ic_tab_option))
         	  	.setContent(R.id.view3)
         );
     	 
