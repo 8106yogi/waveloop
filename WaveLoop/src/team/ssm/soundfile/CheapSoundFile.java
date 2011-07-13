@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ssm.soundfile;
+package team.ssm.soundfile;
 
 import java.io.File;
 import java.io.FileInputStream;

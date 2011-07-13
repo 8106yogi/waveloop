@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ssm.soundfile;
+package team.ssm.soundfile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -170,8 +170,8 @@ public class CheapWAV extends CheapSoundFile {
                         "Bad WAV file: data chunk before fmt chunk");
                 }
 
-                int frameSamples = (mSampleRate * mChannels) / 50;// 1/50ÃÊ ´ÜÀ§·Î ÀúÀåÇÏ´Âµí
-                mFrameBytes = frameSamples * 2;// ÇÑ°³¿¡ 2byte¾¿
+                int frameSamples = (mSampleRate * mChannels) / 50;// 1/50ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Âµï¿½
+                mFrameBytes = frameSamples * 2;// ï¿½Ñ°ï¿½ï¿½ï¿½ 2byteï¿½ï¿½
 
                 mNumFrames = (chunkLen + (mFrameBytes - 1)) / mFrameBytes;
                 mFrameOffsets = new int[mNumFrames];
