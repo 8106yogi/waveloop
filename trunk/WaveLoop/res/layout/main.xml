@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@android:id/tabhost"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent">
+
+<LinearLayout
+android:orientation="vertical"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent">
+
+<TabWidget
+android:id="@android:id/tabs"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content" />
+
+<FrameLayout
+android:id="@android:id/tabcontent"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent">
+ 
+
+<LinearLayout 
+android:layout_height="fill_parent"
+android:layout_width="fill_parent"
+android:id="@+id/view1"
+android:orientation="vertical">
+
+<ListView
+android:id="@+id/list"
+android:layout_height="wrap_content"
+android:layout_width="fill_parent"
+/>
+
+
+
+
+<Button android:id="@+id/AddButton"
+android:layout_height="wrap_content"
+android:layout_width="wrap_content"
+android:onClick="mOnClick"
+android:gravity="center"
+android:layout_alignParentBottom="true"
+android:text="추가"></Button>
+
+</LinearLayout>
+
+ 
+<LinearLayout android:layout_height="fill_parent"
+android:layout_width="fill_parent"
+android:id="@+id/view2">
+
+
+</LinearLayout>
+
+<LinearLayout android:layout_height="fill_parent"
+android:layout_width="fill_parent"
+android:id="@+id/view3">
+</LinearLayout>
+
+
+</FrameLayout>
+</LinearLayout>
+
+</TabHost>
