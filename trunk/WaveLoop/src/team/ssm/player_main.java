@@ -19,6 +19,9 @@ public class player_main extends Activity {
     SeekBar mProgress;
     boolean wasPlaying;
     String filepath;
+    HorizontalScrollView mWaveformView;
+    LinearLayout mWaveformLayout;
+    
     
     public void onCreate(Bundle savedInstanceState) {
          super.onCreate(savedInstanceState);
@@ -82,6 +85,19 @@ public class player_main extends Activity {
          mIdx = 0;
 		*/
          
+         // 웨이브폼 스크롤뷰 추가
+         mWaveformView = (HorizontalScrollView)findViewById(R.id.WaveformScrollView);
+         mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
+
+         // 레이아웃에 자식뷰 추가 테스트
+         for(int i = 0; i < 1200; i++)
+         {
+        	 ImageView iv = new ImageView(this);
+             iv.setImageResource(R.drawable.ic_tab_option);
+             mWaveformLayout.addView( iv );
+         }
+        
+         
          // 버튼들의 클릭 리스너 등록
          mFileName = (TextView)findViewById(R.id.filename);
          mPlayBtn = (Button)findViewById(R.id.play);
@@ -89,7 +105,8 @@ public class player_main extends Activity {
          findViewById(R.id.stop).setOnClickListener(mClickStop);
          findViewById(R.id.prev).setOnClickListener(mClickPrevNext);
          findViewById(R.id.next).setOnClickListener(mClickPrevNext);
-        
+         
+         
          // 완료 리스너, 시크바 변경 리스너 등록
          mPlayer.setOnCompletionListener(mOnComplete);
          mPlayer.setOnSeekCompleteListener(mOnSeekComplete);
