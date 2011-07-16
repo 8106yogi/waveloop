@@ -26,6 +26,14 @@ public class WaveLoopActivity extends TabActivity {
     ArrayAdapter<String> Adapter;
     String abc;
     
+    /*
+    // 로딩 progress 관련
+    private long mLoadingStartTime;
+    private long mLoadingLastUpdateTime;
+    private boolean mLoadingKeepGoing;
+    private ProgressDialog mProgressDialog;
+    */
+    
     public void onCreate(Bundle savedInstanceState) {
     	
     	super.onCreate(savedInstanceState);
@@ -169,6 +177,35 @@ public class WaveLoopActivity extends TabActivity {
     			**************/
     			Items.add(abc);
     			Adapter.notifyDataSetChanged();
+    			
+    			// 로딩 화면으로 전환 필요
+    			/*
+    			mLoadingStartTime = System.currentTimeMillis();
+    	        mLoadingLastUpdateTime = System.currentTimeMillis();
+    	        mLoadingKeepGoing = true;
+    	        mProgressDialog = new ProgressDialog(WaveLoopActivity.this);
+    	        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+    	        mProgressDialog.setTitle("로딩중이시다!");
+    	        mProgressDialog.setCancelable(true);
+    	        mProgressDialog.setOnCancelListener(
+    	            new DialogInterface.OnCancelListener() {
+    	                public void onCancel(DialogInterface dialog) {
+    	                    mLoadingKeepGoing = false;
+    	                }
+    	            });
+    	        mProgressDialog.show();
+
+    	        */
+    			
+    			// ProgressDialog 
+    	        
+    			// 여기서 사운드 파일의 변환 과정을 거치고
+    			// 정상 처리된 파일을 DB에 추가하고
+    			// DB 목록을 기반으로 메인 Activity 를 업데이트 한다.
+    			
+    			// DB 파일을 Activity 에 추가시, 해당 경로에 실제 mp3 파일이 있는지 매번 확인이 필요하다.
+    			
+    			
     		}
     	})
     	.setNegativeButton("취소", null)
