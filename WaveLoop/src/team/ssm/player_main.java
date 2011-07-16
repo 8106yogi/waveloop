@@ -29,7 +29,7 @@ public class player_main extends Activity {
          Intent intent = getIntent();
          if (intent != null)
          {
-        	 filepath= intent.getStringExtra("파일경로");
+        	 filepath= intent.getStringExtra("오디오파일경로");
          }
          
          

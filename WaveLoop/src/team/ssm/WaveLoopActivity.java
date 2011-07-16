@@ -19,8 +19,8 @@ public class WaveLoopActivity extends TabActivity {
     AlertDialog.Builder builder;
     boolean[] mSelect;
     CharSequence[] mFiles;
-    Cursor cursorExt;
-    Cursor cursorInt;
+ 
+    Cursor mCursor;
     ListView list;
     ArrayList<String> Items;
     ArrayAdapter<String> Adapter;
@@ -95,8 +95,8 @@ public class WaveLoopActivity extends TabActivity {
             "파일을 클릭하면 재생 화면으로 넘어간다." 
         	*****************/
         	
-        	cursorInt.moveToPosition(position);
-            String path = cursorInt.getString(cursorInt.getColumnIndex(Audio.AudioColumns.DATA));
+        	mCursor.moveToPosition(position);
+            String path = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.DATA));
         	Intent i = new Intent(WaveLoopActivity.this, player_main.class); 
             i.putExtra("오디오파일경로", path );
         	startActivity(i);
@@ -110,47 +110,35 @@ public class WaveLoopActivity extends TabActivity {
     public void mOnClick(View v) {
     	
     	////////////////////////////////////////////////////////////////////
-    	// db????????????????????????
+    	
     	ContentResolver mCr = getContentResolver();
     	
     	Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
     	Uri uriInternal = Audio.Media.INTERNAL_CONTENT_URI;
     	 
     	
-    	cursorInt = mCr.query(uriInternal, null, null, null, null);
-    	cursorExt = mCr.query(uriExternal, null, null, null, null);
+    	Cursor cursorInt = mCr.query(uriInternal, null, null, null, null);
+    	Cursor cursorExt = mCr.query(uriExternal, null, null, null, null);
     	
+    	mCursor = new MergeCursor( new Cursor[] { cursorInt, cursorExt} );
     	
-    	int nCountInt = (cursorInt == null)?0:cursorInt.getCount();
-    	int nCountExt = (cursorExt == null)?0:cursorExt.getCount();
-    	int nCountTotal = nCountInt + nCountExt;
+    	int nCurCount = (mCursor == null)?0:mCursor.getCount();
     	
-    	mFiles = new CharSequence[nCountTotal];
-    	mSelect = new boolean[nCountTotal];
-    	//mFiles = new CharSequence[nCountExt];
-    	//mSelect = new boolean[nCountExt];
-    	
-    	for (int i = 0; i < nCountExt; i++) {
+    	if(nCurCount > 0)
+    	{
+    		mFiles = new CharSequence[nCurCount];
+        	mSelect = new boolean[nCurCount];
+        	
+        	for (int i = 0; i < nCurCount; i++) {
+        		mCursor.moveToPosition(i);
+                mFiles[i] = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.DISPLAY_NAME));
+                mSelect[i] = false;
+            }
 
-            cursorExt.moveToPosition(i);
-            mFiles[i] = cursorExt.getString(cursorExt.getColumnIndex(Audio.AudioColumns.DISPLAY_NAME));
-        }
+            startManagingCursor(mCursor);
+    	}
     	
-    	
-    	for (int i = 0; i < nCountInt; i++) {
-
-        	cursorInt.moveToPosition(i);
-            mFiles[i+nCountExt] = cursorInt.getString(cursorInt.getColumnIndex(Audio.AudioColumns.DISPLAY_NAME));
-        }
-    	
-    	
-    	
-       
-        
-        ////////////////////////////////////////////////////////////////////
-        startManagingCursor(cursorExt);
-    	startManagingCursor(cursorInt);
-    	
+ 
     	
     	// TODO Auto-generated method stub
     	new AlertDialog.Builder(this)
@@ -159,13 +147,7 @@ public class WaveLoopActivity extends TabActivity {
     	.setMultiChoiceItems(mFiles, mSelect, 
     			new DialogInterface.OnMultiChoiceClickListener(){
     		public void onClick(DialogInterface dialog, int which, boolean isChecked){
-    			//mSelect[which] = isChecked;
-    			if(mSelect[which] = isChecked){
-    				abc = (String)mFiles[which];
-    				
-    			}
-    			//전역변수를 하나 두어서, 현재 클릭한 항목의 인덱스인 which변수값과 체크여부 변수인 isChecked를 이용하여 저장해 두었다가,
-                //밑에 추가 버튼 클릭시, 혹은 cancel 버튼 클릭시에 이용.
+    			mSelect[which] = isChecked;
     		}
     	})
     	
@@ -175,7 +157,15 @@ public class WaveLoopActivity extends TabActivity {
     			 추가버튼을 눌렀을때 선택한 아이템이 리스트뷰에 보여져야 함.
     			 추가 버튼 클릭시 , 여기서 선택한 값을 메인 Activity 로 넘기면 된다.
     			**************/
-    			Items.add(abc);
+    			
+    			for(int i = 0; i < mSelect.length; ++i )
+    			{
+    				if( mSelect[i] )
+    				{
+    					Items.add( (String)mFiles[i] );
+    				}
+    				
+    			}
     			Adapter.notifyDataSetChanged();
     			
     			// 로딩 화면으로 전환 필요
