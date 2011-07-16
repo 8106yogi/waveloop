@@ -89,6 +89,8 @@ public class player_main extends Activity {
          mWaveformView = (HorizontalScrollView)findViewById(R.id.WaveformScrollView);
          mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
 
+         mWaveformLayout.addView( new WaveformView(this) );
+         
          // 레이아웃에 자식뷰 추가 테스트
          for(int i = 0; i < 1200; i++)
          {
