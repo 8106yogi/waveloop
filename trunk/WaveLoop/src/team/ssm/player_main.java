@@ -71,7 +71,7 @@ public class player_main extends Activity {
              }
          };
          /** 오디오파일 지원포맷: MP3/AAC/MP4/WAV **/
-         /*
+         
          String[] mplist = sdRoot.list(filter);
          
          if (mplist.length == 0) {
@@ -83,7 +83,7 @@ public class player_main extends Activity {
              mList.add(sdPath + "/" + s);
          }
          mIdx = 0;
-		*/
+		
          
          // 웨이브폼 스크롤뷰 추가
          mWaveformView = (HorizontalScrollView)findViewById(R.id.WaveformScrollView);
@@ -115,12 +115,12 @@ public class player_main extends Activity {
          mProgressHandler.sendEmptyMessageDelayed(0,200);
         
          // 첫 곡 읽기 및 준비
-         /*
+         
          if (LoadMedia(mIdx) == false) {
              Toast.makeText(this, "파일을 읽을 수 없습니다.", Toast.LENGTH_LONG).show();
              finish();
          }
-         */
+         
     }
 
     // 액티비티 종료시 재생 강제 종료
