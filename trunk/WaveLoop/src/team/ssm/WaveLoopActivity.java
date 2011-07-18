@@ -120,9 +120,10 @@ public class WaveLoopActivity extends TabActivity {
 
     	String selection = "( (_DATA LIKE ?) OR (_DATA LIKE ?) OR (_DATA LIKE ?) OR (_DATA LIKE ?) )";
     	String[] selectionArgs = {"%.aac", "%.arm", "%.mp3", "%.wav" };
+    	String sortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
     	
-    	Cursor cursorInt = mCr.query(uriInternal, null, selection, selectionArgs, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-    	Cursor cursorExt = mCr.query(uriExternal, null, selection, selectionArgs, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+    	Cursor cursorInt = mCr.query(uriInternal, null, selection, selectionArgs, sortOrder);
+    	Cursor cursorExt = mCr.query(uriExternal, null, selection, selectionArgs, sortOrder);
     	
     	mCursor = new MergeCursor( new Cursor[] { cursorInt, cursorExt} );
     	
