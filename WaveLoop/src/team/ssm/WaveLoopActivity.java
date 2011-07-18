@@ -120,7 +120,7 @@ public class WaveLoopActivity extends TabActivity {
 
     	String selection = "( (_DATA LIKE ?) OR (_DATA LIKE ?) OR (_DATA LIKE ?) OR (_DATA LIKE ?) )";
     	String[] selectionArgs = {"%.aac", "%.arm", "%.mp3", "%.wav" };
-    	String sortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
+    	String sortOrder = Audio.Media.DEFAULT_SORT_ORDER;
     	
     	Cursor cursorInt = mCr.query(uriInternal, null, selection, selectionArgs, sortOrder);
     	Cursor cursorExt = mCr.query(uriExternal, null, selection, selectionArgs, sortOrder);
