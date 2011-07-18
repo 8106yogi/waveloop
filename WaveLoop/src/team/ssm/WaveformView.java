@@ -2,13 +2,11 @@ package team.ssm;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
 import android.view.View;
-//import android.widget.ImageView;
 
 public class WaveformView extends View {
 
@@ -36,6 +34,12 @@ public class WaveformView extends View {
 	
 	
 	protected void onDraw(Canvas canvas) {
+		
+		sd.draw(canvas);
+		
+		Matrix matrix = new Matrix();
+		matrix.preScale(1, -1);
+		canvas.setMatrix(matrix);
 		
 		sd.draw(canvas);
         
