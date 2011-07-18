@@ -7,6 +7,7 @@ import android.content.*;
 import android.database.*;
 import android.net.*;
 import android.os.*;
+import android.provider.MediaStore;
 import android.provider.MediaStore.Audio;
 import android.provider.MediaStore.MediaColumns;
 import android.view.*;
@@ -105,8 +106,8 @@ public class WaveLoopActivity extends TabActivity {
         }
    };
    
-  
-    
+
+   
     public void mOnClick(View v) {
     	
     	////////////////////////////////////////////////////////////////////
@@ -116,9 +117,12 @@ public class WaveLoopActivity extends TabActivity {
     	Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
     	Uri uriInternal = Audio.Media.INTERNAL_CONTENT_URI;
     	 
+
+    	String selection = "( (_DATA LIKE ?) OR (_DATA LIKE ?) OR (_DATA LIKE ?) OR (_DATA LIKE ?) )";
+    	String[] selectionArgs = {"%.aac", "%.arm", "%.mp3", "%.wav" };
     	
-    	Cursor cursorInt = mCr.query(uriInternal, null, null, null, null);
-    	Cursor cursorExt = mCr.query(uriExternal, null, null, null, null);
+    	Cursor cursorInt = mCr.query(uriInternal, null, selection, selectionArgs, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+    	Cursor cursorExt = mCr.query(uriExternal, null, selection, selectionArgs, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
     	
     	mCursor = new MergeCursor( new Cursor[] { cursorInt, cursorExt} );
     	
