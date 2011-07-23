@@ -2,14 +2,14 @@ package team.ssm;
 
 import java.util.*;
 
+import team.ssm.DbAdapter.DatabaseHelper;
 import android.app.*;
 import android.content.*;
 import android.database.*;
+import android.database.sqlite.*;
 import android.net.*;
 import android.os.*;
-import android.provider.MediaStore;
 import android.provider.MediaStore.Audio;
-import android.provider.MediaStore.MediaColumns;
 import android.view.*;
 import android.widget.*;
  
@@ -26,7 +26,12 @@ public class WaveLoopActivity extends TabActivity {
     ArrayList<String> Items;
     ArrayAdapter<String> Adapter;
     String abc;
+    DbAdapter dba;
+    DatabaseHelper dbh;
+    SQLiteDatabase db;
+    //int idx;
     
+    public static final String WAVEPATH = "/data/data/com.androidhuman.app/files/";   
     /*
     // 로딩 progress 관련
     private long mLoadingStartTime;
@@ -41,7 +46,12 @@ public class WaveLoopActivity extends TabActivity {
     	
     	setContentView(R.layout.main);
     	TabHost mTabHost = getTabHost();
-    	  	 
+    	
+    	
+    	dba = new DbAdapter(this);
+    	dbh = dba.new DatabaseHelper(this);
+    	//dba.open();
+    	
     	
     	/*
     	SimpleCursorAdapter Adapter = new SimpleCursorAdapter(this,
@@ -69,6 +79,7 @@ public class WaveLoopActivity extends TabActivity {
     	    .setContent(R.id.view2)
     	);
     	
+    	
     	mTabHost.addTab(mTabHost.newTabSpec("tab_test3")
         	   	.setIndicator("옵션")
         	  	.setContent(R.id.view3)
@@ -78,7 +89,10 @@ public class WaveLoopActivity extends TabActivity {
     }
     
     
-    /*
+    
+
+
+	/*
     public void additems(){
     	SimpleCursorAdapter Adapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_list_item_1,
@@ -95,11 +109,18 @@ public class WaveLoopActivity extends TabActivity {
 			리스트뷰에 나타나는 각각의 오디오 파일을 클릭했을 때 일어나는 동작을 정의하는 부분.
             "파일을 클릭하면 재생 화면으로 넘어간다." 
         	*****************/
+        	dba.open();
+        	//mCursor.moveToPosition(position);
+            //String path = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.DATA));
+        	 
         	
-        	mCursor.moveToPosition(position);
-            String path = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.DATA));
+        	
+        
+        	
+        	int idx = 0;
         	Intent i = new Intent(WaveLoopActivity.this, player_main.class); 
-            i.putExtra("오디오파일경로", path );
+        	i.putExtra("오디오파일경로", idx );
+        	//i.putExtra("오디오파일경로", path );
         	startActivity(i);
         
             
@@ -110,7 +131,13 @@ public class WaveLoopActivity extends TabActivity {
    
     public void mOnClick(View v) {
     	
-    	////////////////////////////////////////////////////////////////////
+    	/*
+    	dba = new DbAdapter(this);
+    	dbh = dba.new DatabaseHelper(this);
+    	
+    	SQLiteOpenHelper dbHelper = new DatabaseHelper(this);
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		*/
     	
     	ContentResolver mCr = getContentResolver();
     	
@@ -153,6 +180,7 @@ public class WaveLoopActivity extends TabActivity {
     			new DialogInterface.OnMultiChoiceClickListener(){
     		public void onClick(DialogInterface dialog, int which, boolean isChecked){
     			mSelect[which] = isChecked;
+    			
     		}
     	})
     	
@@ -162,16 +190,20 @@ public class WaveLoopActivity extends TabActivity {
     			 추가버튼을 눌렀을때 선택한 아이템이 리스트뷰에 보여져야 함.
     			 추가 버튼 클릭시 , 여기서 선택한 값을 메인 Activity 로 넘기면 된다.
     			**************/
-    			
+    			dba.open();
     			for(int i = 0; i < mSelect.length; ++i )
     			{
     				if( mSelect[i] )
     				{
     					Items.add( (String)mFiles[i] );
+    					mCursor.moveToPosition(i);	
+    		            String path = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.DATA));
+    					dba.createBook(path,WAVEPATH + mFiles[i]);
+    					
     				}
-    				
     			}
     			Adapter.notifyDataSetChanged();
+    			dba.close();
     			
     			// 로딩 화면으로 전환 필요
     			/*
