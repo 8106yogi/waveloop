@@ -35,8 +35,9 @@ public class player_main extends Activity {
          
          mList = new ArrayList<String>();
          mPlayer = new MediaPlayer();
-
+         //String sdPath; 
          
+         /*
          // SD 카드가 없을 시 에러 처리한다.
          String ext = Environment.getExternalStorageState();
          String sdPath;
@@ -45,35 +46,25 @@ public class player_main extends Activity {
              finish();
              return;
          }
+         */
 
+         /*
          // SD 카드 루트의 MP3 파일 목록을 구한다.
          sdPath = Environment.getExternalStorageDirectory().getAbsolutePath();
          File sdRoot = new File(sdPath);
-         /** 오디오파일 지원포맷: MP3/AAC/MP4/WAV **/
+        
          FilenameFilter filter = new FilenameFilter() {
              public boolean accept(File dir, String name) {
                   return name.endsWith(".mp3");
              }
          };
-         FilenameFilter filter2 = new FilenameFilter() {
-             public boolean accept(File dir, String name) {
-                  return name.endsWith(".wav");
-             }
-         };
-         FilenameFilter filter3 = new FilenameFilter() {
-             public boolean accept(File dir, String name) {
-                  return name.endsWith(".ogg");
-             }
-         };
-         FilenameFilter filter4 = new FilenameFilter() {
-             public boolean accept(File dir, String name) {
-                  return name.endsWith(".mp4");
-             }
-         };
+        */
+        
          /** 오디오파일 지원포맷: MP3/AAC/MP4/WAV **/
          
-         String[] mplist = sdRoot.list(filter);
+         //String[] mplist = sdRoot.list(filter);
          
+        /*
          if (mplist.length == 0) {
              Toast.makeText(this, "재생할 파일이 없습니다.", Toast.LENGTH_LONG).show();
              finish();
@@ -83,7 +74,7 @@ public class player_main extends Activity {
              mList.add(sdPath + "/" + s);
          }
          mIdx = 0;
-		
+		*/
          
          // 웨이브폼 스크롤뷰 추가
          mWaveformView = (HorizontalScrollView)findViewById(R.id.WaveformScrollView);
@@ -135,11 +126,10 @@ public class player_main extends Activity {
    }
 
    // 항상 준비 상태여야 한다.
-    
-   boolean LoadMedia(int idx) {
+    boolean LoadMedia(int idx) {
          try {
-             mPlayer.setDataSource(mList.get(idx));
-        	 //mPlayer.setDataSource(filepath);
+             //DB인덱스를 통해 파일경로를 인자로 넣어야함));
+        	 mPlayer.setDataSource(filepath);
          } catch (IllegalArgumentException e) {
              return false;
          } catch (IllegalStateException e) {
