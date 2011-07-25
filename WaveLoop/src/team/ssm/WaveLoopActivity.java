@@ -30,7 +30,7 @@ public class WaveLoopActivity extends TabActivity {
     DatabaseHelper dbh;
     SQLiteDatabase db;
     //int idx;
-    SoundLoadProgressDialog loadingDialog;
+    ImportProgressDialog importDialog;
     
     public static final String WAVEPATH = "/data/data/com.androidhuman.app/files/";   
     /*
@@ -128,7 +128,7 @@ public class WaveLoopActivity extends TabActivity {
         }
    };
    
-	private void showLoadingResultMessage( SoundLoadProgressDialog.EFinishResult result )
+	private void showLoadingResultMessage( ImportProgressDialog.EFinishResult result )
 	{
 		String message;
 		switch(result)
@@ -267,11 +267,11 @@ public class WaveLoopActivity extends TabActivity {
     			
     			
     			// 로딩 다이얼로그 생성
-    			loadingDialog = new SoundLoadProgressDialog(WaveLoopActivity.this);
-    			loadingDialog.setAudioPaths(paths);
-    			loadingDialog.setFinishLoading( new SoundLoadProgressDialog.FinishLoading() { 
-    				private SoundLoadProgressDialog.EFinishResult mResult;
-    				public void finish( SoundLoadProgressDialog.EFinishResult result ){// dialog가 dismiss 될 때 호출되는 함수.
+    			importDialog = new ImportProgressDialog(WaveLoopActivity.this);
+    			importDialog.setAudioPaths(paths);
+    			importDialog.setFinishLoading( new ImportProgressDialog.FinishLoading() { 
+    				private ImportProgressDialog.EFinishResult mResult;
+    				public void finish( ImportProgressDialog.EFinishResult result ){// dialog가 dismiss 될 때 호출되는 함수.
     					mResult = result;
 	    				runOnUiThread( new Runnable(){
 	    					public void run()
@@ -283,8 +283,8 @@ public class WaveLoopActivity extends TabActivity {
 
     				}
     			});
-    			loadingDialog.show();
-    			loadingDialog.beginThread();
+    			importDialog.show();
+    			importDialog.beginThread();
     			
     			
     		}

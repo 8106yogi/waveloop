@@ -15,7 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
-public class SoundLoadProgressDialog extends ProgressDialog {
+public class ImportProgressDialog extends ProgressDialog {
 
 	private long mLoadingStartTime;
 	private long mLoadingLastUpdateTime;
@@ -46,7 +46,7 @@ public class SoundLoadProgressDialog extends ProgressDialog {
 		mFinishLoading = finishLoading;
 	}
 	
-	public SoundLoadProgressDialog(Context context)
+	public ImportProgressDialog(Context context)
 	{
 		super(context);
 		mDba = new DbAdapter(context);
