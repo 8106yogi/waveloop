@@ -28,20 +28,29 @@ android:orientation="vertical">
 
 <ListView
 android:id="@+id/list"
-android:layout_height="wrap_content"
+android:layout_height="fill_parent"
 android:layout_width="fill_parent"
+android:layout_weight="1"
 />
 
 
 
+<LinearLayout 
+android:layout_height="wrap_content"
+android:layout_width="fill_parent"
+android:background="#5b5b5b">
 
 <Button android:id="@+id/AddButton"
 android:layout_height="wrap_content"
-android:layout_width="wrap_content"
+android:layout_width="fill_parent"
+android:layout_marginLeft="60dip"
+android:layout_marginRight="60dip"
+android:layout_marginTop="6dip"
+android:layout_marginBottom="2dip"
 android:onClick="mOnClick"
-android:gravity="center"
-android:layout_alignParentBottom="true"
 android:text="추가"></Button>
+
+</LinearLayout>
 
 </LinearLayout>
 
