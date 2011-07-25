@@ -30,6 +30,7 @@ public class WaveLoopActivity extends TabActivity {
     DatabaseHelper dbh;
     SQLiteDatabase db;
     //int idx;
+    SoundLoadProgressDialog loadingDialog;
     
     public static final String WAVEPATH = "/data/data/com.androidhuman.app/files/";   
     /*
@@ -127,7 +128,50 @@ public class WaveLoopActivity extends TabActivity {
         }
    };
    
+	private void showLoadingResultMessage( SoundLoadProgressDialog.EFinishResult result )
+	{
+		String message;
+		switch(result)
+		{
+		case eFR_OK:
+			message = "성공적으로 처리되었습니다.";
+			break;
+		case eFR_FILEERROR:
+			message = "잘못된 파일입니다.";
+			break;
+		case eFR_FILENOTFOUNDERROR:
+			message = "파일을 찾을 수 없스빈다.";
+			break;
+		case eFR_SUSPEND:
+			message = "작업이 중단되었습니다.";
+			break;
+		case eFR_EXCEPTION:
+			message = "알 수 없는 에러가 발생했습니다.";
+			break;
+		default:
+			message = "알 수 없는 에러가 발생했습니다.";
+			break;
+		}
+		Toast.makeText( getApplicationContext(), message, Toast.LENGTH_SHORT ).show();
+   }
 
+	public void refrashListFromDB()
+	{
+		// DB의 내용을 가져다가 Items에 새로 입력.
+		Items.clear();
+		dba.open();
+		Cursor cur = dba.fetchAllBooks();
+		for(int i = 0; i < cur.getCount(); ++i )
+		{
+			cur.moveToPosition(i);
+			String strFilePath = cur.getString(cur.getColumnIndex(DbAdapter.KEY_FILEPATH));
+			//String strWavePath = cur.getString(cur.getColumnIndex(DbAdapter.KEY_WAVEPATH));
+			Items.add(strFilePath);// 여기 뭔가 수정되어야 할듯!?
+		}
+		dba.close();
+		
+		Adapter.notifyDataSetChanged();
+	}
    
     public void mOnClick(View v) {
     	
@@ -190,6 +234,9 @@ public class WaveLoopActivity extends TabActivity {
     			 추가버튼을 눌렀을때 선택한 아이템이 리스트뷰에 보여져야 함.
     			 추가 버튼 클릭시 , 여기서 선택한 값을 메인 Activity 로 넘기면 된다.
     			**************/
+    			//  DB에 입력 전에 웨이브파일을 생성하고 DB에 입력해야 할 듯
+    			
+    			/*
     			dba.open();
     			for(int i = 0; i < mSelect.length; ++i )
     			{
@@ -204,33 +251,40 @@ public class WaveLoopActivity extends TabActivity {
     			}
     			Adapter.notifyDataSetChanged();
     			dba.close();
+    			*/
     			
-    			// 로딩 화면으로 전환 필요
-    			/*
-    			mLoadingStartTime = System.currentTimeMillis();
-    	        mLoadingLastUpdateTime = System.currentTimeMillis();
-    	        mLoadingKeepGoing = true;
-    	        mProgressDialog = new ProgressDialog(WaveLoopActivity.this);
-    	        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-    	        mProgressDialog.setTitle("로딩중이시다!");
-    	        mProgressDialog.setCancelable(true);
-    	        mProgressDialog.setOnCancelListener(
-    	            new DialogInterface.OnCancelListener() {
-    	                public void onCancel(DialogInterface dialog) {
-    	                    mLoadingKeepGoing = false;
-    	                }
-    	            });
-    	        mProgressDialog.show();
+    			// 선택된 음악파일 경로를 ArrayList에 담는다.
+    			ArrayList<String> paths = new ArrayList<String>();
+    			for(int i = 0; i < mSelect.length; ++i )
+    			{
+    				if( mSelect[i] )
+    				{
+    					mCursor.moveToPosition(i);	
+    		            String path = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.DATA));
+    					paths.add(path);
+    				}
+    			}
+    			
+    			
+    			// 로딩 다이얼로그 생성
+    			loadingDialog = new SoundLoadProgressDialog(WaveLoopActivity.this);
+    			loadingDialog.setAudioPaths(paths);
+    			loadingDialog.setFinishLoading( new SoundLoadProgressDialog.FinishLoading() { 
+    				private SoundLoadProgressDialog.EFinishResult mResult;
+    				public void finish( SoundLoadProgressDialog.EFinishResult result ){// dialog가 dismiss 될 때 호출되는 함수.
+    					mResult = result;
+	    				runOnUiThread( new Runnable(){
+	    					public void run()
+	    					{
+	    						showLoadingResultMessage(mResult);
+	    						refrashListFromDB();
+	    					}
+	    				});
 
-    	        */
-    			
-    			// ProgressDialog 
-    	        
-    			// 여기서 사운드 파일의 변환 과정을 거치고
-    			// 정상 처리된 파일을 DB에 추가하고
-    			// DB 목록을 기반으로 메인 Activity 를 업데이트 한다.
-    			
-    			// DB 파일을 Activity 에 추가시, 해당 경로에 실제 mp3 파일이 있는지 매번 확인이 필요하다.
+    				}
+    			});
+    			loadingDialog.show();
+    			loadingDialog.beginThread();
     			
     			
     		}

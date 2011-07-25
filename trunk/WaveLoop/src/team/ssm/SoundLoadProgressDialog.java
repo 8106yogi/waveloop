@@ -1,7 +1,9 @@
 package team.ssm;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
@@ -11,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
 
 public class SoundLoadProgressDialog extends ProgressDialog {
 
@@ -21,14 +24,34 @@ public class SoundLoadProgressDialog extends ProgressDialog {
 	private ArrayList<String> mAudioPaths;
 	private DbAdapter mDba;
 	private Context mContext;
+	
+	private FinishLoading mFinishLoading;
 
+	public enum EFinishResult
+	{
+		eFR_OK,
+		eFR_FILEERROR,
+		eFR_FILENOTFOUNDERROR,
+		eFR_SUSPEND,
+		
+		eFR_EXCEPTION,
+	}
+	
+	public interface FinishLoading {
+        public void finish( EFinishResult result );// dialog가 dismiss 될 때 호출되는 함수.
+    }
+	
+	public void setFinishLoading( FinishLoading finishLoading )
+	{
+		mFinishLoading = finishLoading;
+	}
+	
 	public SoundLoadProgressDialog(Context context)
 	{
 		super(context);
-		
 		mDba = new DbAdapter(context);
-		
 		mContext = context;
+		mFinishLoading = null;
 		
 		// 프로그레스 다이얼로그 초기설정
 		setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -95,7 +118,7 @@ public class SoundLoadProgressDialog extends ProgressDialog {
 		        
             public void run() 
             {
-            	
+            	EFinishResult result = EFinishResult.eFR_OK; 
             	
             	for( final String path : mAudioPaths )// 선택된 오디오 파일을 돌아준다 
             	{
@@ -108,9 +131,13 @@ public class SoundLoadProgressDialog extends ProgressDialog {
 
                     	// 에러처리
                         if (mSoundFile == null) {
-                        	dismiss();
+                        	//dismiss();
                         	// 토스트 메세지 출력 
-                            return;
+                        	//Toast.makeText(mContext,"잘못된 사운드 파일.", Toast.LENGTH_SHORT ).show();
+                        	//finishLoading();
+                        	//return;
+                        	result = EFinishResult.eFR_FILEERROR;
+                        	break;
                         }
                         
                         
@@ -153,15 +180,26 @@ public class SoundLoadProgressDialog extends ProgressDialog {
                         
                         
                         // 여기까지 에러처리 ㄷㄷ
+                    } catch(final FileNotFoundException e) {
+                    	result = EFinishResult.eFR_FILENOTFOUNDERROR;
+                    	break;
+            		} catch(final IOException e) {
+            			result = EFinishResult.eFR_FILEERROR;
+                    	break;
                     } catch (final Exception e) {
-                    	dismiss();
-                    	
+                    	//dismiss();
                     	// 토스트 메세지 출력 
-                    	return;
+                    	//Toast.makeText(mContext,"Exception! ", Toast.LENGTH_SHORT ).show();
+                    	//finishLoading( EFinishResult.eFR_OK );
+                    	
+                    	result = EFinishResult.eFR_EXCEPTION;
+                    	break;
                     }
             	}
 
-            	dismiss();
+            	
+            	//Toast.makeText(mContext,"로드가 정상적으로 완료되었습니다.", Toast.LENGTH_LONG ).show();
+            	finishLoading( result );
                 
             }
         }).start();
@@ -170,12 +208,16 @@ public class SoundLoadProgressDialog extends ProgressDialog {
 	}
 	
 	
-	private void finishLoading()
+	private void finishLoading( EFinishResult result )
 	{
-		// 다음 로딩할 파일이 있으면 하고
-		// 없으면 걍 종료?
-		// 파일로 저장해야지
-		// DB에 저장도 해야지
+		dismiss();
+		
+		if( null != mFinishLoading )
+		{
+			mFinishLoading.finish(result);
+		}
+		
+		
 	}
 	
 		
