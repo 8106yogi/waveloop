@@ -11,10 +11,14 @@ import java.util.ArrayList;
 import team.ssm.DbAdapter.*;
 import team.ssm.soundfile.CheapSoundFile;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore.Audio;
 import android.widget.Toast;
 
 public class ImportProgressDialog extends ProgressDialog {
@@ -23,8 +27,9 @@ public class ImportProgressDialog extends ProgressDialog {
 	private long mLoadingLastUpdateTime;
 	private boolean mLoadingKeepGoing;
 	//private ProgressDialog mProgressDialog;
-	private ArrayList<String> mAudioPaths;
+	private ArrayList<Integer> mAudioIDs;
 	private DbAdapter mDba;
+	private ContentResolver mContentResolver;
 	private Context mContext;
 	
 	private FinishLoading mFinishLoading;
@@ -46,6 +51,10 @@ public class ImportProgressDialog extends ProgressDialog {
 	public void setFinishLoading( FinishLoading finishLoading )
 	{
 		mFinishLoading = finishLoading;
+	}
+	public void setContentResolver( ContentResolver cr )
+	{
+		mContentResolver = cr;
 	}
 	
 	public ImportProgressDialog(Context context)
@@ -71,9 +80,9 @@ public class ImportProgressDialog extends ProgressDialog {
 		
 	}
 	
-	public void setAudioPaths( ArrayList<String> paths )
+	public void setAudioIDs( ArrayList<Integer> iIDs )
 	{
-		mAudioPaths = paths;
+		mAudioIDs = iIDs;
 	}
 	
 	@Override
@@ -122,22 +131,18 @@ public class ImportProgressDialog extends ProgressDialog {
             {
             	EFinishResult result = EFinishResult.eFR_OK; 
             	
-            	for( final String path : mAudioPaths )// 선택된 오디오 파일을 돌아준다 
+            	for( final Integer id : mAudioIDs )// 선택된 오디오 파일을 돌아준다 
             	{
             		try {
             			// DB를 탐색해서 이미 있는 파일이라면 경고 메세지를 띄워주자
             			
             			
                     	// 절대 경로를 가지고 사운드 파일 인스턴스 생성. 
+            			String path = getAbsolutePathFromMediaDB(id);
                     	CheapSoundFile mSoundFile = CheapSoundFile.create(path, listener);
 
                     	// 에러처리
                         if (mSoundFile == null) {
-                        	//dismiss();
-                        	// 토스트 메세지 출력 
-                        	//Toast.makeText(mContext,"잘못된 사운드 파일.", Toast.LENGTH_SHORT ).show();
-                        	//finishLoading();
-                        	//return;
                         	result = EFinishResult.eFR_FILEERROR;
                         	break;
                         }
@@ -147,12 +152,9 @@ public class ImportProgressDialog extends ProgressDialog {
                         // 문장단위로 분할하는 작업을 해 주고
                         
                         // 두개의 파일을 잘 저장한 다음
-                        String strFileName = "test.wfd";
+                        String strFileName = id.toString() + ".wfd";
                         File outputFile = mContext.getFileStreamPath(strFileName);
                         //File outputFile = mContext.getExternalFilesDir(null);
-                        //outputFile.
-                        // 폴더 생성해야 하는데!!!!
-                        
                         
                         if( outputFile.canWrite() )
                         {
@@ -176,14 +178,7 @@ public class ImportProgressDialog extends ProgressDialog {
                         
                         // DB에 입력하자
                         mDba.open();
-                        /*
-                        DbAdapter dba = new DbAdapter();
-                    	DatabaseHelper dbh = dba.new DatabaseHelper(this);
-                        
-                        db = dbh.getWritableDatabase();
-                        */
-                        
-                        mDba.createBook(path, wavePath, "0");
+                        mDba.createBook(path, wavePath, id.toString());
                         mDba.close();
                         
                         
@@ -211,6 +206,29 @@ public class ImportProgressDialog extends ProgressDialog {
             	finishLoading( result );
                 
             }
+
+
+
+			private String getAbsolutePathFromMediaDB(final Integer id) {
+    			// id 를 가지고 DB로부터 오디오파일 경로를 가져온다.
+				
+		    	Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
+
+		    	String selection = "( (_ID LIKE ?) )";
+		    	String[] selectionArgs = { id.toString() };
+		    	String sortOrder = Audio.Media.DEFAULT_SORT_ORDER;
+		    	
+		    	//Cursor cursorInt = mCr.query(uriInternal, null, selection, selectionArgs, sortOrder);
+		    	Cursor cursor = mContentResolver.query(uriExternal, null, selection, selectionArgs, sortOrder);
+		    	cursor.moveToPosition(0);
+		    	String path = cursor.getString(cursor.getColumnIndex(Audio.AudioColumns.DATA));
+
+		    	return path;
+			}
+
+
+
+			
         }).start();
 
 		
