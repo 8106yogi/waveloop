@@ -1,5 +1,6 @@
 package team.ssm;
 
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -152,18 +153,18 @@ public class ImportProgressDialog extends ProgressDialog {
                         // 폴더 생성해야 하는데!!!!
                         
                         
-                        
-                        boolean bCreateReturn = outputFile.createNewFile();
-                        if( bCreateReturn && outputFile.canWrite() )
+                        if( outputFile.canWrite() )
                         {
                         	final int[] frameGains = mSoundFile.getFrameGains();
                         	
-                        	FileOutputStream outputFileStream = new FileOutputStream(outputFile);
+                        	FileOutputStream fileOutputStream = new FileOutputStream(outputFile, false);
+                        	DataOutputStream dataOutputStream = new DataOutputStream(fileOutputStream);
                         	
-                        	//outputFileStream // 오브젝트 사이즈 저장
+                        	int frameLength = frameGains.length;
+                        	dataOutputStream.writeInt(frameLength);
                         	
-                        	ObjectOutputStream obj_out = new ObjectOutputStream (outputFileStream);
-                        	obj_out.writeObject(frameGains);
+                        	ObjectOutputStream objectOutputStream = new ObjectOutputStream (fileOutputStream);
+                        	objectOutputStream.writeObject(frameGains);
                         	
                         	// 파일 작성 완료.
                         	
