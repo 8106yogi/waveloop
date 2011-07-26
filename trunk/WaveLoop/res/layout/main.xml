@@ -26,6 +26,7 @@ android:layout_width="fill_parent"
 android:id="@+id/view1"
 android:orientation="vertical">
 
+
 <ListView
 android:id="@+id/list"
 android:layout_height="fill_parent"
@@ -48,11 +49,13 @@ android:layout_marginRight="60dip"
 android:layout_marginTop="6dip"
 android:layout_marginBottom="2dip"
 android:onClick="mOnClick"
-android:text="추가"></Button>
+android:text="추가">
+</Button>
 
 </LinearLayout>
-
 </LinearLayout>
+
+
 
  
 <LinearLayout android:layout_height="fill_parent"

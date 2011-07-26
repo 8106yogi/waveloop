@@ -23,8 +23,10 @@ public class WaveLoopActivity extends TabActivity {
  
     Cursor mCursor;
     ListView list;
-    ArrayList<String> Items;
-    ArrayAdapter<String> Adapter;
+    //ArrayList<String> items;
+    ArrayList<sound> m_orders;
+    //ArrayAdapter<String> Adapter;
+    ArrayAdapter<sound> m_adapter;
     String abc;
     DbAdapter dba;
     DatabaseHelper dbh;
@@ -49,26 +51,35 @@ public class WaveLoopActivity extends TabActivity {
     	TabHost mTabHost = getTabHost();
     	
     	
-    	dba = new DbAdapter(this);
-    	dbh = dba.new DatabaseHelper(this);
-    	//dba.open();
-    	
+    	dba = new DbAdapter(this); //어댑터 객체 생성.
+    	dbh = dba.new DatabaseHelper(this);	//오픈헬퍼 객체 생성.
+    	//Items = new ArrayList<String>();
     	
     	/*
-    	SimpleCursorAdapter Adapter = new SimpleCursorAdapter(this,
-                android.R.layout.simple_list_item_1,
-                mCursor, new String[] { MediaColumns.DISPLAY_NAME },
-                new int[] { android.R.id.text1});
-    	*/
-    	Items = new ArrayList<String>();
-    	
         Adapter = new ArrayAdapter<String>(this, android.R.layout.
         		 simple_list_item_1, Items);
         list = (ListView)findViewById(R.id.list);
         list.setAdapter(Adapter);
         list.setChoiceMode(ListView.CHOICE_MODE_NONE);
         list.setOnItemClickListener(mItemClickListener);
-    	
+    	*/
+    	//db.execSQL("DROP TABLE IF EXISTS data");
+        
+        /***** 20100725_동진: Custom ArrayAdapter를 이용한 ListView*****/
+        
+    	m_orders = new ArrayList<sound>();	//리스트뷰에 출력할 항목(sound 객체)들을 저장하는 ArraylList 생성.
+        list = (ListView)findViewById(R.id.list);
+        //Person p1 = new Person("안드로이드", "011-123-4567");
+        //Person p2 = new Person("구글", "02-123-4567");
+        //m_orders.add(p1);
+        //m_orders.add(p2);
+        m_adapter = new SoundAdapter(this, R.layout.row, m_orders); // 어댑터를 생성.
+        list.setAdapter(m_adapter);
+        list.setChoiceMode(ListView.CHOICE_MODE_NONE);
+        list.setOnItemClickListener(mItemClickListener);
+        
+        
+        
         
     	mTabHost.addTab(mTabHost.newTabSpec("tab_test1")
     	  	.setIndicator("재생목록")    	  	
@@ -87,22 +98,10 @@ public class WaveLoopActivity extends TabActivity {
         );
     	
     	
+    	// refreshListFromDB();
     }
     
-    
-    
 
-
-	/*
-    public void additems(){
-    	SimpleCursorAdapter Adapter = new SimpleCursorAdapter(this,
-                android.R.layout.simple_list_item_1,
-                mCursor, new String[] { MediaColumns.DISPLAY_NAME },
-                new int[] { android.R.id.text1});
-    	list.setAdapter(Adapter);
-    	
-    }
-    */
     
     AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -111,12 +110,6 @@ public class WaveLoopActivity extends TabActivity {
             "파일을 클릭하면 재생 화면으로 넘어간다." 
         	*****************/
         	dba.open();
-        	//mCursor.moveToPosition(position);
-            //String path = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.DATA));
-        	 
-        	
-        	
-        
         	
         	int idx = 0;
         	Intent i = new Intent(WaveLoopActivity.this, player_main.class); 
@@ -140,7 +133,7 @@ public class WaveLoopActivity extends TabActivity {
 			message = "잘못된 파일입니다.";
 			break;
 		case eFR_FILENOTFOUNDERROR:
-			message = "파일을 찾을 수 없스빈다.";
+			message = "파일을 찾을 수 없습니다.";
 			break;
 		case eFR_SUSPEND:
 			message = "작업이 중단되었습니다.";
@@ -155,22 +148,41 @@ public class WaveLoopActivity extends TabActivity {
 		Toast.makeText( getApplicationContext(), message, Toast.LENGTH_SHORT ).show();
    }
 
-	public void refrashListFromDB()
+	public void refreshListFromDB()	// 음악 리스트의 내용을 새로고침.
 	{
-		// DB의 내용을 가져다가 Items에 새로 입력.
-		Items.clear();
+		// DB의 내용을 가져다가 m_orders에 새로 입력.
+		m_orders.clear();
+			
+		
+		/*
+		db = dbh.getWritableDatabase();
+		db.execSQL("DROP TABLE IF EXISTS data");
+		db.execSQL("create table data (_id integer primary key autoincrement,"+
+		"filepath text not null, wavepath text not null, media_db_id text not null)");
+		//dbh.onDrop(db);
+		*/
 		dba.open();
+		
 		Cursor cur = dba.fetchAllBooks();
 		for(int i = 0; i < cur.getCount(); ++i )
 		{
 			cur.moveToPosition(i);
-			String strFilePath = cur.getString(cur.getColumnIndex(DbAdapter.KEY_FILEPATH));
+			//String strFilePath = cur.getString(cur.getColumnIndex(DbAdapter.KEY_FILEPATH));
 			//String strWavePath = cur.getString(cur.getColumnIndex(DbAdapter.KEY_WAVEPATH));
-			Items.add(strFilePath);// 여기 뭔가 수정되어야 할듯!?
+			//m_orders.add(strFilePath);// 여기 뭔가 수정되어야 할듯!?
+			/*
+			mCursor.moveToPosition(i);
+			String artist = cur.getString(mCursor.getColumnIndex(Audio.AudioColumns.ARTIST));
+			String album = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.ALBUM));
+			String title = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.TITLE));
+			
+			sound s1 = new sound(artist, album, title);
+			m_orders.add(s1)
+			*/;
 		}
 		dba.close();
 		
-		Adapter.notifyDataSetChanged();
+		m_adapter.notifyDataSetChanged();
 	}
    
     public void mOnClick(View v) {
@@ -186,17 +198,18 @@ public class WaveLoopActivity extends TabActivity {
     	ContentResolver mCr = getContentResolver();
     	
     	Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
-    	Uri uriInternal = Audio.Media.INTERNAL_CONTENT_URI;
+    	//Uri uriInternal = Audio.Media.INTERNAL_CONTENT_URI;
     	 
 
     	String selection = "( (_DATA LIKE ?) OR (_DATA LIKE ?) OR (_DATA LIKE ?) OR (_DATA LIKE ?) )";
     	String[] selectionArgs = {"%.aac", "%.arm", "%.mp3", "%.wav" };
     	String sortOrder = Audio.Media.DEFAULT_SORT_ORDER;
     	
-    	Cursor cursorInt = mCr.query(uriInternal, null, selection, selectionArgs, sortOrder);
+    	//Cursor cursorInt = mCr.query(uriInternal, null, selection, selectionArgs, sortOrder);
     	Cursor cursorExt = mCr.query(uriExternal, null, selection, selectionArgs, sortOrder);
     	
-    	mCursor = new MergeCursor( new Cursor[] { cursorInt, cursorExt} );
+    	//mCursor = new MergeCursor( new Cursor[] { cursorInt, cursorExt} );
+    	mCursor = cursorExt;
     	
     	int nCurCount = (mCursor == null)?0:mCursor.getCount();
     	
@@ -242,16 +255,31 @@ public class WaveLoopActivity extends TabActivity {
     			{
     				if( mSelect[i] )
     				{
-    					Items.add( (String)mFiles[i] );
-    					mCursor.moveToPosition(i);	
-    		            String path = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.DATA));
-    					dba.createBook(path,WAVEPATH + mFiles[i]);
+    					
+    				    //Person p1 = new Person("안드로이드", "011-123-4567");
+    			        //Person p2 = new Person("구글", "02-123-4567");
+    			        //m_orders.add(p1);
+    			        //m_orders.add(p2);
+    					
+    					mCursor.moveToPosition(i);
+    					String artist = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.ARTIST));
+    					String album = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.ALBUM));
+    					String title = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.TITLE));
+    					
+    					sound s1 = new sound(artist, album, title);
+    					m_orders.add(s1);
+    					//m_orders.add( (String)mFiles[i] );
+    					//mCursor.moveToPosition(i);	
+    		            
+    					String path = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.DATA));
+    					dba.createBook(path,WAVEPATH + mFiles[i],0);
     					
     				}
     			}
-    			Adapter.notifyDataSetChanged();
+    			m_adapter.notifyDataSetChanged();
     			dba.close();
     			*/
+    			db = dbh.getWritableDatabase();
     			
     			// 선택된 음악파일 경로를 ArrayList에 담는다.
     			ArrayList<String> paths = new ArrayList<String>();
@@ -266,6 +294,7 @@ public class WaveLoopActivity extends TabActivity {
     			}
     			
     			
+    			
     			// 로딩 다이얼로그 생성
     			importDialog = new ImportProgressDialog(WaveLoopActivity.this);
     			importDialog.setAudioPaths(paths);
@@ -277,7 +306,7 @@ public class WaveLoopActivity extends TabActivity {
 	    					public void run()
 	    					{
 	    						showLoadingResultMessage(mResult);
-	    						refrashListFromDB();
+	    						refreshListFromDB();
 	    					}
 	    				});
 
@@ -293,35 +322,71 @@ public class WaveLoopActivity extends TabActivity {
     	.show();
     	
     
-    	
-    	/*
-    	AlertDialog.Builder builder = new AlertDialog.Builder(waveloop_main.this);
-    		builder.setTitle("�߰��� ������ �����ϼ���");
-    		builder.setMultiChoiceItems(files, mSelect, new DialogInterface.OnMultiChoiceClickListener() {
-		
-    		    
-    		    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-    		      
-    		    	Toast.makeText( getApplicationContext(), 
-    		                  items[which] + "  Checked-" + Boolean.toString(isChecked), 
-    		                  Toast.LENGTH_SHORT).show();
-    		      
-    		      }
-    		    })
-    		.setPositiveButton("�߰�", new DialogInterface.OnClickListener() {
-    	           public void onClick(DialogInterface dialog, int id) {
-    	             Toast.makeText(getApplicationContext(),"����Ͽ� �߰��Ǿ���ϴ�.",Toast.LENGTH_SHORT).show();
-    	           }
-    	       })
-    	       .setNegativeButton("���", new DialogInterface.OnClickListener() {
-    	           public void onClick(DialogInterface dialog, int id) {
-    	             dialog.cancel();
-    	           }
-    	       });
-    	*/
+    }
+    
+    //	어댑터 클래스
+    private class SoundAdapter extends ArrayAdapter<sound> {		
 
+        private ArrayList<sound> items;
 
-    	}
-    	
+        public SoundAdapter(Context context, int textViewResourceId, ArrayList<sound> items) {
+                super(context, textViewResourceId, items);
+                this.items = items;
+        }
+        
+        // 각 항목의 뷰 생성
+        public View getView(int position, View convertView, ViewGroup parent) {
+                View v = convertView;
+                if (v == null) {
+                    LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    v = vi.inflate(R.layout.row, null);
+                }
+                sound p = items.get(position);
+                if (p != null) {
+                        TextView tar = (TextView) v.findViewById(R.id.top_artist);
+                        TextView tal = (TextView) v.findViewById(R.id.top_album);
+                        TextView bt = (TextView) v.findViewById(R.id.bottom_title);
+                        if (tar != null){
+                        	tar.setText(p.getArtist());                            
+                        }
+                        if (tal != null){
+                        	tal.setText(p.getAlbum());                            
+                        }
+                        if(bt != null){
+                        		bt.setText(p.getTitle());
+                        }
+                }
+                return v;
+        }
+}
+    
+
+    
+    // 리스트 뷰에 출력할 항목
+    class sound {	
+        
+        private String Artist;
+        private String Album;
+        private String Title;
+        
+        
+        public sound(String _Artist, String _Album, String _Title) {
+        	this.Artist = _Artist;
+        	this.Album = _Album;
+        	this.Title = _Title;
+        }
+        
+        public String getArtist() {
+            return Artist;
+        }
+        
+        public String getAlbum(){
+        	return Album;
+        }
+        public String getTitle() {
+            return Title;
+        }
+
+    }
 
 }

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import team.ssm.DbAdapter.*;
 import team.ssm.soundfile.CheapSoundFile;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -175,7 +176,14 @@ public class ImportProgressDialog extends ProgressDialog {
                         
                         // DB에 입력하자
                         mDba.open();
-                        mDba.createBook(path, wavePath);
+                        /*
+                        DbAdapter dba = new DbAdapter();
+                    	DatabaseHelper dbh = dba.new DatabaseHelper(this);
+                        
+                        db = dbh.getWritableDatabase();
+                        */
+                        
+                        mDba.createBook(path, wavePath, "0");
                         mDba.close();
                         
                         
