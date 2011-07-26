@@ -80,16 +80,11 @@ public class player_main extends Activity {
          mWaveformView = (HorizontalScrollView)findViewById(R.id.WaveformScrollView);
          mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
 
-         mWaveformLayout.addView( new WaveformView(this) );
-         
-         // 레이아웃에 자식뷰 추가 테스트
-         for(int i = 0; i < 1200; i++)
-         {
-        	 ImageView iv = new ImageView(this);
-             iv.setImageResource(R.drawable.ic_tab_option);
-             mWaveformLayout.addView( iv );
-         }
-        
+         /* 
+         ImageView iv = new ImageView(this);
+         iv.setImageResource(R.drawable.ic_tab_option);
+         mWaveformLayout.addView( iv );
+         */
          
          // 버튼들의 클릭 리스너 등록
          mFileName = (TextView)findViewById(R.id.filename);
@@ -108,13 +103,65 @@ public class player_main extends Activity {
          mProgressHandler.sendEmptyMessageDelayed(0,200);
         
          // 첫 곡 읽기 및 준비
-         
+         /*
          if (LoadMedia(mIdx) == false) {
              Toast.makeText(this, "파일을 읽을 수 없습니다.", Toast.LENGTH_LONG).show();
              finish();
          }
+         */
+         
+         // 임시로 특정 경로에 있는 파일을 읽어옴.
+         
+         
+         // 두개의 파일을 잘 저장한 다음
+         String strFileName = "test.wfd";
+         File wavefile = this.getFileStreamPath(strFileName);
+         //File outputFile = mContext.getExternalFilesDir(null);
+         //outputFile.
+         // 폴더 생성해야 하는데!!!!
+         
+         
+         if( wavefile.canRead() )
+         {
+        	try {
+	         	FileInputStream fileInputStream = new FileInputStream(wavefile);
+	         	DataInputStream dataInputStream = new DataInputStream(fileInputStream);
+	         	
+	         	int frameLength = dataInputStream.readInt();
+	         	int[] frameGains = new int[frameLength];
+	         	
+	         	ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+	         	frameGains = (int[]) objectInputStream.readObject();
+	         	
+	         	for( int i = 0; i < frameLength; i+=500 )
+	         	{
+	         		WaveformView waveformView = new WaveformView(this);
+		         	waveformView.setData(frameGains, i, ((i+500)<frameLength)?(i+500):frameLength
+		         			, 300 );
+		         	mWaveformLayout.addView( waveformView );
+	         	}
+	         	
+				
+			} catch (StreamCorruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+         	
+         	
+         	// 파일 작성 완료.
+         	
+         }
+         
          
     }
+    
+    
 
     // 액티비티 종료시 재생 강제 종료
     public void onDestroy() {

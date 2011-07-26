@@ -15,15 +15,27 @@ public class WaveformView extends View {
 	private int[] mData;
 	private int mBeginFrame;
 	private int mEndFrame;
-	public Path path;
+	private int mHeight;
+	private Path path;
+	private Paint mPaint;
 	
-	public void setData( int[] data, int beginFrame, int endFrame )
+	public WaveformView(Context context) {
+		super(context);
+		
+		mPaint = new Paint();
+		mPaint.setColor(0xff74AC23);
+		
+	}
+	
+	
+	public void setData( int[] data, int beginFrame, int endFrame, int height )
 	{
 		mData = data;
 		mBeginFrame = beginFrame;
 		mEndFrame = endFrame;
+		mHeight = height;
 		
-		/*
+		
 		int numFrames = mData.length;
         int[] frameGains = mData;
         double[] smoothedGains = new double[numFrames];
@@ -100,14 +112,21 @@ public class WaveformView extends View {
             if (value > 1.0)
                 value = 1.0;
             heights[i] = value * value;
+            if(heights[i] > 0.95f)
+            	heights[i] = 0.0f;
+            	
         }
+        
+        
 
-        */
+        
 		path = new Path();
         path.moveTo( 0, 0 );
         for(int i = 0; i + mBeginFrame < mEndFrame; ++i )
         {
-        	path.lineTo( i*2, mData[i+mBeginFrame] );
+        	//path.lineTo( i*2, (float)(heights[i+mBeginFrame]*150.f) );
+        	path.lineTo( i*2, data[i+mBeginFrame] );
+        	
         }
         path.lineTo( mEndFrame, 0 );
         path.lineTo( 0, 0 );
@@ -120,33 +139,32 @@ public class WaveformView extends View {
 		
 	}
 	
-	public WaveformView(Context context) {
-		super(context);
-	}
 	
 	
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		//if( null != sd )
-		//{
-			//sd.draw(canvas);
-			
-//			Matrix matrix = new Matrix();
-//			matrix.preScale(1, -1);
-//			canvas.setMatrix(matrix);
-			
-//			sd.draw(canvas);
-			
-		//}
-		Paint paint = new Paint();
-		paint.setColor(0xff74AC23);
-		canvas.drawPath(path, paint);
 
+		if(null != path)
+		{
+			Matrix matrix = canvas.getMatrix();
+			
+			matrix.postTranslate(0, mHeight/2);
+
+			matrix.preScale(1, 1);
+			canvas.setMatrix(matrix);
+			canvas.drawPath(path, mPaint);
+			
+			matrix.preScale(1, -1);
+			canvas.setMatrix(matrix);
+			canvas.drawPath(path, mPaint);
+
+		}
+				
 	}
 	
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{
-		setMeasuredDimension(mEndFrame-mBeginFrame, 300);
+		setMeasuredDimension(mEndFrame-mBeginFrame, mHeight);
 	}
 
 	

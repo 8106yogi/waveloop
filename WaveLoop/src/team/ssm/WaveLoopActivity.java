@@ -97,8 +97,7 @@ public class WaveLoopActivity extends TabActivity {
         	  	.setContent(R.id.view3)
         );
     	
-    	
-    	// refreshListFromDB();
+    	refreshListFromDB();
     }
     
 
@@ -167,6 +166,33 @@ public class WaveLoopActivity extends TabActivity {
 		for(int i = 0; i < cur.getCount(); ++i )
 		{
 			cur.moveToPosition(i);
+			String strMediaDBIndex = cur.getString(cur.getColumnIndex(DbAdapter.KEY_MEDIA_DB_ID));
+			
+			Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
+
+	    	String selection = "( (_ID LIKE ?) )";
+	    	String[] selectionArgs = { strMediaDBIndex };
+	    	String sortOrder = Audio.Media.DEFAULT_SORT_ORDER;
+	    	
+	    	//Cursor cursorInt = mCr.query(uriInternal, null, selection, selectionArgs, sortOrder);
+	    	Cursor curMedia = getContentResolver().query(uriExternal, null, selection, selectionArgs, sortOrder);
+	    	if(curMedia.getCount() == 1)
+	    	{
+	    		curMedia.moveToPosition(0);
+		    	String artist = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ARTIST));
+				String album = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ALBUM));
+				String title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
+				
+				sound s = new sound(artist, album, title);
+				m_orders.add(s);
+	    		
+	    	}
+	    	else
+	    	{
+	    		// 오디오 파일을 삭제하면 이곳에 들어올 것임.
+	    		// 자동으로 삭제할지, 수동으로 삭제할지 생각해보자.
+	    	}
+	    	
 			//String strFilePath = cur.getString(cur.getColumnIndex(DbAdapter.KEY_FILEPATH));
 			//String strWavePath = cur.getString(cur.getColumnIndex(DbAdapter.KEY_WAVEPATH));
 			//m_orders.add(strFilePath);// 여기 뭔가 수정되어야 할듯!?
@@ -177,8 +203,8 @@ public class WaveLoopActivity extends TabActivity {
 			String title = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.TITLE));
 			
 			sound s1 = new sound(artist, album, title);
-			m_orders.add(s1)
-			*/;
+			m_orders.add(s1);
+			*/
 		}
 		dba.close();
 		
@@ -282,14 +308,14 @@ public class WaveLoopActivity extends TabActivity {
     			db = dbh.getWritableDatabase();
     			
     			// 선택된 음악파일 경로를 ArrayList에 담는다.
-    			ArrayList<String> paths = new ArrayList<String>();
+    			ArrayList<Integer> paths = new ArrayList<Integer>();
     			for(int i = 0; i < mSelect.length; ++i )
     			{
     				if( mSelect[i] )
     				{
     					mCursor.moveToPosition(i);	
-    		            String path = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.DATA));
-    					paths.add(path);
+    		            int id = mCursor.getInt(mCursor.getColumnIndex(Audio.AudioColumns._ID));
+    					paths.add(id);
     				}
     			}
     			
@@ -297,7 +323,8 @@ public class WaveLoopActivity extends TabActivity {
     			
     			// 로딩 다이얼로그 생성
     			importDialog = new ImportProgressDialog(WaveLoopActivity.this);
-    			importDialog.setAudioPaths(paths);
+    			importDialog.setAudioIDs(paths);
+    			importDialog.setContentResolver(getContentResolver());
     			importDialog.setFinishLoading( new ImportProgressDialog.FinishLoading() { 
     				private ImportProgressDialog.EFinishResult mResult;
     				public void finish( ImportProgressDialog.EFinishResult result ){// dialog가 dismiss 될 때 호출되는 함수.
