@@ -32,6 +32,9 @@ public class ImportProgressDialog extends ProgressDialog {
 	private ContentResolver mContentResolver;
 	private Context mContext;
 	
+	private Handler mHandler = new Handler();
+
+	
 	private FinishLoading mFinishLoading;
 
 	public enum EFinishResult
@@ -67,6 +70,7 @@ public class ImportProgressDialog extends ProgressDialog {
 		// 프로그레스 다이얼로그 초기설정
 		setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         setTitle("오디오 파일을 가져옵니다.");
+        setMessage("");
         setCancelable(true);
         setOnCancelListener(
             new DialogInterface.OnCancelListener() {
@@ -133,6 +137,18 @@ public class ImportProgressDialog extends ProgressDialog {
             	
             	for( final Integer id : mAudioIDs )// 선택된 오디오 파일을 돌아준다 
             	{
+            		mHandler.post( new Runnable()
+            		{
+            			public void run()
+            			{
+            				setMessage( getTitleFromMediaDB(id) );
+            			}
+            		});
+            		
+            		//post()
+            		//ImportProgressDialog.
+            		//runOnUiThread();
+            		//setMessage( getTitleFromMediaDB(id) );
             		try {
             			// DB를 탐색해서 이미 있는 파일이라면 경고 메세지를 띄워주자
             			
@@ -147,7 +163,12 @@ public class ImportProgressDialog extends ProgressDialog {
                         	break;
                         }
                         
+                        if(mLoadingKeepGoing == false) {
+                        	result = EFinishResult.eFR_SUSPEND;
+                        	break;
+                        }
                         
+                        setProgress( (int)(getMax()) );
                         
                         // 문장단위로 분할하는 작업을 해 주고
                         
@@ -215,7 +236,8 @@ public class ImportProgressDialog extends ProgressDialog {
 
 
 
-			private String getAbsolutePathFromMediaDB(final Integer id) {
+			
+			private String getStringFromMediaDB(final Integer id, final String columnName) {
     			// id 를 가지고 DB로부터 오디오파일 경로를 가져온다.
 				
 		    	Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
@@ -227,10 +249,21 @@ public class ImportProgressDialog extends ProgressDialog {
 		    	//Cursor cursorInt = mCr.query(uriInternal, null, selection, selectionArgs, sortOrder);
 		    	Cursor cursor = mContentResolver.query(uriExternal, null, selection, selectionArgs, sortOrder);
 		    	cursor.moveToPosition(0);
-		    	String path = cursor.getString(cursor.getColumnIndex(Audio.AudioColumns.DATA));
+		    	String strResult = cursor.getString(cursor.getColumnIndex(columnName));
 
-		    	return path;
+		    	return strResult;
+
 			}
+			
+			private String getAbsolutePathFromMediaDB(final Integer id) {
+    			// id 를 가지고 DB로부터 오디오파일 경로를 가져온다.
+		    	return getStringFromMediaDB(id, Audio.AudioColumns.DATA);
+			}
+			
+			private String getTitleFromMediaDB(final Integer id) {
+ 		    	return getStringFromMediaDB(id, Audio.AudioColumns.TITLE);
+			}
+
 
 
 
