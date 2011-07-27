@@ -101,7 +101,7 @@ public class WaveLoopActivity extends TabActivity {
     }
     
 
-    
+    // 어댑터뷰의 클릭리스너
     AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             /****************
@@ -111,7 +111,7 @@ public class WaveLoopActivity extends TabActivity {
         	//dba.open();
         	//int idx = 0;
         	Intent i = new Intent(WaveLoopActivity.this, player_main.class); 
-        	i.putExtra("오디오파일경로", id );
+        	i.putExtra("오디오파일경로", position );
         	//i.putExtra("오디오파일경로", path );
         	startActivity(i);
         
