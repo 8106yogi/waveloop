@@ -5,8 +5,10 @@ import java.util.*;
 
 import android.app.*;
 import android.content.*;
+import android.database.Cursor;
 import android.media.*;
 import android.os.*;
+import android.provider.MediaStore.Audio;
 import android.view.*;
 import android.widget.*;
 
@@ -18,19 +20,28 @@ public class player_main extends Activity {
     TextView mFileName;
     SeekBar mProgress;
     boolean wasPlaying;
-    String filepath;
+    String mFilepath;
+    String mWavePath;
     HorizontalScrollView mWaveformView;
     LinearLayout mWaveformLayout;
     
     
     public void onCreate(Bundle savedInstanceState) {
-         super.onCreate(savedInstanceState);
-         setContentView(R.layout.player_main);
-         Intent intent = getIntent();
-         if (intent != null)
-         {
-        	 filepath= intent.getStringExtra("오디오파일경로");
-         }
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.player_main);
+        Intent intent = getIntent();
+        if (intent != null)
+        {
+        	long lDataIndex = intent.getIntExtra("오디오파일경로", 0);
+        	DbAdapter dba = new DbAdapter(getBaseContext());
+        	dba.open();
+        	Cursor cursor = dba.fetchAllBooks();
+        	cursor.moveToPosition((int) lDataIndex);
+        	mFilepath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_FILEPATH));
+        	mWavePath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_WAVEPATH));
+        	dba.close();
+        	//filepath= intent.getStringExtra("오디오파일경로");
+        }
          
          
          mList = new ArrayList<String>();
@@ -114,8 +125,10 @@ public class player_main extends Activity {
          
          
          // 두개의 파일을 잘 저장한 다음
-         String strFileName = "test.wfd";
-         File wavefile = this.getFileStreamPath(strFileName);
+         File wavefile = new File(mWavePath);
+         //String strFileName = "5.wfd";
+         //File wavefile = this.getFileStreamPath(strFileName);
+         
          //File outputFile = mContext.getExternalFilesDir(null);
          //outputFile.
          // 폴더 생성해야 하는데!!!!
@@ -140,6 +153,12 @@ public class player_main extends Activity {
 		         			, 300 );
 		         	mWaveformLayout.addView( waveformView );
 	         	}
+	         	
+	         	dataInputStream.close();
+            	objectInputStream.close();
+            	
+            	fileInputStream.close();
+            	
 	         	
 				
 			} catch (StreamCorruptedException e) {
@@ -176,7 +195,7 @@ public class player_main extends Activity {
     boolean LoadMedia(int idx) {
          try {
              //DB인덱스를 통해 파일경로를 인자로 넣어야함));
-        	 mPlayer.setDataSource(filepath);
+        	 mPlayer.setDataSource(mFilepath);
          } catch (IllegalArgumentException e) {
              return false;
          } catch (IllegalStateException e) {
@@ -187,7 +206,7 @@ public class player_main extends Activity {
          if (Prepare() == false) {
              return false;
          }
-         mFileName.setText("파일 : " + filepath);
+         mFileName.setText("파일 : " + mFilepath);
          mProgress.setMax(mPlayer.getDuration());
          return true;
    }

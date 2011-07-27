@@ -155,7 +155,8 @@ public class ImportProgressDialog extends ProgressDialog {
                         String strFileName = id.toString() + ".wfd";
                         File outputFile = mContext.getFileStreamPath(strFileName);
                         //File outputFile = mContext.getExternalFilesDir(null);
-                        
+                        if( outputFile.exists() == false )
+                        	outputFile.createNewFile();
                         if( outputFile.canWrite() )
                         {
                         	final int[] frameGains = mSoundFile.getFrameGains();
@@ -166,9 +167,14 @@ public class ImportProgressDialog extends ProgressDialog {
                         	int frameLength = frameGains.length;
                         	dataOutputStream.writeInt(frameLength);
                         	
+                        	
                         	ObjectOutputStream objectOutputStream = new ObjectOutputStream (fileOutputStream);
                         	objectOutputStream.writeObject(frameGains);
                         	
+                        	dataOutputStream.close();
+                        	objectOutputStream.close();
+                        	
+                        	fileOutputStream.close();
                         	// 파일 작성 완료.
                         	
                         }
