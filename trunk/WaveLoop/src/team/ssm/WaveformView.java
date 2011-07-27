@@ -35,7 +35,7 @@ public class WaveformView extends View {
 		mEndFrame = endFrame;
 		mHeight = height;
 		
-		
+		/*
 		int numFrames = mData.length;
         int[] frameGains = mData;
         double[] smoothedGains = new double[numFrames];
@@ -119,7 +119,7 @@ public class WaveformView extends View {
         
         
 
-        
+        */
 		path = new Path();
         path.moveTo( 0, 0 );
         for(int i = 0; i + mBeginFrame < mEndFrame; ++i )
