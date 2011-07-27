@@ -108,11 +108,10 @@ public class WaveLoopActivity extends TabActivity {
 			리스트뷰에 나타나는 각각의 오디오 파일을 클릭했을 때 일어나는 동작을 정의하는 부분.
             "파일을 클릭하면 재생 화면으로 넘어간다." 
         	*****************/
-        	dba.open();
-        	
-        	int idx = 0;
+        	//dba.open();
+        	//int idx = 0;
         	Intent i = new Intent(WaveLoopActivity.this, player_main.class); 
-        	i.putExtra("오디오파일경로", idx );
+        	i.putExtra("오디오파일경로", id );
         	//i.putExtra("오디오파일경로", path );
         	startActivity(i);
         
