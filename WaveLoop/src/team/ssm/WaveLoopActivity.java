@@ -414,5 +414,34 @@ public class WaveLoopActivity extends TabActivity {
         }
 
     }
+    
+    
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuItem item=menu.add(0,1,0,"도움말");
+        item.setIcon(R.drawable.icon);
+        menu.add(0,2,0,"추가").setIcon(R.drawable.icon);
+        menu.add(0,3,0,"삭제").setIcon(R.drawable.icon);
+        
+        return true;
+    }
+    
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case 1:
+              Toast.makeText(this,"도움말입니다^^;",Toast.LENGTH_SHORT).show();
+              return true;
+        case 2:
+              Toast.makeText(this,"추가합니다^^;",Toast.LENGTH_SHORT).show();
+              return true;
+        case 3:
+              Toast.makeText(this,"삭제합니다^^;",Toast.LENGTH_SHORT).show();
+              return true;
+        }
+        return false;
+ }
+    
+    
+    
 
 }
