@@ -102,24 +102,23 @@ public class player_main extends Activity {
          mPlayBtn = (Button)findViewById(R.id.play);
          mPlayBtn.setOnClickListener(mClickPlay);
          findViewById(R.id.stop).setOnClickListener(mClickStop);
-         findViewById(R.id.prev).setOnClickListener(mClickPrevNext);
-         findViewById(R.id.next).setOnClickListener(mClickPrevNext);
+         //findViewById(R.id.prev).setOnClickListener(mClickPrevNext);
+         //findViewById(R.id.next).setOnClickListener(mClickPrevNext);
          
          
          // 완료 리스너, 시크바 변경 리스너 등록
-         mPlayer.setOnCompletionListener(mOnComplete);
+         //mPlayer.setOnCompletionListener(mOnComplete);
          mPlayer.setOnSeekCompleteListener(mOnSeekComplete);
          mProgress = (SeekBar)findViewById(R.id.progress);
          mProgress.setOnSeekBarChangeListener(mOnSeek);
          mProgressHandler.sendEmptyMessageDelayed(0,200);
         
          // 첫 곡 읽기 및 준비
-         /*
-         if (LoadMedia(mIdx) == false) {
+         if (LoadMedia() == false) {
              Toast.makeText(this, "파일을 읽을 수 없습니다.", Toast.LENGTH_LONG).show();
              finish();
          }
-         */
+        
          
          // 임시로 특정 경로에 있는 파일을 읽어옴.
          
@@ -192,7 +191,7 @@ public class player_main extends Activity {
    }
 
    // 항상 준비 상태여야 한다.
-    boolean LoadMedia(int idx) {
+    boolean LoadMedia() {
          try {
              //DB인덱스를 통해 파일경로를 인자로 넣어야함
         	 mPlayer.setDataSource(mFilepath);
@@ -245,6 +244,7 @@ public class player_main extends Activity {
          }
    };
   
+   /*
    Button.OnClickListener mClickPrevNext = new View.OnClickListener() {
          public void onClick(View v) {
              boolean wasPlaying = mPlayer.isPlaying();
@@ -265,7 +265,10 @@ public class player_main extends Activity {
              }
          }
    };
+   */
 
+   
+   /*
    // 재생 완료되면 다음곡으로
    MediaPlayer.OnCompletionListener mOnComplete = new MediaPlayer.OnCompletionListener() {
          public void onCompletion(MediaPlayer arg0) {
@@ -275,6 +278,7 @@ public class player_main extends Activity {
              mPlayer.start();
          }
    };
+   */
 
    // 에러 발생시 메시지 출력
    MediaPlayer.OnErrorListener mOnError = new MediaPlayer.OnErrorListener() {
