@@ -194,7 +194,7 @@ public class player_main extends Activity {
    // 항상 준비 상태여야 한다.
     boolean LoadMedia(int idx) {
          try {
-             //DB인덱스를 통해 파일경로를 인자로 넣어야함));
+             //DB인덱스를 통해 파일경로를 인자로 넣어야함
         	 mPlayer.setDataSource(mFilepath);
          } catch (IllegalArgumentException e) {
              return false;

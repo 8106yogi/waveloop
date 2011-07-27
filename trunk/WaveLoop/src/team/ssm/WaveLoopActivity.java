@@ -51,6 +51,25 @@ public class WaveLoopActivity extends TabActivity {
     	TabHost mTabHost = getTabHost();
     	
     	
+    	  
+    	mTabHost.addTab(mTabHost.newTabSpec("tab_test1")
+    	  	.setIndicator("재생목록", getResources().getDrawable(R.drawable.icon))    	  	
+    	    .setContent(R.id.view1)
+    	    
+    	);
+    	
+    	mTabHost.addTab(mTabHost.newTabSpec("tab_test2")
+    	   	.setIndicator("문장노트", getResources().getDrawable(R.drawable.icon))
+    	    .setContent(R.id.view2)
+    	);
+    	
+    	
+    	mTabHost.addTab(mTabHost.newTabSpec("tab_test3")
+        	   	.setIndicator("옵션", getResources().getDrawable(R.drawable.icon))
+        	  	.setContent(R.id.view3)
+        );
+    	
+    	
     	dba = new DbAdapter(this); //어댑터 객체 생성.
     	dbh = dba.new DatabaseHelper(this);	//오픈헬퍼 객체 생성.
     	//Items = new ArrayList<String>();
@@ -80,23 +99,7 @@ public class WaveLoopActivity extends TabActivity {
         
         
         
-        
-    	mTabHost.addTab(mTabHost.newTabSpec("tab_test1")
-    	  	.setIndicator("재생목록")    	  	
-    	    .setContent(R.id.view1)
-    	);
-    	
-    	mTabHost.addTab(mTabHost.newTabSpec("tab_test2")
-    	   	.setIndicator("문장노트")
-    	    .setContent(R.id.view2)
-    	);
-    	
-    	
-    	mTabHost.addTab(mTabHost.newTabSpec("tab_test3")
-        	   	.setIndicator("옵션")
-        	  	.setContent(R.id.view3)
-        );
-    	
+      
     	refreshListFromDB();
     }
     
@@ -152,13 +155,15 @@ public class WaveLoopActivity extends TabActivity {
 		m_orders.clear();
 			
 		
+		
+		/*********************  디버깅용. db 테이블(data) 삭제 코드 ************************/
 		/*
 		db = dbh.getWritableDatabase();
 		db.execSQL("DROP TABLE IF EXISTS data");
 		db.execSQL("create table data (_id integer primary key autoincrement,"+
 		"filepath text not null, wavepath text not null, media_db_id text not null)");
-		//dbh.onDrop(db);
 		*/
+		
 		dba.open();
 		
 		Cursor cur = dba.fetchAllBooks();
