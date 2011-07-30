@@ -128,7 +128,7 @@ public class WaveformView extends View {
         	path.lineTo( i*2, data[i+mBeginFrame] );
         	
         }
-        path.lineTo( mEndFrame, 0 );
+        path.lineTo( mEndFrame*2, 0 );
         path.lineTo( 0, 0 );
         path.close();
 
@@ -144,11 +144,13 @@ public class WaveformView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
+		canvas.drawLine(0, 0, 0, 300, mPaint);
+		canvas.drawLine(0, 300, (mEndFrame-mBeginFrame)*2, 300, mPaint);
 		if(null != path)
 		{
 			Matrix matrix = canvas.getMatrix();
 			
-			matrix.postTranslate(0, mHeight/2);
+			matrix.postTranslate(1, mHeight/2);
 
 			matrix.preScale(1, 1);
 			canvas.setMatrix(matrix);
@@ -164,7 +166,7 @@ public class WaveformView extends View {
 	
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{
-		setMeasuredDimension(mEndFrame-mBeginFrame, mHeight);
+		setMeasuredDimension((mEndFrame-mBeginFrame)*2, mHeight);
 	}
 
 	

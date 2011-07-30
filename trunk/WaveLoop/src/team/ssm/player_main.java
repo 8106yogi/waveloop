@@ -90,6 +90,8 @@ public class player_main extends Activity {
          // 웨이브폼 스크롤뷰 추가
          mWaveformView = (HorizontalScrollView)findViewById(R.id.WaveformScrollView);
          mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
+         
+         
 
          /* 
          ImageView iv = new ImageView(this);
@@ -112,7 +114,7 @@ public class player_main extends Activity {
          mProgress = (SeekBar)findViewById(R.id.progress);
          mProgress.setOnSeekBarChangeListener(mOnSeek);
          mProgressHandler.sendEmptyMessageDelayed(0,200);
-        
+         mScrollHandler.sendEmptyMessageDelayed(0,16);
          // 첫 곡 읽기 및 준비
          if (LoadMedia() == false) {
              Toast.makeText(this, "파일을 읽을 수 없습니다.", Toast.LENGTH_LONG).show();
@@ -145,13 +147,16 @@ public class player_main extends Activity {
 	         	ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 	         	frameGains = (int[]) objectInputStream.readObject();
 	         	
-	         	for( int i = 0; i < frameLength; i+=500 )
+	         	int count = 0;
+	         	for( int i = 0; i < frameLength; i+=100 )
 	         	{
 	         		WaveformView waveformView = new WaveformView(this);
-		         	waveformView.setData(frameGains, i, ((i+500)<frameLength)?(i+500):frameLength
+		         	waveformView.setData(frameGains, i, ((i+100)<frameLength)?(i+100):frameLength
 		         			, 300 );
 		         	mWaveformLayout.addView( waveformView );
+		         	count++;
 	         	}
+	         	
 	         	
 	         	dataInputStream.close();
             	objectInputStream.close();
@@ -306,6 +311,20 @@ public class player_main extends Activity {
                   mProgress.setProgress(mPlayer.getCurrentPosition());
              }
              mProgressHandler.sendEmptyMessageDelayed(0,200);
+         }
+    };
+    
+ // 0.016초에 한번꼴로 재생 위치 갱신
+    Handler mScrollHandler = new Handler() {
+         public void handleMessage(Message msg) {
+             if (mPlayer == null) return;
+             if (mPlayer.isPlaying()) {
+            	 //int duration = mPlayer.getDuration();
+            	 int width = mWaveformLayout.getMeasuredWidth();
+                  int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()) * ((double)mPlayer.getCurrentPosition() / (double)mPlayer.getDuration()));
+                  mWaveformView.scrollTo(pos, 0);
+             }
+             mScrollHandler.sendEmptyMessageDelayed(0,16);
          }
     };
 

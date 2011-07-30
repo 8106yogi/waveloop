@@ -42,10 +42,15 @@ public class WaveLoopActivity extends TabActivity {
     private boolean mLoadingKeepGoing;
     private ProgressDialog mProgressDialog;
     */
+    static {
+    	System.loadLibrary("audio-tools");
+    }
     
     public void onCreate(Bundle savedInstanceState) {
     	
     	super.onCreate(savedInstanceState);
+    	
+    	
     	
     	setContentView(R.layout.main);
     	TabHost mTabHost = getTabHost();

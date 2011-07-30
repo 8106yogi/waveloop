@@ -191,7 +191,7 @@ public class CheapWAV extends CheapSoundFile {
                     stream.read(oneFrame, 0, oneFrameBytes);
 
                     int maxGain = 0;
-                    for (int j = 1; j < oneFrameBytes; j += 4 * mChannels) {
+                    for (int j = 1; j < oneFrameBytes; j += 4 ) {
                         int val = java.lang.Math.abs(oneFrame[j]);
                         if (val > maxGain) {
                             maxGain = val;

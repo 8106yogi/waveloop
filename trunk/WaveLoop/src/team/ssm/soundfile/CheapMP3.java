@@ -16,9 +16,16 @@
 
 package team.ssm.soundfile;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+//import javazoom.jlme.decoder.*;
 
 /**
  * CheapMP3 represents an MP3 file by doing a "cheap" scan of the file,
@@ -123,6 +130,149 @@ public class CheapMP3 extends CheapSoundFile {
             throws java.io.FileNotFoundException,
             java.io.IOException {
         super.ReadFile(inputFile);
+        
+        
+        
+        
+        
+        ArrayList<Integer> array = new ArrayList<Integer>();
+        
+        NativeMP3Decoder decoder = new NativeMP3Decoder( inputFile.getAbsolutePath() ); 
+        while( true )
+        {
+        	float[] samples = new float[882];//44100hz 가정하에.44100/50으로 초당 50개 
+        	int size = decoder.readSamples( samples );
+        	if(size <= 0)
+        		break;
+        	
+        	float sum = 0;
+        	for(int i = 0; i < size; ++i )
+        	{
+        		sum += java.lang.Math.abs(samples[i]);
+        	}
+        	int result = (int)((sum / size) * 500.f);
+        	array.add(result);
+        	
+        	float fProgress = decoder.getProgress();
+        	
+        	if (mProgressListener != null) {
+                boolean keepGoing = mProgressListener.reportProgress(fProgress);
+                if (!keepGoing) {
+                    break;
+                }
+            }
+        	
+        }
+            
+        mFrameGains = new int[array.size()];
+        for(int i = 0; i < array.size(); ++i )
+        {
+        	mFrameGains[i] = array.get(i);
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        /*
+        int startMs = 0;
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream(1024);
+        float totalMs = 0;
+        boolean seeking = true;
+       
+        File file = inputFile;//new File(path);
+        
+        //File file = new File(path);
+        InputStream inputStream = new BufferedInputStream(new FileInputStream(file), 8 * 1024 * 1024);
+        try {
+          Bitstream bitstream = new Bitstream(inputStream);
+          Decoder decoder = new Decoder();
+       
+          int nGainMax = 0;
+          int nCount = 0;
+          boolean done = false;
+          while (! done) {
+            Header frameHeader = bitstream.readFrame();
+            if (frameHeader == null) {
+              done = true;
+            } else {
+              totalMs += frameHeader.ms_per_frame();
+       
+              if (totalMs >= startMs) {
+                seeking = false;
+              }
+       
+              if (! seeking) {
+                SampleBuffer output = (SampleBuffer) decoder.decodeFrame(frameHeader, bitstream);
+       
+                //if (output.getSampleFrequency() != 44100
+                //    || output.getChannelCount() != 2) {
+                //  throw new com.mindtherobot.libs.mpg.DecoderException("mono or non-44100 MP3 not supported");
+                //}
+       
+                int gainPerFrame = output.getSampleFrequency() /50;
+                short[] pcm = output.getBuffer();
+                
+                for (short s : pcm) {
+                	//if(nCount%4 == 0)
+                	{
+                		int val = (int) (java.lang.Math.abs(s)/200.f); 
+                        if(nGainMax < val)
+                    	    nGainMax = val;
+                	}
+                	++nCount;
+                    if(nCount > gainPerFrame)
+                    {
+                    	list.add(nGainMax);
+                    	nGainMax = 0;
+                    	nCount = 0;
+                    	
+                    }
+                }
+               //for (short s : pcm) {
+               //   outStream.write(s & 0xff);
+               //   outStream.write((s >> 8 ) & 0xff);
+               // }
+       //       }
+       //
+       //       if (totalMs >= (startMs + maxMs)) {
+       //         done = true;
+       //       }
+              
+            }
+            bitstream.closeFrame();
+          }
+          
+        //list;
+          mNumFrames = list.size();
+          mFrameGains = new int[mNumFrames];
+          for( int i = 0; i< mNumFrames; ++i )
+          {
+        	  mFrameGains[i] = list.get(i);
+          }
+       
+          //return outStream.toByteArray();
+        } catch (BitstreamException e) {
+          //throw new IOException("Bitstream error: " + e);
+        } catch (DecoderException e) {
+          //Log.w(TAG, "Decoder error", e);
+          //throw new com.mindtherobot.libs.mpg.DecoderException(e);
+        } finally {
+          //IOUtils.safeClose(inputStream);
+        }
+        
+        
+         */
+        
+        
+        
+        /*
         mNumFrames = 0;
         mMaxFrames = 64;  // This will grow as needed
         mFrameOffsets = new int[mMaxFrames];
@@ -282,6 +432,9 @@ public class CheapMP3 extends CheapSoundFile {
             mAvgBitRate = mBitrateSum / mNumFrames;
         else
             mAvgBitRate = 0;
+            
+            
+            */
     }
 
     public void WriteFile(File outputFile, int startFrame, int numFrames)
