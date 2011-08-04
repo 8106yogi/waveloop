@@ -14,7 +14,9 @@ import android.view.*;
 import android.widget.*;
  
 public class WaveLoopActivity extends TabActivity {
-    /** Called when the activity is first created. */
+    
+
+	/** Called when the activity is first created. */
     
     Dialog dialog;
     AlertDialog.Builder builder;
@@ -24,7 +26,7 @@ public class WaveLoopActivity extends TabActivity {
     Cursor mCursor;
     ListView list;
     //ArrayList<String> items;
-    ArrayList<sound> m_orders;
+    static ArrayList<sound> m_orders;
     //ArrayAdapter<String> Adapter;
     ArrayAdapter<sound> m_adapter;
     String abc;
@@ -35,6 +37,7 @@ public class WaveLoopActivity extends TabActivity {
     ImportProgressDialog importDialog;
     
     public static final String WAVEPATH = "/data/data/com.androidhuman.app/files/";   
+    
     /*
     // 로딩 progress 관련
     private long mLoadingStartTime;
@@ -58,19 +61,19 @@ public class WaveLoopActivity extends TabActivity {
     	
     	  
     	mTabHost.addTab(mTabHost.newTabSpec("tab_test1")
-    	  	.setIndicator("재생목록", getResources().getDrawable(R.drawable.icon))    	  	
+    	  	.setIndicator("재생목록", getResources().getDrawable(R.drawable.ic_tab_playlist))    	  	
     	    .setContent(R.id.view1)
     	    
     	);
     	
     	mTabHost.addTab(mTabHost.newTabSpec("tab_test2")
-    	   	.setIndicator("문장노트", getResources().getDrawable(R.drawable.icon))
+    	   	.setIndicator("문장노트", getResources().getDrawable(R.drawable.ic_tab_sentencenote))
     	    .setContent(R.id.view2)
     	);
     	
     	
     	mTabHost.addTab(mTabHost.newTabSpec("tab_test3")
-        	   	.setIndicator("옵션", getResources().getDrawable(R.drawable.icon))
+        	   	.setIndicator("옵션", getResources().getDrawable(R.drawable.ic_tab_option))
         	  	.setContent(R.id.view3)
         );
     	
@@ -91,12 +94,9 @@ public class WaveLoopActivity extends TabActivity {
         
         /***** 20100725_동진: Custom ArrayAdapter를 이용한 ListView*****/
         
-    	m_orders = new ArrayList<sound>();	//리스트뷰에 출력할 항목(sound 객체)들을 저장하는 ArraylList 생성.
+    	m_orders = new ArrayList<sound>();	//m_orders: WaveLoopActivity의 리스트뷰에 출력할 항목들을 저장하는 ArraylList.
         list = (ListView)findViewById(R.id.list);
-        //Person p1 = new Person("안드로이드", "011-123-4567");
-        //Person p2 = new Person("구글", "02-123-4567");
-        //m_orders.add(p1);
-        //m_orders.add(p2);
+      
         m_adapter = new SoundAdapter(this, R.layout.row, m_orders); // 어댑터를 생성.
         list.setAdapter(m_adapter);
         list.setChoiceMode(ListView.CHOICE_MODE_NONE);
@@ -108,6 +108,11 @@ public class WaveLoopActivity extends TabActivity {
     	refreshListFromDB();
     }
     
+    
+    public void onDestroy(Bundle savedInstanceState) {
+		super.onDestroy();
+	
+	}
 
     // 어댑터뷰의 클릭리스너
     AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
@@ -222,14 +227,7 @@ public class WaveLoopActivity extends TabActivity {
    
     public void mOnClick(View v) {
     	
-    	/*
-    	dba = new DbAdapter(this);
-    	dbh = dba.new DatabaseHelper(this);
-    	
-    	SQLiteOpenHelper dbHelper = new DatabaseHelper(this);
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		*/
-    	
+    	/*    	
     	ContentResolver mCr = getContentResolver();
     	
     	Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
@@ -261,9 +259,14 @@ public class WaveLoopActivity extends TabActivity {
 
             startManagingCursor(mCursor);
     	}
+    	*/
+    	//int idx = 0;
+    	Intent i = new Intent(WaveLoopActivity.this, addActivity.class); 
+    	//i.putExtra("오디오파일경로", position );
+    	//i.putExtra("오디오파일경로", path );
+    	startActivity(i);
     	
- 
-    	
+    	/*
     	// TODO Auto-generated method stub
     	new AlertDialog.Builder(this)
     	.setTitle("추가할 파일을 선택해주세요")
@@ -313,8 +316,8 @@ public class WaveLoopActivity extends TabActivity {
     			}
     			m_adapter.notifyDataSetChanged();
     			dba.close();
-    			*/
-    			db = dbh.getWritableDatabase();
+    			
+    			
     			
     			// 선택된 음악파일 경로를 ArrayList에 담는다.
     			ArrayList<Integer> paths = new ArrayList<Integer>();
@@ -356,7 +359,7 @@ public class WaveLoopActivity extends TabActivity {
     	})
     	.setNegativeButton("취소", null)
     	.show();
-    	
+    	*/
     
     }
     
@@ -394,7 +397,7 @@ public class WaveLoopActivity extends TabActivity {
                 }
                 return v;
         }
-}
+    }
     
 
     
@@ -429,9 +432,9 @@ public class WaveLoopActivity extends TabActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuItem item=menu.add(0,1,0,"도움말");
-        item.setIcon(R.drawable.icon);
-        menu.add(0,2,0,"추가").setIcon(R.drawable.icon);
-        menu.add(0,3,0,"삭제").setIcon(R.drawable.icon);
+        item.setIcon(R.drawable.ic_tab_example_selected);
+        menu.add(0,2,0,"추가").setIcon(R.drawable.ic_tab_example_selected);
+        menu.add(0,3,0,"전체삭제").setIcon(R.drawable.ic_tab_example_selected);
         
         return true;
     }
@@ -445,7 +448,8 @@ public class WaveLoopActivity extends TabActivity {
               Toast.makeText(this,"추가합니다^^;",Toast.LENGTH_SHORT).show();
               return true;
         case 3:
-              Toast.makeText(this,"삭제합니다^^;",Toast.LENGTH_SHORT).show();
+              Toast.makeText(this,"전체삭제합니다^^;",Toast.LENGTH_SHORT).show();
+              
               return true;
         }
         return false;

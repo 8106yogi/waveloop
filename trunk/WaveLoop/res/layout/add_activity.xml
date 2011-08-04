@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+    
+    
+	<ListView
+	android:id="@+id/list2"
+	android:layout_height="fill_parent"
+	android:layout_width="fill_parent"
+	android:layout_weight="1"
+	/>
+	
+	<LinearLayout 
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:background="#5b5b5b">
+
+		<Button android:id="@+id/add"
+		android:layout_height="wrap_content"
+		android:layout_width="0px"
+		android:layout_marginLeft="10dip"
+		android:layout_marginRight="10dip"
+		android:layout_marginTop="6dip"
+		android:layout_marginBottom="2dip"
+		android:layout_weight="1"
+		android:onClick="mOnClick2"
+		android:text="추가"
+		
+		/>
+		
+		<Button android:id="@+id/cancel"
+		android:layout_height="wrap_content"
+		android:layout_width="0px"
+		android:layout_marginLeft="10dip"
+		android:layout_marginRight="10dip"
+		android:layout_marginTop="6dip"
+		android:layout_marginBottom="2dip"
+		android:layout_weight="1"
+		android:onClick="mOnClick2"
+		android:text="취소"
+		/>
+
+	</LinearLayout>
+    
+</LinearLayout>
