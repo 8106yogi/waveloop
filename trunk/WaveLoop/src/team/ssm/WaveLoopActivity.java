@@ -27,7 +27,7 @@ public class WaveLoopActivity extends TabActivity {
     Cursor mCursor;
     ListView list;
     //ArrayList<String> items;
-    static ArrayList<sound> m_orders;
+    ArrayList<sound> m_orders;
     //ArrayAdapter<String> Adapter;
     ArrayAdapter<sound> m_adapter;
     String abc;

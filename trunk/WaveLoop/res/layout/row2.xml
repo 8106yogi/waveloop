@@ -65,7 +65,9 @@
       
       <CheckBox android:layout_width="wrap_content" 
       android:layout_height="wrap_content" 
-      android:id="@+id/chk">
+      android:id="@+id/chk"
+      android:focusable="false"
+      android:clickable="false">
       </CheckBox>
     </LinearLayout>
         
