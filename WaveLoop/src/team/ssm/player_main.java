@@ -36,6 +36,10 @@ public class player_main extends Activity {
     WaveLoopActivity wla;
     //ArrayList<sound> m_orders;
     
+    ProgressDialog mLoadingDialog;
+    
+    private Handler mLoadingHandler = new Handler();
+    
     
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,64 +129,97 @@ public class player_main extends Activity {
          }
         
          
-         // 임시로 특정 경로에 있는 파일을 읽어옴.
-         
-         
-         // 두개의 파일을 잘 저장한 다음
-         File wavefile = new File(mWavePath);
-         //String strFileName = "5.wfd";
-         //File wavefile = this.getFileStreamPath(strFileName);
-         
-         //File outputFile = mContext.getExternalFilesDir(null);
-         //outputFile.
-         // 폴더 생성해야 하는데!!!!
-         
-         
-         if( wavefile.canRead() )
-         {
-        	try {
-	         	FileInputStream fileInputStream = new FileInputStream(wavefile);
-	         	DataInputStream dataInputStream = new DataInputStream(fileInputStream);
+        new Thread(new Runnable()
+        {
+        	public void run()
+        	{
+        		
+        		 // 파형 정보와 문장정보 파일을 읽어들이는 과정을 쓰레드로 처리 필요.
+        		mLoadingHandler.post( new Runnable()
+        		{
+        			public void run()
+        			{
+        				mLoadingDialog = ProgressDialog.show( player_main.this, "", "Loading. Please wait...", true );
+        			}
+        		});
 	         	
-	         	int frameLength = dataInputStream.readInt();
-	         	int[] frameGains = new int[frameLength];
-	         	
-	         	ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-	         	frameGains = (int[]) objectInputStream.readObject();
-	         	
-	         	int count = 0;
-	         	for( int i = 0; i < frameLength; i+=100 )
-	         	{
-	         		WaveformView waveformView = new WaveformView(this);
-		         	waveformView.setData(frameGains, i, ((i+100)<frameLength)?(i+100):frameLength
-		         			, 300 );
-		         	mWaveformLayout.addView( waveformView );
-		         	count++;
-	         	}
-	         	
-	         	
-	         	dataInputStream.close();
-            	objectInputStream.close();
-            	
-            	fileInputStream.close();
-            	
-	         	
-				
-			} catch (StreamCorruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-         	
-         	
-         	// 파일 작성 완료.
-         	
-         }
+                 
+                 
+                 
+        		// 두개의 파일을 잘 저장한 다음
+                 File wavefile = new File(mWavePath);
+                 if( wavefile.canRead() )
+                 {
+                	try {
+        	         	FileInputStream fileInputStream = new FileInputStream(wavefile);
+        	         	DataInputStream dataInputStream = new DataInputStream(fileInputStream);
+        	         	
+        	         	int frameLength = dataInputStream.readInt();
+        	         	int[] frameGains = new int[frameLength];
+        	         	
+        	         	ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        	         	frameGains = (int[]) objectInputStream.readObject();
+        	         	
+        	         	int count = 0;
+        	         	for( int i = 0; i < frameLength; i+=100 )
+        	         	{
+        	         		final WaveformView waveformView = new WaveformView(player_main.this);
+        		         	waveformView.setData(frameGains, i, ((i+100)<frameLength)?(i+100):frameLength
+        		         			, 300 );
+        		         	
+        		         	
+        		         	mLoadingHandler.post( new Runnable()
+                    		{
+                    			public void run()
+                    			{
+                    				mWaveformLayout.addView( waveformView );
+                    			}
+                    		});
+        		         	
+        		         	
+        		         	
+        		         	count++;
+        	         	}
+        	         	
+        	         	
+        	         	dataInputStream.close();
+                    	objectInputStream.close();
+                    	
+                    	fileInputStream.close();
+                    	
+        	         	
+        				
+        			} catch (StreamCorruptedException e) {
+        				// TODO Auto-generated catch block
+        				e.printStackTrace();
+        			} catch (IOException e) {
+        				// TODO Auto-generated catch block
+        				e.printStackTrace();
+        			} catch (ClassNotFoundException e) {
+        				// TODO Auto-generated catch block
+        				e.printStackTrace();
+        			}
+                 	
+                 	
+                 	// 파일 작성 완료.
+        			
+        			mLoadingHandler.post( new Runnable()
+            		{
+            			public void run()
+            			{
+            				mLoadingDialog.dismiss();
+            				mLoadingDialog = null;
+            			}
+            		});
+        			
+                 	
+                 }
+                
+        		 
+        	 }
+         } ).start();
+          
+         //dialog.hide();
          
          
     }
@@ -196,7 +233,21 @@ public class player_main extends Activity {
          mPlayer.release();
          mPlayer = null;
        }
+       
+       if(mLoadingDialog != null){
+    	   mLoadingDialog.dismiss();
+    	   mLoadingDialog = null;
+       }
+    	   
    }
+    
+    public void onStop() {
+    	super.onStop();
+    	if(mLoadingDialog != null){
+     	   mLoadingDialog.dismiss();
+     	   mLoadingDialog = null;
+        }
+    }
 
    // 항상 준비 상태여야 한다.
     boolean LoadMedia() {
