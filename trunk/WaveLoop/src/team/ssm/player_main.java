@@ -165,7 +165,7 @@ public class player_main extends Activity {
         	         	{
         	         		final WaveformView waveformView = new WaveformView(player_main.this);
         		         	waveformView.setData(frameGains, i, ((i+100)<frameLength)?(i+100):frameLength
-        		         			, 300 );
+        		         			, 200 );
         		         	
         		         	
         		         	mLoadingHandler.post( new Runnable()
