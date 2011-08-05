@@ -3,10 +3,13 @@ package team.ssm;
 import java.io.*;
 import java.util.*;
 
+import team.ssm.WaveLoopActivity.*;
+
 import android.app.*;
 import android.content.*;
 import android.database.Cursor;
 import android.media.*;
+import android.net.*;
 import android.os.*;
 import android.provider.MediaStore.Audio;
 import android.view.*;
@@ -17,13 +20,21 @@ public class player_main extends Activity {
     int mIdx;
     MediaPlayer mPlayer;
     Button mPlayBtn;
-    TextView mFileName;
+    TextView mArtist;
+    TextView mTitle;
+    TextView mAlbum;
+    String artist;
+    String title;
+    String album;
     SeekBar mProgress;
     boolean wasPlaying;
     String mFilepath;
     String mWavePath;
     HorizontalScrollView mWaveformView;
     LinearLayout mWaveformLayout;
+    String strMediaDBIndex;
+    WaveLoopActivity wla;
+    //ArrayList<sound> m_orders;
     
     
     public void onCreate(Bundle savedInstanceState) {
@@ -39,54 +50,43 @@ public class player_main extends Activity {
         	cursor.moveToPosition((int) lDataIndex);
         	mFilepath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_FILEPATH));
         	mWavePath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_WAVEPATH));
+        	strMediaDBIndex = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_MEDIA_DB_ID));
+    		
+        	String selection = "( (_ID LIKE ?) )";
+	    	String[] selectionArgs = { strMediaDBIndex };
+	    	String sortOrder = Audio.Media.DEFAULT_SORT_ORDER;
+	    	
+	    	Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
+	    	
+	    	Cursor curMedia = getContentResolver().query(uriExternal, null, selection, selectionArgs, sortOrder);
+	    	if(curMedia.getCount() == 1)
+	    	{
+	    		curMedia.moveToPosition(0);
+		    	artist = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ARTIST));
+				album = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ALBUM));
+				title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
+				
+				wla = new WaveLoopActivity();
+				sound s = wla.new sound(artist, album, title);
+				WaveLoopActivity.m_orders.add(s);
+	    		
+	    	}
+        	
+        	
         	dba.close();
         	//filepath= intent.getStringExtra("오디오파일경로");
         }
          
-         
+        
+		
+		
          mList = new ArrayList<String>();
          mPlayer = new MediaPlayer();
-         //String sdPath; 
-         
-         /*
-         // SD 카드가 없을 시 에러 처리한다.
-         String ext = Environment.getExternalStorageState();
-         String sdPath;
-         if (ext.equals(Environment.MEDIA_MOUNTED) == false) {
-             Toast.makeText(this, "SD 카드가 반드시 필요합니다.", Toast.LENGTH_LONG).show();
-             finish();
-             return;
-         }
-         */
-
-         /*
-         // SD 카드 루트의 MP3 파일 목록을 구한다.
-         sdPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-         File sdRoot = new File(sdPath);
-        
-         FilenameFilter filter = new FilenameFilter() {
-             public boolean accept(File dir, String name) {
-                  return name.endsWith(".mp3");
-             }
-         };
-        */
-        
-         /** 오디오파일 지원포맷: MP3/AAC/MP4/WAV **/
+       
          
          //String[] mplist = sdRoot.list(filter);
          
-        /*
-         if (mplist.length == 0) {
-             Toast.makeText(this, "재생할 파일이 없습니다.", Toast.LENGTH_LONG).show();
-             finish();
-             return;
-         }
-         for(String s : mplist) {
-             mList.add(sdPath + "/" + s);
-         }
-         mIdx = 0;
-		*/
-         
+                 
          // 웨이브폼 스크롤뷰 추가
          mWaveformView = (HorizontalScrollView)findViewById(R.id.WaveformScrollView);
          mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
@@ -100,10 +100,12 @@ public class player_main extends Activity {
          */
          
          // 버튼들의 클릭 리스너 등록
-         mFileName = (TextView)findViewById(R.id.filename);
+         mArtist = (TextView)findViewById(R.id.artist);
+         mTitle = (TextView)findViewById(R.id.title);
+         mAlbum = (TextView)findViewById(R.id.album);
          mPlayBtn = (Button)findViewById(R.id.play);
          mPlayBtn.setOnClickListener(mClickPlay);
-         findViewById(R.id.stop).setOnClickListener(mClickStop);
+         //findViewById(R.id.stop).setOnClickListener(mClickStop);
          //findViewById(R.id.prev).setOnClickListener(mClickPrevNext);
          //findViewById(R.id.next).setOnClickListener(mClickPrevNext);
          
@@ -210,7 +212,10 @@ public class player_main extends Activity {
          if (Prepare() == false) {
              return false;
          }
-         mFileName.setText("파일 : " + mFilepath);
+         //mArtist.setText(mFilepath);
+         mArtist.setText(artist);
+         mTitle.setText(title);
+         mAlbum.setText(album);
          mProgress.setMax(mPlayer.getDuration());
          return true;
    }

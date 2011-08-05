@@ -4,68 +4,206 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:weightSum="1">
-<TextView
-	android:id="@+id/filename"  
-	android:layout_width="wrap_content" 
-	android:layout_height="wrap_content" 
-	android:textSize="8pt"
-	android:text="파일 : "
-	android:layout_marginTop="10px"
-	android:layout_marginBottom="10px"
-	/>
-<HorizontalScrollView 
+	<LinearLayout 
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:orientation="vertical"
+	>
+		<TextView
+		android:id="@+id/artist"  
+		android:textColor="#ff99ff"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content" 
+		android:layout_gravity="center"
+		android:textSize="12sp"
+		/>
+		<TextView
+		android:id="@+id/title"  
+		android:textColor="#ffffff"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:layout_gravity="center" 
+		android:textSize="12sp"
+		/>
+		<TextView
+		android:id="@+id/album"
+		android:textColor="#ffff99"  
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:layout_gravity="center" 
+		android:textSize="12sp"
+		/>
+	</LinearLayout>
+	<HorizontalScrollView
+	android:layout_width="match_parent" 
 	android:layout_height="wrap_content" 
 	android:id="@+id/WaveformScrollView" 
-	android:layout_width="match_parent" 
 	android:layout_weight="0.52">
-    <LinearLayout 
-    	android:id="@+id/WaveformScrollViewLayout" 
-    	android:layout_width="match_parent" 
-    	android:layout_height="match_parent" 
-    	android:orientation="horizontal">
-    
-    </LinearLayout>
-</HorizontalScrollView>
-<LinearLayout
-	android:orientation="horizontal"
-	android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
-	>
-<Button
-	android:id="@+id/play"  
-	android:layout_width="fill_parent" 
-	android:layout_height="wrap_content"
-	android:layout_weight="1" 
-	android:text="Play"
-	/>
-<Button
-	android:id="@+id/stop"  
-	android:layout_width="fill_parent" 
-	android:layout_height="wrap_content" 
-	android:layout_weight="1" 
-	android:text="Stop"
-	/>
-<Button
-	android:id="@+id/prev"  
-	android:layout_width="fill_parent" 
-	android:layout_height="wrap_content" 
-	android:layout_weight="1" 
-	android:text="Prev"
-	/>
-<Button
-	android:id="@+id/next"  
-	android:layout_width="fill_parent" 
-	android:layout_height="wrap_content" 
-	android:layout_weight="1" 
-	android:text="Next"
-	/>
-</LinearLayout>
-<SeekBar 
+	   	<LinearLayout 
+	   	android:id="@+id/WaveformScrollViewLayout" 
+	   	android:layout_width="match_parent" 
+	   	android:layout_height="match_parent" 
+	   	android:orientation="horizontal">
+	    
+	   	</LinearLayout>
+	</HorizontalScrollView>
+
+	<SeekBar 
     android:id="@+id/progress"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:max="100"
     android:progress="0"
     android:padding="10px"
+    android:layout_marginTop="2dip"
     />
+
+	<HorizontalScrollView 
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content" 
+	android:id="@+id/buttonScrollView" 
+	>
+		
+		<LinearLayout
+		android:id="@+id/button_scroll"
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		>
+		
+			<LinearLayout
+			android:id="@+id/button_scroll_layout"
+			android:orientation="horizontal"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			>
+			
+			<Button
+			android:id="@+id/shuffle"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content" 
+			android:layout_weight="1" 
+			android:text="셔플"
+			/>
+			<Button
+			android:id="@+id/repeat"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content"
+			android:layout_weight="1" 
+			android:text="반복재생"
+			/>
+			<Button
+			android:id="@+id/bookmark"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content" 
+			android:layout_weight="1" 
+			android:text="북마크"
+			/>
+			<Button
+			android:id="@+id/shuffle2"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content" 
+			android:layout_weight="1" 
+			android:text="셔플2"
+			/>
+			<Button
+			android:id="@+id/repeat2"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content"
+			android:layout_weight="1" 
+			android:text="반복재생2"
+			/>
+			<Button
+			android:id="@+id/bookmark2"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content" 
+			android:layout_weight="1" 
+			android:text="북마크2"
+			/>
+		</LinearLayout>    
+
+		<LinearLayout
+		android:id="@+id/button_scroll_layout2"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		>
+			
+			<Button
+			android:id="@+id/prev"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content" 
+			android:layout_weight="1" 
+			android:text="Prev"
+			/>
+			<Button
+			android:id="@+id/play"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content"
+			android:layout_weight="1" 
+			android:text="Play"
+			/>
+			<Button
+			android:id="@+id/next"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content" 
+			android:layout_weight="1" 
+			android:text="Next"
+			/>
+			<Button
+			android:id="@+id/prev2"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content" 
+			android:layout_weight="1" 
+			android:text="Prev2"
+			/>
+			<Button
+			android:id="@+id/play2"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content"
+			android:layout_weight="1" 
+			android:text="Play2"
+			/>
+			<Button
+			android:id="@+id/next2"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content" 
+			android:layout_weight="1" 
+			android:text="Next2"
+			/>
+			</LinearLayout>
+			<LinearLayout
+			android:id="@+id/buttonScrollLayout3"
+			android:orientation="horizontal"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			>
+			<Button
+			android:id="@+id/prev_sentence"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content" 
+			android:layout_weight="1" 
+			android:text="이전문장"
+			/>
+			<Button
+			android:id="@+id/pres_sentence"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content"
+			android:layout_weight="1" 
+			android:text="현재문장"
+			/>
+			<Button
+			android:id="@+id/next_sentence"  
+			android:layout_width="0px" 
+			android:layout_height="wrap_content" 
+			android:layout_weight="1" 
+			android:text="다음문장"
+			/>
+		
+		</LinearLayout>
+	</LinearLayout>
+	</HorizontalScrollView>
+
+
+
 </LinearLayout>
