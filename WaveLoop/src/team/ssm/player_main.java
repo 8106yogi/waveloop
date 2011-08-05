@@ -66,10 +66,11 @@ public class player_main extends Activity {
 				album = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ALBUM));
 				title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
 				
+				/*
 				wla = new WaveLoopActivity();
 				sound s = wla.new sound(artist, album, title);
 				WaveLoopActivity.m_orders.add(s);
-	    		
+	    		*/
 	    	}
         	
         	
