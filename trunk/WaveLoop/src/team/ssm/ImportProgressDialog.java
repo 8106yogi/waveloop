@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import team.ssm.DbAdapter.*;
 import team.ssm.soundfile.CheapSoundFile;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -19,7 +18,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore.Audio;
-import android.widget.Toast;
 
 public class ImportProgressDialog extends ProgressDialog {
 
@@ -176,31 +174,16 @@ public class ImportProgressDialog extends ProgressDialog {
                         String strFileName = id.toString() + ".wfd";
                         File outputFile = mContext.getFileStreamPath(strFileName);
                         //File outputFile = mContext.getExternalFilesDir(null);
-                        if( outputFile.exists() == false )
-                        	outputFile.createNewFile();
-                        if( outputFile.canWrite() )
-                        {
-                        	final int[] frameGains = mSoundFile.getFrameGains();
-                        	
-                        	FileOutputStream fileOutputStream = new FileOutputStream(outputFile, false);
-                        	DataOutputStream dataOutputStream = new DataOutputStream(fileOutputStream);
-                        	
-                        	int frameLength = frameGains.length;
-                        	dataOutputStream.writeInt(frameLength);
-                        	
-                        	
-                        	ObjectOutputStream objectOutputStream = new ObjectOutputStream (fileOutputStream);
-                        	objectOutputStream.writeObject(frameGains);
-                        	
-                        	dataOutputStream.close();
-                        	objectOutputStream.close();
-                        	
-                        	fileOutputStream.close();
-                        	// 파일 작성 완료.
-                        	
-                        }
+                        
+                        saveWaveformFile(mSoundFile, outputFile);
                         
                         String wavePath = outputFile.getAbsolutePath();
+                        
+                        // 파형정보를 기반으로 문장을 나누는 작업을 하자.
+                        ArrayList<SentenceSegment> segs = 
+                        	SentenceSegment.makeSegments( mSoundFile.getFrameGains() );
+                        // 이거 파일로 저장해야할듯.
+                        
                         
                         
                         // DB에 입력하자
@@ -233,6 +216,36 @@ public class ImportProgressDialog extends ProgressDialog {
             	finishLoading( result );
                 
             }
+
+
+
+			private void saveWaveformFile(CheapSoundFile mSoundFile,
+					File outputFile) throws IOException, FileNotFoundException {
+				
+				if( outputFile.exists() == false )
+					outputFile.createNewFile();
+				if( outputFile.canWrite() )
+				{
+					final int[] frameGains = mSoundFile.getFrameGains();
+					
+					FileOutputStream fileOutputStream = new FileOutputStream(outputFile, false);
+					DataOutputStream dataOutputStream = new DataOutputStream(fileOutputStream);
+					
+					int frameLength = frameGains.length;
+					dataOutputStream.writeInt(frameLength);
+					
+					
+					ObjectOutputStream objectOutputStream = new ObjectOutputStream (fileOutputStream);
+					objectOutputStream.writeObject(frameGains);
+					
+					dataOutputStream.close();
+					objectOutputStream.close();
+					
+					fileOutputStream.close();
+					// 파일 작성 완료.
+					
+				}
+			}
 
 
 
@@ -289,7 +302,6 @@ public class ImportProgressDialog extends ProgressDialog {
 		
 }
  
-
 
 
 
