@@ -438,9 +438,27 @@ public class WaveLoopActivity extends TabActivity {
               Toast.makeText(this,"추가합니다^^;",Toast.LENGTH_SHORT).show();
               return true;
         case 3:
-              Toast.makeText(this,"전체삭제합니다^^;",Toast.LENGTH_SHORT).show();
-              
-              return true;
+        	{
+	        
+	        	new AlertDialog.Builder(WaveLoopActivity.this)
+	        	.setTitle("모든 목록을 삭제하시겠습니까?")
+	        	.setIcon(android.R.drawable.ic_dialog_alert)
+	        	.setCancelable(false)
+	        	.setPositiveButton("삭제", new DialogInterface.OnClickListener(){
+	        		public void onClick(DialogInterface dialog, int which){
+	        			// 조낸 삭제 코드 작성.
+	        			// 모든 파일을 삭제하고
+	        			// DB를 초기화
+	        			
+	        			Toast.makeText(WaveLoopActivity.this,"모두 삭제되었습니다.",Toast.LENGTH_SHORT).show();
+	        		}
+	        	} )
+	        	.setNegativeButton("취소", null)
+	        	.show();
+	        	
+	        	
+	        }
+	        return true;
         }
         return false;
  }
