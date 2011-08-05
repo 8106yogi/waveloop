@@ -3,6 +3,7 @@ package team.ssm;
 import java.util.*;
 
 import team.ssm.DbAdapter.DatabaseHelper;
+import android.*;
 import android.app.*;
 import android.content.*;
 import android.database.*;
@@ -82,29 +83,18 @@ public class WaveLoopActivity extends TabActivity {
     	dbh = dba.new DatabaseHelper(this);	//오픈헬퍼 객체 생성.
     	//Items = new ArrayList<String>();
     	
-    	/*
-        Adapter = new ArrayAdapter<String>(this, android.R.layout.
-        		 simple_list_item_1, Items);
-        list = (ListView)findViewById(R.id.list);
-        list.setAdapter(Adapter);
-        list.setChoiceMode(ListView.CHOICE_MODE_NONE);
-        list.setOnItemClickListener(mItemClickListener);
-    	*/
-    	//db.execSQL("DROP TABLE IF EXISTS data");
-        
+    	
         /***** 20100725_동진: Custom ArrayAdapter를 이용한 ListView*****/
         
-    	m_orders = new ArrayList<sound>();	//m_orders: WaveLoopActivity의 리스트뷰에 출력할 항목들을 저장하는 ArraylList.
-        list = (ListView)findViewById(R.id.list);
+    	m_orders = new ArrayList<sound>();	// 리스트뷰에 출력할 내용의 원본data를 저장하는 arrayList.        
+    	list = (ListView)findViewById(R.id.list);		// 사용자가 추가한 오디오 파일을 보여주는 리스트뷰
       
-        m_adapter = new SoundAdapter(this, R.layout.row, m_orders); // 어댑터를 생성.
-        list.setAdapter(m_adapter);
+        m_adapter = new SoundAdapter(this, R.layout.row, m_orders); // 원본; m_orders의 내용을 리스트뷰; list에 연결해주는 어댑터.
+        list.setAdapter(m_adapter);	// 어댑터와 리스트뷰를 연결
         list.setChoiceMode(ListView.CHOICE_MODE_NONE);
-        list.setOnItemClickListener(mItemClickListener);
+        list.setOnItemClickListener(mItemClickListener);	//리스트뷰의 클릭리스너 설정.
         
         
-        
-      
     	refreshListFromDB();
     }
     
@@ -402,7 +392,7 @@ public class WaveLoopActivity extends TabActivity {
 
     
     // 리스트 뷰에 출력할 항목
-    class sound {	
+    public class sound {	
         
         private String Artist;
         private String Album;
