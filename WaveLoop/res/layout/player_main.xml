@@ -16,6 +16,7 @@
 		android:layout_height="wrap_content" 
 		android:layout_gravity="center"
 		android:textSize="12sp"
+		android:text="Artist"
 		/>
 		<TextView
 		android:id="@+id/title"  
@@ -24,6 +25,7 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center" 
 		android:textSize="12sp"
+		android:text="Title"
 		/>
 		<TextView
 		android:id="@+id/album"
@@ -32,13 +34,25 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center" 
 		android:textSize="12sp"
+		android:text="Album"
 		/>
 	</LinearLayout>
+	
+	<SeekBar 
+	android:layout_marginTop="2dip" 
+	android:layout_width="fill_parent" 
+	android:id="@+id/progress" 
+	android:max="100" 
+	android:progress="0" 
+	android:padding="10px" 
+	android:layout_height="wrap_content"
+	></SeekBar>
+	
 	<HorizontalScrollView
 	android:layout_width="match_parent" 
 	android:layout_height="wrap_content" 
 	android:id="@+id/WaveformScrollView" 
-	android:layout_weight="0.52">
+	android:layout_weight="1">
 	   	<LinearLayout 
 	   	android:id="@+id/WaveformScrollViewLayout" 
 	   	android:layout_width="match_parent" 
@@ -47,16 +61,6 @@
 	    
 	   	</LinearLayout>
 	</HorizontalScrollView>
-
-	<SeekBar 
-    android:id="@+id/progress"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:max="100"
-    android:progress="0"
-    android:padding="10px"
-    android:layout_marginTop="2dip"
-    />
 
 	<HorizontalScrollView 
 	android:layout_width="match_parent"
