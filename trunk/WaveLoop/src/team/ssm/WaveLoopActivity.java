@@ -362,26 +362,7 @@ public class WaveLoopActivity extends TabActivity {
     
     }
     
-    /*
-    private class CustomFinishLoading implements FinishLoading{
-    	
-           
-
-			private ImportProgressDialog.EFinishResult mResult;
-			public void finish( ImportProgressDialog.EFinishResult result ){// dialog가 dismiss 될 때 호출되는 함수.
-				mResult = result;
-				runOnUiThread( new Runnable(){
-					public void run()
-					{
-						showLoadingResultMessage(mResult);
-						refreshListFromDB();
-					}
-				});
-
-			
-			}
-    }
-    */
+   
     //	어댑터 클래스
     private class SoundAdapter extends ArrayAdapter<sound> {		
 

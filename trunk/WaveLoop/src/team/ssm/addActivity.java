@@ -4,6 +4,7 @@ import java.util.*;
 
 import team.ssm.DbAdapter.DatabaseHelper;
 import team.ssm.ImportProgressDialog.FinishLoading;
+import team.ssm.WaveLoopActivity.*;
 import android.app.*;
 import android.content.*;
 import android.database.*;
@@ -26,6 +27,8 @@ public class addActivity extends Activity {
 	    ArrayList<sound> m_orders2;
 	    
 	    ArrayAdapter<sound> m_adapter2;
+	    ArrayList<String> MediaDBIndex;
+	    ArrayList<String> repetMDBIdx;
 	    String abc;
 	    DbAdapter dba;
 	    DatabaseHelper dbh;
@@ -36,10 +39,11 @@ public class addActivity extends Activity {
 	    Button btn;
 	    CheckBox cb;
 	    
-	    private boolean isClick[] ; //체크박스의 체크유무를 저장하는 boolean 배열.
+	    private boolean isClick[] ; //체크박스의 체크유무를 저장하는 boolean 배열.(체크되면 true)
+	    private boolean isRepet[];	//파일의 중복유무를 저장하는 boolean 배열.(중복되면 true)
 	    ArrayList<String> mFiles;
 	    public static final String WAVEPATH = "/data/data/com.androidhuman.app/files/";   
-	    private FinishLoading mFinishLoading;
+	    //private FinishLoading mFinishLoading;
 	
 	    public void onCreate(Bundle savedInstanceState) {
 		
@@ -89,6 +93,7 @@ public class addActivity extends Activity {
     	int nCurCount = (mCursor == null)?0:mCursor.getCount();
     	if(nCurCount > 0){
     		isClick= new boolean[nCurCount];
+    		isRepet= new boolean[nCurCount];
     		
     		for (int i = 0; i < nCurCount; i++) {
 	    	
@@ -104,10 +109,44 @@ public class addActivity extends Activity {
 	    	startManagingCursor(mCursor);
     	}
     	
-    	
+    	compare();
 	}
 	    
+	    public void onDestroy(){
+	    	super.onDestroy();
+	    	finish();
+	    }
 	    
+		 public void compare(){ 	/**db의 내용을 가져와서 테이블의 DbAdpter.KEY_MEDIA_DB_ID와 
+			  							모든 오디오목록의 Audio.AudioColumns._ID와 비교하여 
+			  							중복되는 것이 있으면 리스트뷰에서 그 항목을 클릭 받지 못하게 함.**/  
+		  	dba.open();
+		  	MediaDBIndex = new ArrayList<String>();	//db에서 DbAdpter.KEY_MEDIA_DB_ID를 저장하는 ArrayList
+		  	repetMDBIdx = new ArrayList<String>(); //중복된 id를 저장하는 ArrayList.
+			Cursor cur = dba.fetchAllBooks();
+			for(int i = 0; i < cur.getCount(); ++i )
+			{
+				cur.moveToPosition(i);
+				MediaDBIndex.add(cur.getString(cur.getColumnIndex(DbAdapter.KEY_MEDIA_DB_ID)));
+				
+				//Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
+
+		    	//String selection = "( (_ID LIKE ?) )";
+		    	//String[] selectionArgs = { strMediaDBIndex };
+		    	//String sortOrder = Audio.Media.DEFAULT_SORT_ORDER;
+		    	
+		    	
+		    	//Cursor curMedia = getContentResolver().query(uriExternal, null, selection, selectionArgs, sortOrder);
+			}
+			for (int j = 0; j < mCursor.getCount(); j++){
+				mCursor.moveToPosition(j);	
+	            String id = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns._ID)); //모든 오디오목록의 Audio.AudioColumns._ID를 저장하는 string 변수.
+				if(MediaDBIndex.contains(id)){
+					repetMDBIdx.add(id);
+					isRepet[j]=true;
+				}
+			}
+	  }
 	    
 	
 	
@@ -171,6 +210,7 @@ public class addActivity extends Activity {
    						//refreshListFromDB();
    						Intent i = new Intent(addActivity.this, WaveLoopActivity.class);
    			           startActivity(i);
+   			           
    					}
    				});
 
@@ -178,7 +218,7 @@ public class addActivity extends Activity {
 			});
 			importDialog.show();
 			importDialog.beginThread();
-		   
+		   finish();
 		   //list2.clearChoices();
            //m_adapter2.notifyDataSetChanged();
            //Intent i = new Intent(addActivity.this, WaveLoopActivity.class);
@@ -230,6 +270,18 @@ public class addActivity extends Activity {
                 super(context, textViewResourceId, items);
                 this.items = items;
         }
+        /*
+        public boolean areAllItemsEnabled() {
+            return false;
+        }
+        */
+        public boolean isEnabled(int position) {
+        	if (isRepet[position])	//	position에 따른 조건을 주어 활성화/비활성화가 되게끔 코딩해야함. 
+        		return false;	// isRepet가 true이면, 즉 중복되었으면 비활성.
+        	else
+        		return true;	// 그렇지않으면, 즉 중복되지 않았으면 활성.
+        	
+        } 
         
         // 각 항목의 뷰 생성
         public View getView(final int position, View convertView, ViewGroup parent) {
@@ -240,6 +292,9 @@ public class addActivity extends Activity {
                 }
                 sound p = items.get(position);
                 //final int pos = position; 
+                
+               
+                
                 if (p != null) {
                         
                 	
@@ -262,16 +317,16 @@ public class addActivity extends Activity {
                         	
                             
                         }
-                        
+                     
                 }
-            
+                
                 return v;
     
         }
 
 		
     }
-    
+	
     
     // 리스트 뷰에 출력할 항목
     class sound {	
