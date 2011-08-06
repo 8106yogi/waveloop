@@ -75,7 +75,7 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 	public DbAdapter open() throws SQLException{
 		mDbHelper = new DatabaseHelper(mCtx);
 		mDb = mDbHelper.getWritableDatabase();
-		return this;
+		return this;	
 	}
 	
 	public void close(){
@@ -95,6 +95,10 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 		return mDb.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowID, null) > 0;
 	}
 	
+	
+	public void createTable() {
+		mDb.execSQL(DATABASE_CREATE);
+	}
 	public void dropTable(){		//모든 레코드 삭제
 		mDb.execSQL("DROP TABLE IF EXISTS data");
 	}

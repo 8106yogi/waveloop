@@ -1,5 +1,6 @@
 package team.ssm;
 
+import java.io.File;
 import java.util.*;
 
 import team.ssm.DbAdapter.DatabaseHelper;
@@ -159,14 +160,15 @@ public class WaveLoopActivity extends TabActivity {
 		
 		
 		/*********************  디버깅용. db 테이블(data) 삭제 코드 ************************/
-		/*
-		db = dbh.getWritableDatabase();
-		db.execSQL("DROP TABLE IF EXISTS data");
-		db.execSQL("create table data (_id integer primary key autoincrement,"+
-		"filepath text not null, wavepath text not null, media_db_id text not null)");
-		*/
+		
+		//db = dbh.getWritableDatabase();
+		//db.execSQL("DROP TABLE IF EXISTS data");
+		//db.execSQL("create table data (_id integer primary key autoincrement,"+
+		//"filepath text not null, wavepath text not null, media_db_id text not null)");
+		
 		
 		dba.open();
+		//dba.exe
 		
 		Cursor cur = dba.fetchAllBooks();
 		for(int i = 0; i < cur.getCount(); ++i )
@@ -449,9 +451,9 @@ public class WaveLoopActivity extends TabActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuItem item=menu.add(0,1,0,"도움말");
-        item.setIcon(R.drawable.ic_tab_example_selected);
-        menu.add(0,2,0,"추가").setIcon(R.drawable.ic_tab_example_selected);
-        menu.add(0,3,0,"전체삭제").setIcon(R.drawable.ic_tab_example_selected);
+        item.setIcon(android.R.drawable.ic_menu_help);
+        menu.add(0,2,0,"추가").setIcon(android.R.drawable.ic_menu_add);
+        menu.add(0,3,0,"전체삭제").setIcon(android.R.drawable.ic_menu_delete);
         
         return true;
     }
@@ -475,9 +477,23 @@ public class WaveLoopActivity extends TabActivity {
 	        		public void onClick(DialogInterface dialog, int which){
 	        			// 조낸 삭제 코드 작성.
 	        			// 모든 파일을 삭제하고
+	        			File[] fileList = getFilesDir().listFiles();
+	        			for ( int i = 0; i < fileList.length; ++i )
+	        			{
+	        	            if (fileList[i].isFile())
+	        	                fileList[i].delete();
+	        	        }
+	        			
 	        			// DB를 초기화
+	        			dba.open();
+	        			dba.dropTable();
+	        			dba.createTable();
+	        			dba.close();
+	        			
+	        			refreshListFromDB();
 	        			
 	        			Toast.makeText(WaveLoopActivity.this,"모두 삭제되었습니다.",Toast.LENGTH_SHORT).show();
+	        			
 	        		}
 	        	} )
 	        	.setNegativeButton("취소", null)
