@@ -160,6 +160,7 @@ public class player_main extends Activity {
         	         	ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
         	         	frameGains = (int[]) objectInputStream.readObject();
         	         	
+        	         	
         	         	int count = 0;
         	         	for( int i = 0; i < frameLength; i+=100 )
         	         	{
@@ -181,11 +182,17 @@ public class player_main extends Activity {
         		         	count++;
         	         	}
         	         	
+        	         
+    					SentenceSegmentList ssList = new SentenceSegmentList();
+    					ssList.readFromFile(fileInputStream);
         	         	
-        	         	dataInputStream.close();
-                    	objectInputStream.close();
-                    	
-                    	fileInputStream.close();
+    					
+    					
+    					
+    					
+    					
+    					
+        	         	fileInputStream.close();
                     	
         	         	
         				
@@ -240,14 +247,15 @@ public class player_main extends Activity {
        }
     	   
    }
-    
+    /*
     public void onStop() {
     	super.onStop();
     	if(mLoadingDialog != null){
      	   mLoadingDialog.dismiss();
      	   mLoadingDialog = null;
         }
-    }
+    }*/
+    
 
    // 항상 준비 상태여야 한다.
     boolean LoadMedia() {
