@@ -21,7 +21,7 @@ import android.provider.MediaStore.Audio;
 
 public class ImportProgressDialog extends ProgressDialog {
 
-	private long mLoadingStartTime;
+	//private long mLoadingStartTime;
 	private long mLoadingLastUpdateTime;
 	private boolean mLoadingKeepGoing;
 	//private ProgressDialog mProgressDialog;
@@ -97,7 +97,7 @@ public class ImportProgressDialog extends ProgressDialog {
 	
 	public void beginThread()
 	{
-		mLoadingStartTime = System.currentTimeMillis();
+		//mLoadingStartTime = System.currentTimeMillis();
         mLoadingLastUpdateTime = System.currentTimeMillis();
         mLoadingKeepGoing = true;
         
@@ -168,30 +168,41 @@ public class ImportProgressDialog extends ProgressDialog {
                         
                         setProgress( (int)(getMax()) );
                         
-                        // 문장단위로 분할하는 작업을 해 주고
+                        // 파형정보를 기반으로 문장을 나누는 작업을 하자.
+                        //ArrayList<SentenceSegment> segs = 
+                        //	SentenceSegment.makeSegments( mSoundFile.getFrameGains() );
+                        
+                        
+                        
                         
                         // 두개의 파일을 잘 저장한 다음
                         String strFileName = id.toString() + ".wfd";
                         File outputFile = mContext.getFileStreamPath(strFileName);
                         //File outputFile = mContext.getExternalFilesDir(null);
-                        
-                        saveWaveformFile(mSoundFile, outputFile);
-                        
-                        String wavePath = outputFile.getAbsolutePath();
-                        
-                        // 파형정보를 기반으로 문장을 나누는 작업을 하자.
-                        ArrayList<SentenceSegment> segs = 
-                        	SentenceSegment.makeSegments( mSoundFile.getFrameGains() );
-                        // 이거 파일로 저장해야할듯.
-                        
-                        
-                        
-                        // DB에 입력하자
-                        mDba.open();
-                        mDba.createBook(path, wavePath, id.toString());
-                        mDba.close();
-                        
-                        
+                        if( outputFile.exists() == false )
+        					outputFile.createNewFile();
+        				if( outputFile.canWrite() )
+        				{
+	                        FileOutputStream fileOutputStream = new FileOutputStream(outputFile, false);
+	                        
+	                        saveWaveformFile(mSoundFile.getFrameGains(), fileOutputStream);
+	                        
+	                        // 문장정보 저장
+	                        SentenceSegmentList ssList = new SentenceSegmentList();
+	                        ssList.create( mSoundFile.getFrameGains() );
+	                        ssList.writeToFile(fileOutputStream);
+	                        
+	                        
+	                        
+	                        
+	                        String wavePath = outputFile.getAbsolutePath();
+	                        
+	                        // DB에 입력하자
+	                        mDba.open();
+	                        mDba.createBook(path, wavePath, id.toString());
+	                        mDba.close();
+	                        
+        				}
                         
                         // 여기까지 에러처리 ㄷㄷ
                     } catch(final FileNotFoundException e) {
@@ -219,32 +230,23 @@ public class ImportProgressDialog extends ProgressDialog {
 
 
 
-			private void saveWaveformFile(CheapSoundFile mSoundFile,
-					File outputFile) throws IOException, FileNotFoundException {
+			
+
+
+
+			private void saveWaveformFile(final int[] frameGains,
+					FileOutputStream fileOutputStream ) throws IOException, FileNotFoundException {
 				
-				if( outputFile.exists() == false )
-					outputFile.createNewFile();
-				if( outputFile.canWrite() )
-				{
-					final int[] frameGains = mSoundFile.getFrameGains();
-					
-					FileOutputStream fileOutputStream = new FileOutputStream(outputFile, false);
-					DataOutputStream dataOutputStream = new DataOutputStream(fileOutputStream);
-					
-					int frameLength = frameGains.length;
-					dataOutputStream.writeInt(frameLength);
-					
-					
-					ObjectOutputStream objectOutputStream = new ObjectOutputStream (fileOutputStream);
-					objectOutputStream.writeObject(frameGains);
-					
-					dataOutputStream.close();
-					objectOutputStream.close();
-					
-					fileOutputStream.close();
-					// 파일 작성 완료.
-					
-				}
+				DataOutputStream dataOutputStream = new DataOutputStream(fileOutputStream);
+				
+				int frameLength = frameGains.length;
+				dataOutputStream.writeInt(frameLength);
+				
+				
+				ObjectOutputStream objectOutputStream = new ObjectOutputStream (fileOutputStream);
+				objectOutputStream.writeObject(frameGains);
+				
+				// 파일 작성 완료.
 			}
 
 
