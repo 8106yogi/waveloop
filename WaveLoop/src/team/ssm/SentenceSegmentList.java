@@ -11,6 +11,11 @@ public class SentenceSegmentList {
 
 	private SentenceSegment[] mSegmentList;
 	
+	public final SentenceSegment[] getSegments()
+	{
+		return mSegmentList;
+	}
+	
 	public void create( int[] waveformData )
 	{
 		ArrayList<SentenceSegment> segments = new ArrayList<SentenceSegment>();
@@ -25,7 +30,7 @@ public class SentenceSegmentList {
 			{
 				for(int j = i+1; j < nCount; ++j )
 				{
-					if( 2 <= waveformData[j] )
+					if( 0 < waveformData[j] )
 					{
 						nextIndex = j;
 						break;
@@ -48,7 +53,7 @@ public class SentenceSegmentList {
 			{
 				// 클래스를 만들어서 리스트에 넣어줌.
 				
-				SentenceSegment segment = new SentenceSegment(isSilence, i, nextIndex-i+1 );
+				SentenceSegment segment = new SentenceSegment(isSilence, i, nextIndex-i );
 				segments.add(segment);
 				
 				i = nextIndex;
