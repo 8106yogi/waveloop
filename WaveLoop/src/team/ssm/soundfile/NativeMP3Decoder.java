@@ -80,7 +80,6 @@ public class NativeMP3Decoder implements Decoder
         /**
          * {@inheritDoc}
          */
-        @Override
         public int readSamples(float[] samples) 
         {       
                 if( buffer == null || buffer.capacity() != samples.length )
@@ -112,7 +111,6 @@ public class NativeMP3Decoder implements Decoder
         /**
          * {@inheritDoc}
          */
-        @Override
         public int readSamples(short[] samples) 
         {       
                 if( shortBuffer == null || shortBuffer.capacity() != samples.length )
