@@ -13,6 +13,7 @@ import android.net.*;
 import android.os.*;
 import android.provider.MediaStore.Audio;
 import android.view.*;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 
 public class player_main extends Activity {
@@ -161,31 +162,42 @@ public class player_main extends Activity {
         	         	frameGains = (int[]) objectInputStream.readObject();
         	         	
         	         	
-        	         	int count = 0;
-        	         	for( int i = 0; i < frameLength; i+=100 )
-        	         	{
-        	         		final WaveformView waveformView = new WaveformView(player_main.this);
-        		         	waveformView.setData(frameGains, i, ((i+100)<frameLength)?(i+100):frameLength
-        		         			, 200 );
-        		         	
-        		         	
-        		         	mLoadingHandler.post( new Runnable()
-                    		{
-                    			public void run()
-                    			{
-                    				mWaveformLayout.addView( waveformView );
-                    			}
-                    		});
-        		         	
-        		         	
-        		         	
-        		         	count++;
-        	         	}
         	         	
         	         
     					SentenceSegmentList ssList = new SentenceSegmentList();
     					ssList.readFromFile(fileInputStream);
         	         	
+    					SentenceSegment[] segs = ssList.getSegments();
+    					for(int i = 0; i < segs.length; ++i )
+    					{
+    						SentenceSegment segment = segs[i];
+    						
+    						final LinearLayout ll = new LinearLayout(player_main.this);
+    						ll.setOrientation(LinearLayout.HORIZONTAL);
+    						ll.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) );
+    						
+    						int count = 0;
+            	         	for( int innerOffset = 0; innerOffset < segment.size; innerOffset+=1000 )
+            	         	{
+            	         		int width = ((innerOffset+1000)<segment.size)?1000:segment.size-innerOffset;
+            	         		WaveformView waveformView = new WaveformView(player_main.this);
+            		         	waveformView.setData(frameGains, segment.startOffset+innerOffset, 
+            		         			segment.startOffset+innerOffset + width, 200 );
+            		         	
+            		         	ll.addView( waveformView );
+            		         	count++;
+            	         	}
+            	         	
+            	         	mLoadingHandler.post( new Runnable()
+                    		{
+                    			public void run()
+                    			{
+                    				mWaveformLayout.addView(ll);
+                    			}
+                    		});
+        		         	
+            	         	
+    					}
     					
     					
     					
@@ -389,7 +401,7 @@ public class player_main extends Activity {
                   int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()) * ((double)mPlayer.getCurrentPosition() / (double)mPlayer.getDuration()));
                   mWaveformView.scrollTo(pos, 0);
              }
-             mScrollHandler.sendEmptyMessageDelayed(0,16);
+             mScrollHandler.sendEmptyMessageDelayed(0,32);
          }
     };
 
