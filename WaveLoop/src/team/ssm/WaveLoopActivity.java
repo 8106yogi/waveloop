@@ -3,6 +3,7 @@ package team.ssm;
 import java.util.*;
 
 import team.ssm.DbAdapter.DatabaseHelper;
+import team.ssm.ImportProgressDialog.*;
 import android.*;
 import android.app.*;
 import android.content.*;
@@ -122,6 +123,7 @@ public class WaveLoopActivity extends TabActivity {
         }
    };
    
+   
 	private void showLoadingResultMessage( ImportProgressDialog.EFinishResult result )
 	{
 		String message;
@@ -147,8 +149,8 @@ public class WaveLoopActivity extends TabActivity {
 			break;
 		}
 		Toast.makeText( getApplicationContext(), message, Toast.LENGTH_SHORT ).show();
-   }
-
+	}
+	
 	public void refreshListFromDB()	// 음악 리스트의 내용을 새로고침.
 	{
 		// DB의 내용을 가져다가 m_orders에 새로 입력.
@@ -251,9 +253,14 @@ public class WaveLoopActivity extends TabActivity {
     	}
     	*/
     	//int idx = 0;
-    	Intent i = new Intent(WaveLoopActivity.this, addActivity.class); 
+    	
     	//i.putExtra("오디오파일경로", position );
     	//i.putExtra("오디오파일경로", path );
+    	
+		
+    	
+    	
+    	Intent i = new Intent(WaveLoopActivity.this, addActivity.class); 
     	startActivity(i);
     	
     	/*
@@ -353,6 +360,26 @@ public class WaveLoopActivity extends TabActivity {
     
     }
     
+    /*
+    private class CustomFinishLoading implements FinishLoading{
+    	
+           
+
+			private ImportProgressDialog.EFinishResult mResult;
+			public void finish( ImportProgressDialog.EFinishResult result ){// dialog가 dismiss 될 때 호출되는 함수.
+				mResult = result;
+				runOnUiThread( new Runnable(){
+					public void run()
+					{
+						showLoadingResultMessage(mResult);
+						refreshListFromDB();
+					}
+				});
+
+			
+			}
+    }
+    */
     //	어댑터 클래스
     private class SoundAdapter extends ArrayAdapter<sound> {		
 
