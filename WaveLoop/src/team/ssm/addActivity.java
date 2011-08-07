@@ -41,17 +41,19 @@ public class addActivity extends Activity {
 	    
 	    private boolean isClick[] ; //체크박스의 체크유무를 저장하는 boolean 배열.(체크되면 true)
 	    private boolean isRepet[];	//파일의 중복유무를 저장하는 boolean 배열.(중복되면 true)
+	    private boolean isDismiss=false;
 	    ArrayList<String> mFiles;
 	    public static final String WAVEPATH = "/data/data/com.androidhuman.app/files/";   
 	    //private FinishLoading mFinishLoading;
-	
+	    //public static Activity add_activity;
+	    
 	    public void onCreate(Bundle savedInstanceState) {
 		
 	    super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_activity);
 		
 		//team.ssm.WaveLoopActivity.m_orders = m_orders;
-				
+		//add_activity = this;		
 		dba = new DbAdapter(this); //어댑터 객체 생성.
     	dbh = dba.new DatabaseHelper(this);	//오픈헬퍼 객체 생성.
 		
@@ -199,41 +201,53 @@ public class addActivity extends Activity {
 			importDialog = new ImportProgressDialog(addActivity.this);
 			importDialog.setAudioIDs(paths);
 			importDialog.setContentResolver(getContentResolver());
+			importDialog.show();
+			importDialog.beginThread();
 			importDialog.setFinishLoading( new ImportProgressDialog.FinishLoading() { 
 				private ImportProgressDialog.EFinishResult mResult;
 				public void finish( ImportProgressDialog.EFinishResult result ){// dialog가 dismiss 될 때 호출되는 함수.
 					mResult = result;
-   				runOnUiThread( new Runnable(){
-   					public void run()
-   					{
-   						showLoadingResultMessage(mResult);
-   						//refreshListFromDB();
-   						Intent i = new Intent(addActivity.this, WaveLoopActivity.class);
-   			           startActivity(i);
-   			           
-   					}
-   				});
-
+					runOnUiThread( new Runnable(){
+	   					public void run()
+	   					{
+	   						showLoadingResultMessage(mResult);
+	   						//refreshListFromDB();
+	   						//isDismiss=true;
+	   						Intent it = new Intent(addActivity.this, WaveLoopActivity.class);
+	   		   		        startActivity(it);
+	   		   		        addActivity.this.finish();
+	   		   		        
+	   					}
+	   					
+					});
+					
 				}
+				
 			});
-			importDialog.show();
-			importDialog.beginThread();
-		   finish();
+			
+			//finish();
+			
 		   //list2.clearChoices();
            //m_adapter2.notifyDataSetChanged();
-           //Intent i = new Intent(addActivity.this, WaveLoopActivity.class);
-           //startActivity(i);
-  
+           
+			
 		   break;
 	   case R.id.cancel:
-		   	
-	   		finish();
-	   }
+		   		Intent it = new Intent(addActivity.this, WaveLoopActivity.class);
+ 		        startActivity(it);
+ 		        finish();
+ 		}
 	   
    }
    
-  
+   public void onBackPressed() //이 액티비티에서 back키를 눌렀을때 무조건 WaveLoopActivity로 넘어가게 인텐트함. 
+   { 
+	   Intent it = new Intent(addActivity.this, WaveLoopActivity.class);
+       startActivity(it);
+       finish();
+   }
    
+   	
 	   private void showLoadingResultMessage( ImportProgressDialog.EFinishResult result )
 		{
 			String message;

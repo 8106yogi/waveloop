@@ -1,11 +1,9 @@
 package team.ssm;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 import team.ssm.DbAdapter.DatabaseHelper;
-import team.ssm.ImportProgressDialog.*;
-import android.*;
 import android.app.*;
 import android.content.*;
 import android.database.*;
@@ -119,12 +117,31 @@ public class WaveLoopActivity extends TabActivity {
         	i.putExtra("오디오파일경로", position );
         	//i.putExtra("오디오파일경로", path );
         	startActivity(i);
-        
+        	
             
         }
    };
    
+   public void onBackPressed() 
+   { 
+    AlertDialog.Builder alert = new AlertDialog.Builder(this);     
+    alert.setIcon(android.R.drawable.ic_dialog_alert);
+    alert.setTitle("알림");   
+    alert.setMessage("프로그램을 종료하시겠습니까?");   
+    alert.setPositiveButton("종료", new DialogInterface.OnClickListener() 
+    {   
+     public void onClick(DialogInterface dialog, int whichButton) 
+     {   
+    	 //ActivityManager am  = (ActivityManager)getSystemService(Activity.ACTIVITY_SERVICE);
+    	 //am.killBackgroundProcesses(getPackageName());
+    	finish();
+     }   
+    });   
+    alert.setNegativeButton("취소", null);   
+    alert.show(); 
+   }
    
+   /*
 	private void showLoadingResultMessage( ImportProgressDialog.EFinishResult result )
 	{
 		String message;
@@ -151,7 +168,8 @@ public class WaveLoopActivity extends TabActivity {
 		}
 		Toast.makeText( getApplicationContext(), message, Toast.LENGTH_SHORT ).show();
 	}
-	
+	*/
+   
 	public void refreshListFromDB()	// 음악 리스트의 내용을 새로고침.
 	{
 		// DB의 내용을 가져다가 m_orders에 새로 입력.
@@ -264,7 +282,7 @@ public class WaveLoopActivity extends TabActivity {
     	
     	Intent i = new Intent(WaveLoopActivity.this, addActivity.class); 
     	startActivity(i);
-    	
+    	finish();
     	/*
     	// TODO Auto-generated method stub
     	new AlertDialog.Builder(this)
