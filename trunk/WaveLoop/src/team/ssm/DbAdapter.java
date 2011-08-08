@@ -103,8 +103,8 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 		mDb.execSQL("DROP TABLE IF EXISTS data");
 	}
 	
-	public Cursor fetchAllBooks(){		//모든 레코드 반환
-		return mDb.query(DATABASE_TABLE, new String[]{KEY_ROWID, KEY_FILEPATH, KEY_WAVEPATH, KEY_MEDIA_DB_ID}, null, null, null, null, null);
+	public Cursor fetchAllBooks(){		//모든 레코드 반환(_id의 역순으로!)
+		return mDb.query(DATABASE_TABLE, new String[]{KEY_ROWID, KEY_FILEPATH, KEY_WAVEPATH, KEY_MEDIA_DB_ID}, null, null, null, null, "_id desc");
 		
 	}
 	
