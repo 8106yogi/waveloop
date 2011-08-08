@@ -70,51 +70,27 @@ public class player_main extends Activity {
 		    	artist = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ARTIST));
 				album = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ALBUM));
 				title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
-				
-				/*
-				wla = new WaveLoopActivity();
-				sound s = wla.new sound(artist, album, title);
-				WaveLoopActivity.m_orders.add(s);
-	    		*/
 	    	}
         	
-        	
         	dba.close();
-        	//filepath= intent.getStringExtra("오디오파일경로");
         }
          
-        
 		
 		
          mList = new ArrayList<String>();
          mPlayer = new MediaPlayer();
        
          
-         //String[] mplist = sdRoot.list(filter);
-         
-                 
          // 웨이브폼 스크롤뷰 추가
          mWaveformView = (HorizontalScrollView)findViewById(R.id.WaveformScrollView);
          mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
-         
-         
 
-         /* 
-         ImageView iv = new ImageView(this);
-         iv.setImageResource(R.drawable.ic_tab_option);
-         mWaveformLayout.addView( iv );
-         */
-         
          // 버튼들의 클릭 리스너 등록
          mArtist = (TextView)findViewById(R.id.artist);
          mTitle = (TextView)findViewById(R.id.title);
          mAlbum = (TextView)findViewById(R.id.album);
          mPlayBtn = (Button)findViewById(R.id.play);
          mPlayBtn.setOnClickListener(mClickPlay);
-         //findViewById(R.id.stop).setOnClickListener(mClickStop);
-         //findViewById(R.id.prev).setOnClickListener(mClickPrevNext);
-         //findViewById(R.id.next).setOnClickListener(mClickPrevNext);
-         
          
          // 완료 리스너, 시크바 변경 리스너 등록
          //mPlayer.setOnCompletionListener(mOnComplete);
@@ -140,14 +116,14 @@ public class player_main extends Activity {
         		{
         			public void run()
         			{
-        				mLoadingDialog = ProgressDialog.show( player_main.this, "", "Loading. Please wait...", true );
+        				mLoadingDialog = ProgressDialog.show( player_main.this, "", "파일을 읽고 있습니다...", true );
         			}
         		});
 	         	
                  
                  
                  
-        		// 두개의 파일을 잘 저장한 다음
+        		// 두개의 파일을 잘 읽어들인다
                  File wavefile = new File(mWavePath);
                  if( wavefile.canRead() )
                  {
@@ -237,9 +213,6 @@ public class player_main extends Activity {
         		 
         	 }
          } ).start();
-          
-         //dialog.hide();
-         
          
     }
     
@@ -259,15 +232,6 @@ public class player_main extends Activity {
        }
     	   
    }
-    /*
-    public void onStop() {
-    	super.onStop();
-    	if(mLoadingDialog != null){
-     	   mLoadingDialog.dismiss();
-     	   mLoadingDialog = null;
-        }
-    }*/
-    
 
    // 항상 준비 상태여야 한다.
     boolean LoadMedia() {
@@ -397,7 +361,7 @@ public class player_main extends Activity {
              if (mPlayer == null) return;
              if (mPlayer.isPlaying()) {
             	 //int duration = mPlayer.getDuration();
-            	 int width = mWaveformLayout.getMeasuredWidth();
+            	 //int width = mWaveformLayout.getMeasuredWidth();
                   int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()) * ((double)mPlayer.getCurrentPosition() / (double)mPlayer.getDuration()));
                   mWaveformView.scrollTo(pos, 0);
              }
