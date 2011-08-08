@@ -2,16 +2,16 @@ package team.ssm;
 
 import java.io.*;
 import java.util.*;
-
-import team.ssm.WaveLoopActivity.*;
+import java.util.Observable;
 
 import android.app.*;
 import android.content.*;
-import android.database.Cursor;
+import android.database.*;
 import android.media.*;
 import android.net.*;
 import android.os.*;
 import android.provider.MediaStore.Audio;
+import android.util.*;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
@@ -19,7 +19,7 @@ import android.widget.*;
 public class player_main extends Activity {
     ArrayList<String> mList;
     int mIdx;
-    MediaPlayer mPlayer;
+    static MediaPlayer mPlayer;
     Button mPlayBtn;
     TextView mArtist;
     TextView mTitle;
@@ -41,7 +41,9 @@ public class player_main extends Activity {
     
     private Handler mLoadingHandler = new Handler();
     
-    
+   //private int index = 0;
+    //private HFling hf = null;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_main);
@@ -213,19 +215,80 @@ public class player_main extends Activity {
         		 
         	 }
          } ).start();
+
+          
+         //dialog.hide();
+       // this.hf = (HFling)findViewById(R.id.scrollview);
+
+        //test();
+        //initBtn();  
+
+
          
     }
     
+    /*
+    private void test() {
+    	
+    	ImageView iv1 = new ImageView(this);
+    	ImageView iv2 = new ImageView(this);
+    	ImageView iv3 = new ImageView(this);
+    	ImageView iv4 = new ImageView(this);
+    	
+    	
+    	iv1.setImageResource(R.drawable.oo);
+    	iv2.setImageResource(R.drawable.ww);
+    	iv3.setImageResource(R.drawable.oo);
+    	iv4.setImageResource(R.drawable.ww);
+    	
+    	iv1.setTag(new Integer(10));
+    	iv2.setTag(new Integer(11));
+    	iv3.setTag(new Integer(12));
+    	iv4.setTag(new Integer(13));
+    	
+    	hf.addChildView(iv1);
+    	hf.addChildView(iv2);
+    	hf.addChildView(iv3);
+    	hf.addChildView(iv4);
+    	
+    	//hf.setObserver(this);
+    }
     
+    private void xx() {
+    	Log.i("CC", "ScrollTo");
+    	boolean result = hf.ScrollToIndex(index);
+    	Log.i("CC", "RESULT " + result);
+    	index++;
+    	if(2 < index) // error case
+    		index = 0;
+    	//hf.smoothScrollTo(hf.getScrollX() + 30, hf.getScrollY());
+    }
+    
+    
+	public void onClick(View v) {
+		Log.i("CC", "CLICK");
+		if() {
+			xx();
+		}
+	}
+	
+    
+	public void update(Observable observable, Object data) {
+		View v = (View)data;
+		Integer it = (Integer)v.getTag();
+		Log.i("test", "IT " + it);
+	}
+    */
 
     // 액티비티 종료시 재생 강제 종료
     public void onDestroy() {
        super.onDestroy();
+       /*
        if (mPlayer != null) {
          mPlayer.release();
          mPlayer = null;
        }
-       
+       */
        if(mLoadingDialog != null){
     	   mLoadingDialog.dismiss();
     	   mLoadingDialog = null;
