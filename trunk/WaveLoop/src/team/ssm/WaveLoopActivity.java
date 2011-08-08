@@ -1,6 +1,7 @@
 package team.ssm;
 
 import java.io.*;
+import java.text.*;
 import java.util.*;
 
 import team.ssm.DbAdapter.DatabaseHelper;
@@ -28,6 +29,8 @@ public class WaveLoopActivity extends TabActivity {
     ListView list;
     //ArrayList<String> items;
     ArrayList<sound> m_orders;
+  //비어있는 sort용 ArrayList
+    ArrayList<sound> m_ReverseOrders;
     //ArrayAdapter<String> Adapter;
     ArrayAdapter<sound> m_adapter;
     String abc;
@@ -38,6 +41,7 @@ public class WaveLoopActivity extends TabActivity {
     ImportProgressDialog importDialog;
     
     public static final String WAVEPATH = "/data/data/com.androidhuman.app/files/";   
+    //public static final String ORDER_ASC = "title_key asc";
     
     /*
     // 로딩 progress 관련
@@ -87,14 +91,27 @@ public class WaveLoopActivity extends TabActivity {
         /***** 20100725_동진: Custom ArrayAdapter를 이용한 ListView*****/
         
     	m_orders = new ArrayList<sound>();	// 리스트뷰에 출력할 내용의 원본data를 저장하는 arrayList.        
+    	m_ReverseOrders = new ArrayList<sound>(); //m_orders의 역순으로 데이터를 저장할 ArrayList
     	list = (ListView)findViewById(R.id.list);		// 사용자가 추가한 오디오 파일을 보여주는 리스트뷰
       
-        m_adapter = new SoundAdapter(this, R.layout.row, m_orders); // 원본; m_orders의 내용을 리스트뷰; list에 연결해주는 어댑터.
+    	// m_adapter = new SoundAdapter(this, R.layout.row, m_orders); // 원본; m_orders의 내용을 리스트뷰; list에 연결해주는 어댑터.
+    	m_adapter = new SoundAdapter(this, R.layout.row, m_ReverseOrders);
+        
         list.setAdapter(m_adapter);	// 어댑터와 리스트뷰를 연결
         list.setChoiceMode(ListView.CHOICE_MODE_NONE);
         list.setOnItemClickListener(mItemClickListener);	//리스트뷰의 클릭리스너 설정.
         
+      
         
+      //Comparator 를 만든다.
+       /*
+        final Comparator<sound> myComparator= new Comparator<sound>() {
+            private final Collator   collator = Collator.getInstance();
+      public int compare(sound object1,sound object2) {
+       return collator.compare(object1.getData(), object2.getData());
+      }
+     };
+        */
     	refreshListFromDB();
     	
     }
@@ -102,6 +119,10 @@ public class WaveLoopActivity extends TabActivity {
     
     public void onDestroy(Bundle savedInstanceState) {
 		super.onDestroy();
+		if (player_main.mPlayer != null) {
+			player_main.mPlayer.release();
+			player_main.mPlayer = null;
+	       }
 	
 	}
 
@@ -134,16 +155,7 @@ public class WaveLoopActivity extends TabActivity {
 	{
 		// DB의 내용을 가져다가 m_orders에 새로 입력.
 		m_orders.clear();
-			
-		
-		
-		/*********************  디버깅용. db 테이블(data) 삭제 코드 ************************/
-		
-		//db = dbh.getWritableDatabase();
-		//db.execSQL("DROP TABLE IF EXISTS data");
-		//db.execSQL("create table data (_id integer primary key autoincrement,"+
-		//"filepath text not null, wavepath text not null, media_db_id text not null)");
-		
+		m_ReverseOrders.clear();
 		
 		dba.open();
 		//dba.exe
@@ -154,11 +166,13 @@ public class WaveLoopActivity extends TabActivity {
 			cur.moveToPosition(i);
 			String strMediaDBIndex = cur.getString(cur.getColumnIndex(DbAdapter.KEY_MEDIA_DB_ID));
 			
+			
 			Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
 
 	    	String selection = "( (_ID LIKE ?) )";
 	    	String[] selectionArgs = { strMediaDBIndex };
 	    	String sortOrder = Audio.Media.DEFAULT_SORT_ORDER;
+	    	 
 	    	
 	    	//Cursor cursorInt = mCr.query(uriInternal, null, selection, selectionArgs, sortOrder);
 	    	Cursor curMedia = getContentResolver().query(uriExternal, null, selection, selectionArgs, sortOrder);
@@ -171,7 +185,8 @@ public class WaveLoopActivity extends TabActivity {
 				
 				sound s = new sound(artist, album, title);
 				m_orders.add(s);
-	    		
+				
+				
 	    	}
 	    	else
 	    	{
@@ -193,8 +208,15 @@ public class WaveLoopActivity extends TabActivity {
 			*/
 		}
 		dba.close();
+		 
+	        
 		
-		m_adapter.notifyDataSetChanged();
+		//m_adapter.notifyDataSetChanged();
+		//m_orders의 역순으로 데이터를 저장할 ArrayList
+        for(int i =m_orders.size()-1; i>=0 ; i--) {	  //for문을 m_orders의 역순으로 돌며 데이터를 myArrayData에 넣는다
+        	m_ReverseOrders.add(m_orders.get(i));
+        }
+        m_adapter.notifyDataSetChanged();
 	}
    
     public void mOnClick(View v) {
