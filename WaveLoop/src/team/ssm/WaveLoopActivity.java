@@ -96,6 +96,7 @@ public class WaveLoopActivity extends TabActivity {
         
         
     	refreshListFromDB();
+    	
     }
     
     
@@ -122,53 +123,12 @@ public class WaveLoopActivity extends TabActivity {
         }
    };
    
-   public void onBackPressed() 
-   { 
-    AlertDialog.Builder alert = new AlertDialog.Builder(this);     
-    alert.setIcon(android.R.drawable.ic_dialog_alert);
-    alert.setTitle("알림");   
-    alert.setMessage("프로그램을 종료하시겠습니까?");   
-    alert.setPositiveButton("종료", new DialogInterface.OnClickListener() 
-    {   
-     public void onClick(DialogInterface dialog, int whichButton) 
-     {   
-    	 //ActivityManager am  = (ActivityManager)getSystemService(Activity.ACTIVITY_SERVICE);
-    	 //am.killBackgroundProcesses(getPackageName());
-    	finish();
-     }   
-    });   
-    alert.setNegativeButton("취소", null);   
-    alert.show(); 
-   }
    
-   /*
-	private void showLoadingResultMessage( ImportProgressDialog.EFinishResult result )
-	{
-		String message;
-		switch(result)
-		{
-		case eFR_OK:
-			message = "성공적으로 처리되었습니다.";
-			break;
-		case eFR_FILEERROR:
-			message = "잘못된 파일입니다.";
-			break;
-		case eFR_FILENOTFOUNDERROR:
-			message = "파일을 찾을 수 없습니다.";
-			break;
-		case eFR_SUSPEND:
-			message = "작업이 중단되었습니다.";
-			break;
-		case eFR_EXCEPTION:
-			message = "알 수 없는 에러가 발생했습니다.";
-			break;
-		default:
-			message = "알 수 없는 에러가 발생했습니다.";
-			break;
-		}
-		Toast.makeText( getApplicationContext(), message, Toast.LENGTH_SHORT ).show();
-	}
-	*/
+     
+   public void onResume(){
+	   super.onResume();
+	   refreshListFromDB();
+   }
    
 	public void refreshListFromDB()	// 음악 리스트의 내용을 새로고침.
 	{
@@ -239,50 +199,11 @@ public class WaveLoopActivity extends TabActivity {
    
     public void mOnClick(View v) {
     	
-    	/*    	
-    	ContentResolver mCr = getContentResolver();
-    	
-    	Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
-    	//Uri uriInternal = Audio.Media.INTERNAL_CONTENT_URI;
-    	 
-
-    	String selection = "( (_DATA LIKE ?) OR (_DATA LIKE ?) OR (_DATA LIKE ?) OR (_DATA LIKE ?) )";
-    	String[] selectionArgs = {"%.aac", "%.arm", "%.mp3", "%.wav" };
-    	String sortOrder = Audio.Media.DEFAULT_SORT_ORDER;
-    	
-    	//Cursor cursorInt = mCr.query(uriInternal, null, selection, selectionArgs, sortOrder);
-    	Cursor cursorExt = mCr.query(uriExternal, null, selection, selectionArgs, sortOrder);
-    	
-    	//mCursor = new MergeCursor( new Cursor[] { cursorInt, cursorExt} );
-    	mCursor = cursorExt;
-    	
-    	int nCurCount = (mCursor == null)?0:mCursor.getCount();
-    	
-    	if(nCurCount > 0)
-    	{
-    		mFiles = new CharSequence[nCurCount];
-        	mSelect = new boolean[nCurCount];
-        	
-        	for (int i = 0; i < nCurCount; i++) {
-        		mCursor.moveToPosition(i);
-                mFiles[i] = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.DISPLAY_NAME));
-                mSelect[i] = false;
-            }
-
-            startManagingCursor(mCursor);
-    	}
-    	*/
-    	//int idx = 0;
-    	
-    	//i.putExtra("오디오파일경로", position );
-    	//i.putExtra("오디오파일경로", path );
-    	
-		
-    	
+    	   	
     	
     	Intent i = new Intent(WaveLoopActivity.this, addActivity.class); 
     	startActivity(i);
-    	finish();
+    	//finish();
     	/*
     	// TODO Auto-generated method stub
     	new AlertDialog.Builder(this)
@@ -333,50 +254,10 @@ public class WaveLoopActivity extends TabActivity {
     			}
     			m_adapter.notifyDataSetChanged();
     			dba.close();
+    			*/
     			
     			
-    			
-    			// 선택된 음악파일 경로를 ArrayList에 담는다.
-    			ArrayList<Integer> paths = new ArrayList<Integer>();
-    			for(int i = 0; i < mSelect.length; ++i )
-    			{
-    				if( mSelect[i] )
-    				{
-    					mCursor.moveToPosition(i);	
-    		            int id = mCursor.getInt(mCursor.getColumnIndex(Audio.AudioColumns._ID));
-    					paths.add(id);
-    				}
-    			}
-    			
-    			
-    			
-    			// 로딩 다이얼로그 생성
-    			importDialog = new ImportProgressDialog(WaveLoopActivity.this);
-    			importDialog.setAudioIDs(paths);
-    			importDialog.setContentResolver(getContentResolver());
-    			importDialog.setFinishLoading( new ImportProgressDialog.FinishLoading() { 
-    				private ImportProgressDialog.EFinishResult mResult;
-    				public void finish( ImportProgressDialog.EFinishResult result ){// dialog가 dismiss 될 때 호출되는 함수.
-    					mResult = result;
-	    				runOnUiThread( new Runnable(){
-	    					public void run()
-	    					{
-	    						showLoadingResultMessage(mResult);
-	    						refreshListFromDB();
-	    					}
-	    				});
-
-    				}
-    			});
-    			importDialog.show();
-    			importDialog.beginThread();
-    			
-    			
-    		}
-    	})
-    	.setNegativeButton("취소", null)
-    	.show();
-    	*/
+    		
     
     }
     

@@ -213,8 +213,8 @@ public class addActivity extends Activity {
 	   						showLoadingResultMessage(mResult);
 	   						//refreshListFromDB();
 	   						//isDismiss=true;
-	   						Intent it = new Intent(addActivity.this, WaveLoopActivity.class);
-	   		   		        startActivity(it);
+	   						//Intent it = new Intent(addActivity.this, WaveLoopActivity.class);
+	   		   		        //startActivity(it);
 	   		   		        addActivity.this.finish();
 	   		   		        
 	   					}
@@ -233,20 +233,21 @@ public class addActivity extends Activity {
 			
 		   break;
 	   case R.id.cancel:
-		   		Intent it = new Intent(addActivity.this, WaveLoopActivity.class);
- 		        startActivity(it);
+		   		//Intent it = new Intent(addActivity.this, WaveLoopActivity.class);
+ 		        //startActivity(it);
  		        finish();
  		}
 	   
    }
    
+   /*
    public void onBackPressed() //이 액티비티에서 back키를 눌렀을때 무조건 WaveLoopActivity로 넘어가게 인텐트함. 
    { 
-	   Intent it = new Intent(addActivity.this, WaveLoopActivity.class);
-       startActivity(it);
+	   //Intent it = new Intent(addActivity.this, WaveLoopActivity.class);
+       //startActivity(it);
        finish();
    }
-   
+   */
    	
 	   private void showLoadingResultMessage( ImportProgressDialog.EFinishResult result )
 		{
