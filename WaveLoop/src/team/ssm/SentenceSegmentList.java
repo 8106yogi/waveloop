@@ -24,10 +24,13 @@ public class SentenceSegmentList {
 		int nCount = waveformData.length;
 		for (int i = 0; i < nCount; ++i )
 		{
+			nextIndex = nCount;
+			
 			int value = waveformData[i];
 			boolean isSilence = (2 > value)? true:false;
 			if(isSilence)// 무음이면
 			{
+				
 				for(int j = i+1; j < nCount; ++j )
 				{
 					if( 0 < waveformData[j] )
