@@ -29,8 +29,7 @@ public class WaveLoopActivity extends TabActivity {
     ListView list;
     //ArrayList<String> items;
     ArrayList<sound> m_orders;
-  //비어있는 sort용 ArrayList
-    ArrayList<sound> m_ReverseOrders;
+    //ArrayList<sound> m_ReverseOrders;	//비어있는 sort용 ArrayList
     //ArrayAdapter<String> Adapter;
     ArrayAdapter<sound> m_adapter;
     String abc;
@@ -91,11 +90,11 @@ public class WaveLoopActivity extends TabActivity {
         /***** 20100725_동진: Custom ArrayAdapter를 이용한 ListView*****/
         
     	m_orders = new ArrayList<sound>();	// 리스트뷰에 출력할 내용의 원본data를 저장하는 arrayList.        
-    	m_ReverseOrders = new ArrayList<sound>(); //m_orders의 역순으로 데이터를 저장할 ArrayList
+    	//m_ReverseOrders = new ArrayList<sound>(); //m_orders의 역순으로 데이터를 저장할 ArrayList
     	list = (ListView)findViewById(R.id.list);		// 사용자가 추가한 오디오 파일을 보여주는 리스트뷰
       
-    	// m_adapter = new SoundAdapter(this, R.layout.row, m_orders); // 원본; m_orders의 내용을 리스트뷰; list에 연결해주는 어댑터.
-    	m_adapter = new SoundAdapter(this, R.layout.row, m_ReverseOrders);
+    	m_adapter = new SoundAdapter(this, R.layout.row, m_orders); // 원본; m_orders의 내용을 리스트뷰; list에 연결해주는 어댑터.
+    	//m_adapter = new SoundAdapter(this, R.layout.row, m_ReverseOrders);
         
         list.setAdapter(m_adapter);	// 어댑터와 리스트뷰를 연결
         list.setChoiceMode(ListView.CHOICE_MODE_NONE);
@@ -155,7 +154,7 @@ public class WaveLoopActivity extends TabActivity {
 	{
 		// DB의 내용을 가져다가 m_orders에 새로 입력.
 		m_orders.clear();
-		m_ReverseOrders.clear();
+		//m_ReverseOrders.clear();
 		
 		dba.open();
 		//dba.exe
@@ -213,9 +212,11 @@ public class WaveLoopActivity extends TabActivity {
 		
 		//m_adapter.notifyDataSetChanged();
 		//m_orders의 역순으로 데이터를 저장할 ArrayList
-        for(int i =m_orders.size()-1; i>=0 ; i--) {	  //for문을 m_orders의 역순으로 돌며 데이터를 myArrayData에 넣는다
+        /*
+		for(int i =m_orders.size()-1; i>=0 ; i--) {	  //for문을 m_orders의 역순으로 돌며 데이터를 myArrayData에 넣는다
         	m_ReverseOrders.add(m_orders.get(i));
         }
+        */
         m_adapter.notifyDataSetChanged();
 	}
    
