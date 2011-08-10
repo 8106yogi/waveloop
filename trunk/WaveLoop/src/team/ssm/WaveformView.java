@@ -72,7 +72,7 @@ public class WaveformView extends View {
 		super.onDraw(canvas);
 
 		canvas.drawLine(0, 0, 0, 300, mPaint);
-		canvas.drawLine(0, 100, (mEndFrame-mBeginFrame)*2, 100, mPaint);
+		canvas.drawLine(0, mHeight/2, (mEndFrame-mBeginFrame)*2, mHeight/2, mPaint);
 		
 		if(null != path)
 		{
