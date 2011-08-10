@@ -47,8 +47,9 @@
 	android:padding="10px" 
 	android:layout_height="wrap_content"
 	></SeekBar>
+	<ListView android:id="@+id/listView1" android:layout_height="wrap_content" android:layout_width="match_parent"></ListView>
 	
-	<HorizontalScrollView
+	<team.ssm.WaveformScrollView
 	android:layout_width="match_parent" 
 	android:layout_height="wrap_content" 
 	android:id="@+id/WaveformScrollView" 
@@ -60,7 +61,7 @@
 	   	android:orientation="horizontal">
 	    
 	   	</LinearLayout>
-	</HorizontalScrollView>
+	</team.ssm.WaveformScrollView>
 
 	<HorizontalScrollView 
 	android:layout_width="match_parent"
