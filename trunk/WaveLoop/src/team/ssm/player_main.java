@@ -1,8 +1,6 @@
 package team.ssm;
 
 import java.io.*;
-import java.util.*;
-import java.util.Observable;
 
 import android.app.*;
 import android.content.*;
@@ -11,31 +9,25 @@ import android.media.*;
 import android.net.*;
 import android.os.*;
 import android.provider.MediaStore.Audio;
-import android.util.*;
 import android.view.*;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
 
 public class player_main extends Activity {
-    ArrayList<String> mList;
-    int mIdx;
+    
     static MediaPlayer mPlayer;
     Button mPlayBtn;
     TextView mArtist;
     TextView mTitle;
     TextView mAlbum;
-    String artist;
-    String title;
-    String album;
     SeekBar mProgress;
     boolean wasPlaying;
     String mFilepath;
     String mWavePath;
     WaveformScrollView mWaveformView;
     LinearLayout mWaveformLayout;
-    String strMediaDBIndex;
+    //String strMediaDBIndex;
     WaveLoopActivity wla;
 
     
@@ -49,40 +41,9 @@ public class player_main extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_main);
-        Intent intent = getIntent();
-        if (intent != null)
-        {
-        	long lDataIndex = intent.getIntExtra("오디오파일경로", 0);
-        	DbAdapter dba = new DbAdapter(getBaseContext());
-        	dba.open();
-        	Cursor cursor = dba.fetchAllBooks();
-        	cursor.moveToPosition((int) lDataIndex);
-        	mFilepath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_FILEPATH));
-        	mWavePath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_WAVEPATH));
-        	strMediaDBIndex = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_MEDIA_DB_ID));
-    		
-        	String selection = "( (_ID LIKE ?) )";
-	    	String[] selectionArgs = { strMediaDBIndex };
-	    	String sortOrder = Audio.Media.DEFAULT_SORT_ORDER;
-	    	
-	    	Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
-	    	
-	    	Cursor curMedia = getContentResolver().query(uriExternal, null, selection, selectionArgs, sortOrder);
-	    	if(curMedia.getCount() == 1)
-	    	{
-	    		curMedia.moveToPosition(0);
-		    	artist = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ARTIST));
-				album = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ALBUM));
-				title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
-	    	}
-        	
-        	dba.close();
-        }
-         
-		
-		
-         mList = new ArrayList<String>();
-         mPlayer = new MediaPlayer();
+        
+
+        mPlayer = new MediaPlayer();
          
          // 웨이브폼 스크롤뷰 추가
          mWaveformView = (WaveformScrollView)findViewById(R.id.WaveformScrollView);
@@ -114,6 +75,27 @@ public class player_main extends Activity {
          //mProgress.setOnSeekBarChangeListener(mOnSeek);
          mProgressHandler.sendEmptyMessageDelayed(0,200);
          mScrollHandler.sendEmptyMessageDelayed(0,16);
+
+         
+         
+         // 인텐트로 출력할 파일 결정하는 코드 아래로 옮김.
+         Intent intent = getIntent();
+         if (intent != null)
+         {
+         	long lDataIndex = intent.getIntExtra("오디오파일경로", 0);
+         	DbAdapter dba = new DbAdapter(getBaseContext());
+         	dba.open();
+         	Cursor cursor = dba.fetchAllBooks();
+         	cursor.moveToPosition((int) lDataIndex);
+         	mFilepath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_FILEPATH));
+         	mWavePath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_WAVEPATH));
+         	String strMediaDBIndex = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_MEDIA_DB_ID));
+         	dba.close();
+         	
+         	setAudioInfoUIFromMediaDB(strMediaDBIndex);
+         }
+
+         
          // 첫 곡 읽기 및 준비
          if (LoadMedia() == false) {
              Toast.makeText(this, "파일을 읽을 수 없습니다.", Toast.LENGTH_LONG).show();
@@ -242,6 +224,26 @@ public class player_main extends Activity {
 
          
     }
+
+	private void setAudioInfoUIFromMediaDB( String strMediaDBIndex ) {
+		String selection = "( (_ID LIKE ?) )";
+		String[] selectionArgs = { strMediaDBIndex };
+		String sortOrder = Audio.Media.DEFAULT_SORT_ORDER;
+		Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
+		
+		Cursor curMedia = getContentResolver().query(uriExternal, null, selection, selectionArgs, sortOrder);
+		if(curMedia.getCount() == 1)
+		{
+			curMedia.moveToPosition(0);
+			String artist = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ARTIST));
+			String album = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ALBUM));
+			String title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
+			mArtist.setText(artist);
+		    mTitle.setText(title);
+		    mAlbum.setText(album);
+		     
+		}
+	}
     
     /*
     private void test() {
@@ -330,14 +332,7 @@ public class player_main extends Activity {
          }
          mPlayer.start();
          mPlayer.pause();
-         
-         
-         
-         //mArtist.setText(mFilepath);
-         mArtist.setText(artist);
-         mTitle.setText(title);
-         mAlbum.setText(album);
-         //mProgress.setMax(mPlayer.getDuration());
+
          return true;
    }
   
@@ -386,61 +381,8 @@ public class player_main extends Activity {
 		}
    };
    
-   OnScrollListener mOnScrollViewScrollListener = new OnScrollListener() {
-		
-		@Override
-		public void onScroll(AbsListView view, int firstVisibleItem,
-				int visibleItemCount, int totalItemCount) {
-			//if (mPlayer.isPlaying() == false) {
-			//	// 여기서 시크바랑 플레이어를 수정시켜줌.
-				//int a = 9;
-			//}
-			
-			
-		}
-		
-		@Override
-		public void onScrollStateChanged(AbsListView view, int scrollState) {
-			int c = 0;
-		}
-	   
-   };
   
-   /*
-   Button.OnClickListener mClickPrevNext = new View.OnClickListener() {
-         public void onClick(View v) {
-             boolean wasPlaying = mPlayer.isPlaying();
-            
-             if (v.getId() == R.id.prev) {
-                  mIdx = (mIdx == 0 ? mList.size() - 1:mIdx - 1);
-             } else {
-                  mIdx = (mIdx == mList.size() - 1 ? 0:mIdx + 1);
-             }
-            
-             mPlayer.reset();
-             LoadMedia(mIdx);
 
-             // 이전에 재생중이었으면 다음 곡 바로 재생
-             if (wasPlaying) {
-                  mPlayer.start();
-                  mPlayBtn.setText("Pause");
-             }
-         }
-   };
-   */
-
-   
-   /*
-   // 재생 완료되면 다음곡으로
-   MediaPlayer.OnCompletionListener mOnComplete = new MediaPlayer.OnCompletionListener() {
-         public void onCompletion(MediaPlayer arg0) {
-             mIdx = (mIdx == mList.size() - 1 ? 0:mIdx + 1);
-             mPlayer.reset();
-             LoadMedia(mIdx);
-             mPlayer.start();
-         }
-   };
-   */
 
    // 에러 발생시 메시지 출력
    MediaPlayer.OnErrorListener mOnError = new MediaPlayer.OnErrorListener() {
