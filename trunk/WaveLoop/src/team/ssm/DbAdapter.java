@@ -91,12 +91,16 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 		return mDb.insert(DATABASE_TABLE, null, initialValues);
 	}
 
-	public boolean deleteBook(long rowID){		//레코드 삭제
+	public boolean deleteBook(long rowID){		//레코드 삭제(_id)
 		return mDb.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowID, null) > 0;
 	}
 	
+	public boolean deleteBook(String media_DB_ID){		//레코드 삭제(media_db_id)
+		return mDb.delete(DATABASE_TABLE, KEY_MEDIA_DB_ID + "=" + media_DB_ID, null) > 0;
+	}
 	
-	public void createTable() {
+	
+	public void createTable() {	//테이블 생성.
 		mDb.execSQL(DATABASE_CREATE);
 	}
 	public void dropTable(){		//모든 레코드 삭제

@@ -1,7 +1,6 @@
 package team.ssm;
 
 import java.io.*;
-import java.text.*;
 import java.util.*;
 
 import team.ssm.DbAdapter.DatabaseHelper;
@@ -14,6 +13,7 @@ import android.os.*;
 import android.provider.MediaStore.Audio;
 import android.view.*;
 import android.widget.*;
+import android.widget.AdapterView.AdapterContextMenuInfo;
  
 public class WaveLoopActivity extends TabActivity {
     
@@ -38,6 +38,7 @@ public class WaveLoopActivity extends TabActivity {
     SQLiteDatabase db;
     //int idx;
     ImportProgressDialog importDialog;
+    int pos;
     
     public static final String WAVEPATH = "/data/data/com.androidhuman.app/files/";   
     //public static final String ORDER_ASC = "title_key asc";
@@ -99,7 +100,7 @@ public class WaveLoopActivity extends TabActivity {
         list.setAdapter(m_adapter);	// 어댑터와 리스트뷰를 연결
         list.setChoiceMode(ListView.CHOICE_MODE_NONE);
         list.setOnItemClickListener(mItemClickListener);	//리스트뷰의 클릭리스너 설정.
-        
+        //list.setItemsCanFocus(true);
       
         
       //Comparator 를 만든다.
@@ -111,19 +112,80 @@ public class WaveLoopActivity extends TabActivity {
       }
      };
         */
+        registerForContextMenu(list);
+        
+        
     	refreshListFromDB();
     	
     }
     
+    public void onCreateContextMenu (ContextMenu menu, View v,
+            ContextMenu.ContextMenuInfo menuInfo) {
+    		super.onCreateContextMenu(menu, v, menuInfo);
+    		
+    		AdapterContextMenuInfo info =(AdapterContextMenuInfo) menuInfo;
+	      	pos  = info.position; 
+	    	sound p = m_orders.get(pos);
+	    	String HeaderTitle=p.getTitle();
+	    	menu.setHeaderTitle(HeaderTitle);
+	        menu.add(0,1,0,"재생");
+	        menu.add(0,2,0,"목록에서 제거");
+	        
+	      
+
+    }
     
-    public void onDestroy(Bundle savedInstanceState) {
-		super.onDestroy();
-		if (player_main.mPlayer != null) {
-			player_main.mPlayer.release();
-			player_main.mPlayer = null;
-	       }
-	
-	}
+    public boolean onContextItemSelected (MenuItem item) {
+        switch (item.getItemId()) {
+        case 1:	//재생
+        	   	Intent i = new Intent(WaveLoopActivity.this, player_main.class); 
+        		i.putExtra("오디오파일경로", pos );
+        		startActivity(i);
+              return true;
+        case 2:	//목록에서 제거        	
+        	sound p = m_orders.get(pos);
+	    	String HeaderTitle2=p.getTitle();
+        	new AlertDialog.Builder(WaveLoopActivity.this)
+        	.setTitle(HeaderTitle2 +" 파일을 목록에서 제거하시겠습니까?")
+        	.setIcon(android.R.drawable.ic_dialog_alert)
+        	.setCancelable(false)
+        	.setPositiveButton("삭제", new DialogInterface.OnClickListener(){
+        		public void onClick(DialogInterface dialog, int which){
+        			// DB에 접근하여 파일패스를 얻어내고
+        			dba.open();
+        			Cursor cursor = dba.fetchAllBooks();
+                	cursor.moveToPosition(pos);
+                	String mWavepath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_WAVEPATH));
+        			String m_db_id = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_MEDIA_DB_ID));     
+        			File file = new File(mWavepath);
+        			
+        			if(file.delete()){
+        			
+        				Toast.makeText(WaveLoopActivity.this,"파일이 제거되었습니다.",Toast.LENGTH_SHORT).show();
+        			
+	        			
+	        			dba.deleteBook(m_db_id);
+	        			//dba.dropTable();
+	        			//dba.createTable();
+	        			
+	        		}
+        			dba.close();
+        			refreshListFromDB();
+        			
+        		}
+        	} )
+        	.setNegativeButton("취소", null)
+        	.show();
+        	
+        		
+        	
+              return true;
+        
+        }
+       
+        return true;
+   }
+   
 
     // 어댑터뷰의 클릭리스너
     AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
@@ -134,6 +196,7 @@ public class WaveLoopActivity extends TabActivity {
         	*****************/
         	//dba.open();
         	//int idx = 0;
+        	//mPos = position;
         	Intent i = new Intent(WaveLoopActivity.this, player_main.class); 
         	i.putExtra("오디오파일경로", position );
         	//i.putExtra("오디오파일경로", path );
@@ -149,6 +212,16 @@ public class WaveLoopActivity extends TabActivity {
 	   super.onResume();
 	   refreshListFromDB();
    }
+   
+   //액티비티 종료시 재생 강제 종료
+   public void onDestroy() {
+		super.onDestroy();
+		if (player_main.mPlayer != null) {
+			player_main.mPlayer.release();
+			player_main.mPlayer = null;
+	       }
+	
+	}
    
 	public void refreshListFromDB()	// 음악 리스트의 내용을 새로고침.
 	{
@@ -207,25 +280,19 @@ public class WaveLoopActivity extends TabActivity {
 			*/
 		}
 		dba.close();
-		 
-	        
 		
-		//m_adapter.notifyDataSetChanged();
-		//m_orders의 역순으로 데이터를 저장할 ArrayList
-        /*
-		for(int i =m_orders.size()-1; i>=0 ; i--) {	  //for문을 m_orders의 역순으로 돌며 데이터를 myArrayData에 넣는다
-        	m_ReverseOrders.add(m_orders.get(i));
-        }
-        */
         m_adapter.notifyDataSetChanged();
 	}
    
     public void mOnClick(View v) {
     	
-    	   	
+    	switch(v.getId()){   	
+    	case R.id.AddButton:
     	
     	Intent i = new Intent(WaveLoopActivity.this, addActivity.class); 
     	startActivity(i);
+    	break;
+    	}
     	//finish();
     	/*
     	// TODO Auto-generated method stub
