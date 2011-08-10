@@ -13,8 +13,10 @@ import android.os.*;
 import android.provider.MediaStore.Audio;
 import android.util.*;
 import android.view.*;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
+import android.widget.AbsListView.OnScrollListener;
 
 public class player_main extends Activity {
     ArrayList<String> mList;
@@ -31,11 +33,11 @@ public class player_main extends Activity {
     boolean wasPlaying;
     String mFilepath;
     String mWavePath;
-    HorizontalScrollView mWaveformView;
+    WaveformScrollView mWaveformView;
     LinearLayout mWaveformLayout;
     String strMediaDBIndex;
     WaveLoopActivity wla;
-    //ArrayList<sound> m_orders;
+
     
     ProgressDialog mLoadingDialog;
     
@@ -81,11 +83,22 @@ public class player_main extends Activity {
 		
          mList = new ArrayList<String>();
          mPlayer = new MediaPlayer();
-       
          
          // 웨이브폼 스크롤뷰 추가
-         mWaveformView = (HorizontalScrollView)findViewById(R.id.WaveformScrollView);
+         mWaveformView = (WaveformScrollView)findViewById(R.id.WaveformScrollView);
          mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
+         
+         mWaveformView.setOnTouchListener(mOnScrollViewTouchListener);
+         mWaveformView.setSeekBar( (SeekBar)findViewById(R.id.progress) );
+         mWaveformView.setMediaPlayer(mPlayer);
+         
+         //mWaveformView.dis
+         //mWaveformView.setOn
+         
+         //mWaveformView.setOn
+         //mWaveformView.fling(0);
+         //mWaveformView.setSmoothScrollingEnabled(false);
+         
 
          // 버튼들의 클릭 리스너 등록
          mArtist = (TextView)findViewById(R.id.artist);
@@ -98,7 +111,7 @@ public class player_main extends Activity {
          //mPlayer.setOnCompletionListener(mOnComplete);
          mPlayer.setOnSeekCompleteListener(mOnSeekComplete);
          mProgress = (SeekBar)findViewById(R.id.progress);
-         mProgress.setOnSeekBarChangeListener(mOnSeek);
+         //mProgress.setOnSeekBarChangeListener(mOnSeek);
          mProgressHandler.sendEmptyMessageDelayed(0,200);
          mScrollHandler.sendEmptyMessageDelayed(0,16);
          // 첫 곡 읽기 및 준비
@@ -171,6 +184,9 @@ public class player_main extends Activity {
                     			public void run()
                     			{
                     				mWaveformLayout.addView(ll);
+                    				//ViewTreeObserver ov =
+                    				//	mWaveformLayout.getViewTreeObserver().;
+                    				//mWaveformLayout.
                     			}
                     		});
         		         	
@@ -308,14 +324,20 @@ public class player_main extends Activity {
          } catch (IOException e) {
              return false;
          }
+         
          if (Prepare() == false) {
              return false;
          }
+         mPlayer.start();
+         mPlayer.pause();
+         
+         
+         
          //mArtist.setText(mFilepath);
          mArtist.setText(artist);
          mTitle.setText(title);
          mAlbum.setText(album);
-         mProgress.setMax(mPlayer.getDuration());
+         //mProgress.setMax(mPlayer.getDuration());
          return true;
    }
   
@@ -334,11 +356,11 @@ public class player_main extends Activity {
    Button.OnClickListener mClickPlay = new View.OnClickListener() {
          public void onClick(View v) {
              if (mPlayer.isPlaying() == false) {
-                  mPlayer.start();
-                  mPlayBtn.setText("Pause");
+            	 mPlayer.start();
+                 mPlayBtn.setText("Pause");
              } else {
-                  mPlayer.pause();
-                  mPlayBtn.setText("Play");
+                 mPlayer.pause();
+                 mPlayBtn.setText("Play");
              }
          }
     };
@@ -348,9 +370,40 @@ public class player_main extends Activity {
          public void onClick(View v) {
              mPlayer.stop();
              mPlayBtn.setText("Play");
-             mProgress.setProgress(0);
+             //mProgress.setProgress(0);
              Prepare();
          }
+   };
+   
+   View.OnTouchListener mOnScrollViewTouchListener = new View.OnTouchListener() {
+	   	@Override
+		public boolean onTouch(View v, MotionEvent event) {
+	   		if (mPlayer.isPlaying() == true) {
+				mPlayer.pause();
+            	mPlayBtn.setText("Play");
+			}
+			return false;
+		}
+   };
+   
+   OnScrollListener mOnScrollViewScrollListener = new OnScrollListener() {
+		
+		@Override
+		public void onScroll(AbsListView view, int firstVisibleItem,
+				int visibleItemCount, int totalItemCount) {
+			//if (mPlayer.isPlaying() == false) {
+			//	// 여기서 시크바랑 플레이어를 수정시켜줌.
+				//int a = 9;
+			//}
+			
+			
+		}
+		
+		@Override
+		public void onScrollStateChanged(AbsListView view, int scrollState) {
+			int c = 0;
+		}
+	   
    };
   
    /*
@@ -412,11 +465,15 @@ public class player_main extends Activity {
          public void handleMessage(Message msg) {
              if (mPlayer == null) return;
              if (mPlayer.isPlaying()) {
-                  mProgress.setProgress(mPlayer.getCurrentPosition());
+                  //mProgress.setProgress(mPlayer.getCurrentPosition());
              }
              mProgressHandler.sendEmptyMessageDelayed(0,200);
          }
     };
+    public double getPlayerCurrentRate()
+    {
+    	return ((double)mPlayer.getCurrentPosition() / (double)mPlayer.getDuration());
+    }
     
  // 0.016초에 한번꼴로 재생 위치 갱신
     Handler mScrollHandler = new Handler() {
@@ -425,8 +482,8 @@ public class player_main extends Activity {
              if (mPlayer.isPlaying()) {
             	 //int duration = mPlayer.getDuration();
             	 //int width = mWaveformLayout.getMeasuredWidth();
-                  int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()) * ((double)mPlayer.getCurrentPosition() / (double)mPlayer.getDuration()));
-                  mWaveformView.scrollTo(pos, 0);
+                  int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()) * getPlayerCurrentRate() );
+                  mWaveformView.smoothScrollTo(pos, 0);
              }
              mScrollHandler.sendEmptyMessageDelayed(0,32);
          }
@@ -436,7 +493,7 @@ public class player_main extends Activity {
     SeekBar.OnSeekBarChangeListener mOnSeek = new SeekBar.OnSeekBarChangeListener() {
          public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
              if (fromUser) {
-                  mPlayer.seekTo(progress);
+                  //mPlayer.seekTo(progress);
              }
          }
 
