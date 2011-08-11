@@ -18,6 +18,9 @@ public class player_main extends Activity {
     
     static MediaPlayer mPlayer;
     Button mPlayBtn;
+    Button mNextBtn;
+    Button mPrevBtn;
+    
     TextView mArtist;
     TextView mTitle;
     TextView mAlbum;
@@ -29,6 +32,8 @@ public class player_main extends Activity {
     LinearLayout mWaveformLayout;
     //String strMediaDBIndex;
     WaveLoopActivity wla;
+    
+    SentenceSegmentList sentenceSegmentList;
 
     
     ProgressDialog mLoadingDialog;
@@ -67,6 +72,12 @@ public class player_main extends Activity {
          mAlbum = (TextView)findViewById(R.id.album);
          mPlayBtn = (Button)findViewById(R.id.play);
          mPlayBtn.setOnClickListener(mClickPlay);
+         
+         mNextBtn = (Button)findViewById(R.id.next);
+         mNextBtn.setOnClickListener(mClickNext);
+         
+         mPrevBtn = (Button)findViewById(R.id.prev);
+         mPrevBtn.setOnClickListener(mClickPrev);
          
          // 완료 리스너, 시크바 변경 리스너 등록
          //mPlayer.setOnCompletionListener(mOnComplete);
@@ -137,10 +148,11 @@ public class player_main extends Activity {
         	         	
         	         	
         	         
-    					SentenceSegmentList ssList = new SentenceSegmentList();
-    					ssList.readFromFile(fileInputStream);
-        	         	
-    					SentenceSegment[] segs = ssList.getSegments();
+        	         	sentenceSegmentList = new SentenceSegmentList();
+        	         	sentenceSegmentList.readFromFile(fileInputStream);
+        	         	int widthSum = 0;
+        	         	int widthSum2 = 0;
+    					SentenceSegment[] segs = sentenceSegmentList.getSegments();
     					for(int i = 0; i < segs.length; ++i )
     					{
     						SentenceSegment segment = segs[i];
@@ -149,6 +161,7 @@ public class player_main extends Activity {
     						ll.setOrientation(LinearLayout.HORIZONTAL);
     						ll.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) );
     						
+    						widthSum2 += segment.size;
     						int count = 0;
             	         	for( int innerOffset = 0; innerOffset < segment.size; innerOffset+=1000 )
             	         	{
@@ -156,7 +169,7 @@ public class player_main extends Activity {
             	         		WaveformView waveformView = new WaveformView(player_main.this);
             		         	waveformView.setData(frameGains, segment.startOffset+innerOffset, 
             		         			segment.startOffset+innerOffset + width, 200 );
-            		         	
+            		         	widthSum += width;
             		         	ll.addView( waveformView );
             		         	count++;
             	         	}
@@ -359,15 +372,42 @@ public class player_main extends Activity {
              }
          }
     };
+    
+    // 다음문장으로 이동.
+    Button.OnClickListener mClickNext = new View.OnClickListener() {
+        public void onClick(View v) {
+        	
+        	int offset = sentenceSegmentList.getNextSentenceOffset(mWaveformView.getScrollX()/2);
+        	mWaveformView.smoothScrollTo(offset*2, 0);
+        	
+        	@SuppressWarnings("unused")
+			int a = mWaveformLayout.getMeasuredWidth();
+        	
+        	
+        	
+        }
+    };
+    
+ // 다음문장으로 이동.
+    Button.OnClickListener mClickPrev = new View.OnClickListener() {
+        public void onClick(View v) {
+        	
+        	int offset = sentenceSegmentList.getPrevSentenceOffset(mWaveformView.getScrollX()/2);
+        	mWaveformView.smoothScrollTo(offset*2, 0);
+        	
+        }
+    };
+    
+    
 
     // 재생 정지. 재시작을 위해 미리 준비해 놓는다.
    Button.OnClickListener mClickStop = new View.OnClickListener() {
-         public void onClick(View v) {
+        public void onClick(View v) {
              mPlayer.stop();
              mPlayBtn.setText("Play");
              //mProgress.setProgress(0);
              Prepare();
-         }
+        }
    };
    
    View.OnTouchListener mOnScrollViewTouchListener = new View.OnTouchListener() {
