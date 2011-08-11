@@ -59,7 +59,7 @@ public class SentenceSegmentList {
 				SentenceSegment segment = new SentenceSegment(isSilence, i, nextIndex-i );
 				segments.add(segment);
 				
-				i = nextIndex;
+				i = nextIndex-1;
 
 	        }
 		}
@@ -134,6 +134,57 @@ public class SentenceSegmentList {
 		objectOutputStream.writeObject(mSegmentList);
 	}
 	
+	public int getCurrentSentenceIndex( int currentOffset )
+	{
+		for(int i = 0;i < mSegmentList.length; ++i )
+		{
+			if( mSegmentList[i].startOffset <= currentOffset &&
+				mSegmentList[i].startOffset + mSegmentList[i].size > currentOffset )
+				return i;
+		}
+
+		return 0;
+	}
+	
+	public int getNextSentenceOffset( int currentOffset )
+	{
+		int currentIndex = getCurrentSentenceIndex(currentOffset);
+		
+		if( mSegmentList[currentIndex].isSilence )
+			currentIndex++;
+		else
+			currentIndex+=2;
+		
+		if( currentIndex >= mSegmentList.length )
+			return currentOffset;
+			
+		
+		return mSegmentList[currentIndex].startOffset;
+	}
+	
+	public int getPrevSentenceOffset( int currentOffset )
+	{
+		int currentIndex = getCurrentSentenceIndex(currentOffset);
+		
+		// startOffset으로부터 일정사이즈 이상이면 현재 문장 처음으로 이동하고.
+		// startOffset에 가까우면 앞문장의 startOffset으로 이동한다.
+		if( mSegmentList[currentIndex].isSilence )
+			currentIndex--;
+		else
+		{
+			if( currentOffset - mSegmentList[currentIndex].startOffset < 15 )//0.3초 이하이면 앞문장으로.
+			{
+				currentIndex-=2;
+			}
+			
+		}
+
+		if( currentIndex < 0 )
+			currentIndex = 0;
+		
+		return mSegmentList[currentIndex].startOffset;
+	}
+
 	
 	
 }
