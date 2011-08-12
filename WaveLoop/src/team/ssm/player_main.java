@@ -57,6 +57,7 @@ public class player_main extends Activity {
          mWaveformView.setOnTouchListener(mOnScrollViewTouchListener);
          mWaveformView.setSeekBar( (SeekBar)findViewById(R.id.progress) );
          mWaveformView.setMediaPlayer(mPlayer);
+         mWaveformView.setInnerLayout(mWaveformLayout);
          
          //mWaveformView.dis
          //mWaveformView.setOn
@@ -364,8 +365,12 @@ public class player_main extends Activity {
    Button.OnClickListener mClickPlay = new View.OnClickListener() {
          public void onClick(View v) {
              if (mPlayer.isPlaying() == false) {
+            	 mWaveformView.forceStop();
+            	 //mWaveformView.smoothScrollTo(mWaveformView.getScrollX(), mWaveformView.getScrollY());
             	 mPlayer.start();
                  mPlayBtn.setText("Pause");
+                 // 여기서 스크롤뷰를 세팅하고.
+                 
              } else {
                  mPlayer.pause();
                  mPlayBtn.setText("Play");
@@ -376,24 +381,19 @@ public class player_main extends Activity {
     // 다음문장으로 이동.
     Button.OnClickListener mClickNext = new View.OnClickListener() {
         public void onClick(View v) {
-        	
+        	mPlayer.pause();
         	int offset = sentenceSegmentList.getNextSentenceOffset(mWaveformView.getScrollX()/2);
-        	mWaveformView.smoothScrollTo(offset*2, 0);
-        	
-        	@SuppressWarnings("unused")
-			int a = mWaveformLayout.getMeasuredWidth();
-        	
-        	
+        	mWaveformView.scrollSmoothTo(offset*2, 0);
         	
         }
     };
     
- // 다음문장으로 이동.
+    // 이전문장으로 이동.
     Button.OnClickListener mClickPrev = new View.OnClickListener() {
         public void onClick(View v) {
-        	
+        	mPlayer.pause();
         	int offset = sentenceSegmentList.getPrevSentenceOffset(mWaveformView.getScrollX()/2);
-        	mWaveformView.smoothScrollTo(offset*2, 0);
+        	mWaveformView.scrollSmoothTo(offset*2, 0);
         	
         }
     };
@@ -465,9 +465,9 @@ public class player_main extends Activity {
             	 //int duration = mPlayer.getDuration();
             	 //int width = mWaveformLayout.getMeasuredWidth();
                   int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()) * getPlayerCurrentRate() );
-                  mWaveformView.smoothScrollTo(pos, 0);
+                  mWaveformView.scrollTo(pos, 0);
              }
-             mScrollHandler.sendEmptyMessageDelayed(0,32);
+             mScrollHandler.sendEmptyMessageDelayed(0,16);
          }
     };
 

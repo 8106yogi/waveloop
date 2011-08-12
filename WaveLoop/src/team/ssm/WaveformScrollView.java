@@ -1,18 +1,30 @@
 package team.ssm;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.Scroller;
 import android.widget.SeekBar;
 
 public class WaveformScrollView extends HorizontalScrollView {
 	SeekBar mSeekBar;
 	boolean mIsSeekbarTouched;
 	MediaPlayer mPlayer;
+	Scroller mScroller;// = new Scroller(this);
+	//int mMaxScrollX;
+	//int mMaxScrollY;
+	LinearLayout mWaveformLinearLayout;
+	
+	public void setInnerLayout( LinearLayout layout )
+	{
+		mWaveformLinearLayout = layout;
+	}
 	
 	public void setSeekBar( SeekBar seekBar )
 	{
@@ -25,6 +37,8 @@ public class WaveformScrollView extends HorizontalScrollView {
 	public void setMediaPlayer( MediaPlayer player )
 	{
 		mPlayer = player;
+		
+		
 	}
 	
 	
@@ -32,7 +46,7 @@ public class WaveformScrollView extends HorizontalScrollView {
     SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         	if (fromUser) {
-            	WaveformScrollView.this.smoothScrollTo(progress, 0);
+            	WaveformScrollView.this.scrollTo(progress, 0);
             	 
             	double position = (double)progress/(double)mSeekBar.getMax()*(double)mPlayer.getDuration();
  				mPlayer.seekTo( (int)position );
@@ -41,6 +55,9 @@ public class WaveformScrollView extends HorizontalScrollView {
 
          public void onStartTrackingTouch(SeekBar seekBar) {
         	 mIsSeekbarTouched = true;
+        	 
+        	 forceStop();
+        	 
         	 if( mPlayer != null )
         	 {
         		 mPlayer.pause();
@@ -53,37 +70,56 @@ public class WaveformScrollView extends HorizontalScrollView {
     };
 	
 	GestureDetector mGestureDetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener(){
-    	@Override
-    	public boolean onFling(MotionEvent e1, MotionEvent e2,
-    			float velocityX, float velocityY) {
-    		/*if(Math.abs(velocityX) > 1000 && Math.abs(velocityY) < 500){//민감도 조정
-    			Log.d(TAG, "onFling, consumed");
-    			if(velocityX < 0){//왼쪽에서 오른쪽으로 플링
-    				if(mButtonNext.isEnabled()){
-    					mButtonNext.performClick();
-    					return true;//touch 이벤트 흡수
-    				}
-    			}else{
-    				if(mButtonPrev.isEnabled()){
-    					mButtonPrev.performClick();
-    					return true;//touch 이벤트 흡수
-    				}
-    			}
-    		}*/
-    		return false;
-    	}
+    	
+		
+		@Override
+	    public boolean onScroll(MotionEvent e1, MotionEvent e2,
+	                                float distanceX, float distanceY) {
+	        // beware, it can scroll to infinity
+	        scrollBy((int)distanceX, (int)distanceY);
+	        return true;
+	    }
+
+	    @Override
+	    public boolean onFling(MotionEvent e1, MotionEvent e2, float vX, float vY) {
+	        mScroller.fling(getScrollX(), getScrollY(),
+	                -(int)vX, -(int)vY, 0, 
+	                (int)mWaveformLinearLayout.getMeasuredWidth(), 0, (int)mWaveformLinearLayout.getMeasuredHeight());
+	        invalidate(); // don't remember if it's needed
+	        return true;
+	    }
+
+	    @Override
+	    public boolean onDown(MotionEvent e) {
+	        if(!mScroller.isFinished() ) { // is flinging
+	            mScroller.forceFinished(true); // to stop flinging on touch
+	        }
+	        return true; // else won't work
+	    }
+	    
+	    
     	
     	
     });
 	
 	public WaveformScrollView(Context context) {
 		super(context);
+		
+		mScroller = new Scroller(context);
+		//mWaveformLinearLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
+		
 	}
 	public WaveformScrollView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		
+		mScroller = new Scroller(context);
+		//mWaveformLinearLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
 	}
 	public WaveformScrollView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+		
+		mScroller = new Scroller(context);
+		//mWaveformLinearLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
 	}
 	
 	
@@ -92,13 +128,13 @@ public class WaveformScrollView extends HorizontalScrollView {
 		// 시크바를 직접 컨트롤중이 아니라면, 스크롤바 변화에 따라 시크바를 따라가게 한다.
 		if( mSeekBar != null && mIsSeekbarTouched == false )
 		{
-			LinearLayout waveformLinearLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
-			mSeekBar.setMax( waveformLinearLayout.getMeasuredWidth() );
+			//LinearLayout waveformLinearLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
+			mSeekBar.setMax( mWaveformLinearLayout.getMeasuredWidth() );
 			mSeekBar.setProgress( this.getScrollX() );
 			
 			if( mPlayer != null && mPlayer.isPlaying() == false )
 			{
-				double position = (double)this.getScrollX()/(double)waveformLinearLayout.getMeasuredWidth()*(double)mPlayer.getDuration();
+				double position = (double)this.getScrollX()/(double)mWaveformLinearLayout.getMeasuredWidth()*(double)mPlayer.getDuration();
 				mPlayer.seekTo( (int)position );
 			}
 				
@@ -108,13 +144,8 @@ public class WaveformScrollView extends HorizontalScrollView {
 
 		super.onScrollChanged(l, t, oldl, oldt);
 	}
-	@Override
-	public boolean onTouchEvent(MotionEvent ev) {
-		
-		return super.onTouchEvent(ev);
-	}
 	
-	/*
+	
 	@Override
 	protected void onAnimationEnd() {
 		
@@ -125,8 +156,13 @@ public class WaveformScrollView extends HorizontalScrollView {
 		
 		super.onAnimationStart();
 	}
-	*/
 	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+	    return mGestureDetector.onTouchEvent(event);
+	}
+	
+	/*
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
 		if(mGestureDetector.onTouchEvent(ev)){
@@ -135,9 +171,62 @@ public class WaveformScrollView extends HorizontalScrollView {
     	}
     	return super.dispatchTouchEvent(ev);
 	}
+	*/
 	
+	@Override
+	public void computeScroll() {
+		if(mScroller.computeScrollOffset()) {
+	        scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+		}
+	
+	}
+	
+	
+	public void scrollSmoothTo( int x, int y )
+	{
+		if(!mScroller.isFinished() ) { // is flinging
+            mScroller.abortAnimation(); // to stop flinging on touch
+            scrollTo(x,y);
+            
+        }
+		//else
+		{
+			int curX = getScrollX();
+			int curY = getScrollY();
+			Log.i("", "getScroll : " + getScrollX() + ", " + getScrollY() );
+			Log.i("", "target : " + x + ", " + y );
+			
+			mScroller.startScroll(
+					
+					mScroller.getCurrX(), 
+					mScroller.getCurrY(), 
+					x-mScroller.getCurrX(), 
+					y-mScroller.getCurrY() );
+					
+
+					/*
+					getScrollX(), 
+					getScrollY(), 
+					x-getScrollX(), 
+					y-getScrollY() );*/
+			invalidate();
+			
+		}
+		
+		
+	}
+	
+	public void forceStop()
+	{
+		//smoothScrollTo(0, 0)
+		if(!mScroller.isFinished() ) { // is flinging
+            mScroller.forceFinished(true); // to stop flinging on touch
+        }
+		
+	}
+}
 	
 	
 	
 
-}
+
