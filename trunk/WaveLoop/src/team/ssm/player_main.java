@@ -151,6 +151,10 @@ public class player_main extends Activity {
         	         
         	         	sentenceSegmentList = new SentenceSegmentList();
         	         	sentenceSegmentList.readFromFile(fileInputStream);
+        	         	
+        	         	fileInputStream.close();
+        	         	
+        	         	
         	         	int widthSum = 0;
         	         	int widthSum2 = 0;
     					SentenceSegment[] segs = sentenceSegmentList.getSegments();
@@ -194,7 +198,7 @@ public class player_main extends Activity {
     					
     					
     					
-        	         	fileInputStream.close();
+        	         	
                     	
         	         	
         				

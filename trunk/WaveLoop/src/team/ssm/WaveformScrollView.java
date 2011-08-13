@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.animation.AnimationUtils;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
@@ -20,6 +21,8 @@ public class WaveformScrollView extends HorizontalScrollView {
 	//int mMaxScrollX;
 	//int mMaxScrollY;
 	LinearLayout mWaveformLinearLayout;
+	
+	long mLastScroll;
 	
 	public void setInnerLayout( LinearLayout layout )
 	{
@@ -184,34 +187,31 @@ public class WaveformScrollView extends HorizontalScrollView {
 	
 	public void scrollSmoothTo( int x, int y )
 	{
-		if(!mScroller.isFinished() ) { // is flinging
-            mScroller.abortAnimation(); // to stop flinging on touch
-            scrollTo(x,y);
-            
-        }
-		//else
-		{
-			int curX = getScrollX();
-			int curY = getScrollY();
-			Log.i("", "getScroll : " + getScrollX() + ", " + getScrollY() );
-			Log.i("", "target : " + x + ", " + y );
-			
+		
+		long duration = AnimationUtils.currentAnimationTimeMillis() - mLastScroll;
+		
+		if (duration > 250) {
+			//Log.i("", "getScroll : " + getScrollX() + ", " + getScrollY() );
+			//Log.i("", "target : " + x + ", " + y );
+			if(!mScroller.isFinished() ) { // is flinging
+                mScroller.abortAnimation(); // to stop flinging on touch
+        	}
 			mScroller.startScroll(
-					
-					mScroller.getCurrX(), 
-					mScroller.getCurrY(), 
-					x-mScroller.getCurrX(), 
-					y-mScroller.getCurrY() );
-					
-
-					/*
 					getScrollX(), 
 					getScrollY(), 
 					x-getScrollX(), 
-					y-getScrollY() );*/
+					y-getScrollY() );
 			invalidate();
-			
-		}
+        } else {
+        	if(!mScroller.isFinished() ) { // is flinging
+                mScroller.abortAnimation(); // to stop flinging on touch
+        	}
+        	   scrollTo(x,y);
+        }
+		
+
+		
+		mLastScroll = AnimationUtils.currentAnimationTimeMillis();
 		
 		
 	}
