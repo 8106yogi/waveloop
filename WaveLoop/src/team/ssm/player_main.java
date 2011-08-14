@@ -9,6 +9,7 @@ import android.media.*;
 import android.net.*;
 import android.os.*;
 import android.provider.MediaStore.Audio;
+import android.util.*;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
@@ -17,13 +18,16 @@ import android.widget.AbsListView.OnScrollListener;
 public class player_main extends Activity {
     
     static MediaPlayer mPlayer;
-    Button mPlayBtn;
+    Button mPlayBtn; 
     Button mNextBtn;
     Button mPrevBtn;
     
     TextView mArtist;
     TextView mTitle;
     TextView mAlbum;
+    TextView mCurtime;
+    TextView mTotaltime;
+    
     SeekBar mProgress;
     boolean wasPlaying;
     String mFilepath;
@@ -32,21 +36,29 @@ public class player_main extends Activity {
     LinearLayout mWaveformLayout;
     //String strMediaDBIndex;
     WaveLoopActivity wla;
+
+    HorizontalScrollView hv;
+
     
     SentenceSegmentList sentenceSegmentList;
+
 
     
     ProgressDialog mLoadingDialog;
     
     private Handler mLoadingHandler = new Handler();
     
-   //private int index = 0;
+   // private int index = 0;
     //private HFling hf = null;
-
+    private HorizontalScrollView scrollView;
+    private ViewGroup contentView;
+   
+    
+    
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_main);
-        
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         mPlayer = new MediaPlayer();
          
@@ -67,25 +79,34 @@ public class player_main extends Activity {
          //mWaveformView.setSmoothScrollingEnabled(false);
          
 
-         // 버튼들의 클릭 리스너 등록
+         
          mArtist = (TextView)findViewById(R.id.artist);
          mTitle = (TextView)findViewById(R.id.title);
          mAlbum = (TextView)findViewById(R.id.album);
+         mCurtime = (TextView)findViewById(R.id.cur_time);
+         mTotaltime = (TextView)findViewById(R.id.total_time);
+         
+         // 버튼들의 클릭 리스너 등록
          mPlayBtn = (Button)findViewById(R.id.play);
          mPlayBtn.setOnClickListener(mClickPlay);
          
+
+         
+
          mNextBtn = (Button)findViewById(R.id.next);
          mNextBtn.setOnClickListener(mClickNext);
          
          mPrevBtn = (Button)findViewById(R.id.prev);
          mPrevBtn.setOnClickListener(mClickPrev);
          
+
          // 완료 리스너, 시크바 변경 리스너 등록
          //mPlayer.setOnCompletionListener(mOnComplete);
          mPlayer.setOnSeekCompleteListener(mOnSeekComplete);
          mProgress = (SeekBar)findViewById(R.id.progress);
          //mProgress.setOnSeekBarChangeListener(mOnSeek);
-         mProgressHandler.sendEmptyMessageDelayed(0,200);
+         //mProgressHandler.sendEmptyMessageDelayed(0,200);
+         mPlaytimeHandler.sendEmptyMessageDelayed(0,1000);
          mScrollHandler.sendEmptyMessageDelayed(0,16);
 
          
@@ -232,22 +253,36 @@ public class player_main extends Activity {
         	 }
          } ).start();
 
-          
          //dialog.hide();
-       // this.hf = (HFling)findViewById(R.id.scrollview);
-
+        //this.hf = (HFling)findViewById(R.id.buttonScrollView);
         //test();
         //initBtn();  
+        
+        /*
+        scrollView = (HorizontalScrollView) findViewById(R.id.buttonScrollView);	//가로스크롤뷰
+        contentView = (ViewGroup) findViewById(R.id.button_scroll);	//가로스크롤뷰에 담긴 전체 리니어레이아웃
+        scrollView.setOnTouchListener(new ScrollPager(scrollView, contentView));
+        scrollView.post(new Runnable() {
+	        public void run() {
+	          //scrollView.scrollTo(0, contentView.getPaddingTop());
+	          scrollView.scrollTo(contentView.getPaddingLeft(), 0);
+	         }
+        });
+        */
+    }
+      
+
 
 
          
-    }
+    
 
 	private void setAudioInfoUIFromMediaDB( String strMediaDBIndex ) {
 		String selection = "( (_ID LIKE ?) )";
 		String[] selectionArgs = { strMediaDBIndex };
 		String sortOrder = Audio.Media.DEFAULT_SORT_ORDER;
 		Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
+		int tMin = 0, tSec =0;
 		
 		Cursor curMedia = getContentResolver().query(uriExternal, null, selection, selectionArgs, sortOrder);
 		if(curMedia.getCount() == 1)
@@ -256,11 +291,28 @@ public class player_main extends Activity {
 			String artist = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ARTIST));
 			String album = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ALBUM));
 			String title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
-			mArtist.setText(artist);
+			
+			int tot_time = curMedia.getInt(curMedia.getColumnIndex(Audio.AudioColumns.DURATION));
+			if(tot_time<=0){
+				tot_time=0;
+			}
+			else{
+				int tot_time_sec = (int)(double)curMedia.getInt(curMedia.getColumnIndex(Audio.AudioColumns.DURATION))/1000;
+				tMin = tot_time_sec / 60;
+				tSec = tot_time_sec % 60;
+				
+			} 
+			
+			//int cur = mPlayer.getCurrentPosition(); 
+ 			mArtist.setText(artist);
 		    mTitle.setText(title);
 		    mAlbum.setText(album);
-		     
+		    //mCurtime.setText(cur);
+		    String strTime = String.format("%02d:%02d" , tMin, tSec);
+		    mTotaltime.setText(strTime);
+		    //mTotaltime.setText(cur);
 		}
+		//mPlaytimeHandler.sendEmptyMessageDelayed(0,1000);
 	}
     
     /*
@@ -301,12 +353,7 @@ public class player_main extends Activity {
     }
     
     
-	public void onClick(View v) {
-		Log.i("CC", "CLICK");
-		if() {
-			xx();
-		}
-	}
+	
 	
     
 	public void update(Observable observable, Object data) {
@@ -372,6 +419,7 @@ public class player_main extends Activity {
             	 mWaveformView.forceStop();
             	 //mWaveformView.smoothScrollTo(mWaveformView.getScrollX(), mWaveformView.getScrollY());
             	 mPlayer.start();
+            	 
                  mPlayBtn.setText("Pause");
                  // 여기서 스크롤뷰를 세팅하고.
                  
@@ -415,8 +463,7 @@ public class player_main extends Activity {
    };
    
    View.OnTouchListener mOnScrollViewTouchListener = new View.OnTouchListener() {
-	   	@Override
-		public boolean onTouch(View v, MotionEvent event) {
+	   	public boolean onTouch(View v, MotionEvent event) {
 	   		if (mPlayer.isPlaying() == true) {
 				mPlayer.pause();
             	mPlayBtn.setText("Play");
@@ -425,6 +472,9 @@ public class player_main extends Activity {
 		}
    };
    
+
+
+
   
 
 
@@ -446,16 +496,38 @@ public class player_main extends Activity {
          }
    };
 
+   
+   /*
    // 0.2초에 한번꼴로 재생 위치 갱신
     Handler mProgressHandler = new Handler() {
          public void handleMessage(Message msg) {
              if (mPlayer == null) return;
              if (mPlayer.isPlaying()) {
                   //mProgress.setProgress(mPlayer.getCurrentPosition());
+            	
              }
              mProgressHandler.sendEmptyMessageDelayed(0,200);
          }
     };
+   */
+    
+    //1초에 한 번씩 재생시간 갱신
+    Handler mPlaytimeHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            
+        	if (mPlayer == null) return;
+            if (mPlayer.isPlaying()) {
+            	int cur =  mPlayer.getCurrentPosition()/1000;
+           	 	int cMin = cur/60;
+                int cSec = cur%60;
+                String strTime = String.format("%02d:%02d" , cMin, cSec);
+                mCurtime.setText(strTime);
+            }
+            mPlaytimeHandler.sendEmptyMessageDelayed(0,1000);
+       }
+   };
+   
+    
     public double getPlayerCurrentRate()
     {
     	return ((double)mPlayer.getCurrentPosition() / (double)mPlayer.getDuration());
@@ -480,6 +552,10 @@ public class player_main extends Activity {
          public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
              if (fromUser) {
                   //mPlayer.seekTo(progress);
+            	 //int cur = mPlayer.getCurrentPosition()/1000;
+                
+            	
+                 
              }
          }
 
