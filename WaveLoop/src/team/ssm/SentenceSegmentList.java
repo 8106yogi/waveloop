@@ -27,13 +27,13 @@ public class SentenceSegmentList {
 			nextIndex = nCount;
 			
 			int value = waveformData[i];
-			boolean isSilence = (2 > value)? true:false;
+			boolean isSilence = (5 > value)? true:false;
 			if(isSilence)// 무음이면
 			{
 				
 				for(int j = i+1; j < nCount; ++j )
 				{
-					if( 0 < waveformData[j] )
+					if( 2 < waveformData[j] )
 					{
 						nextIndex = j;
 						break;
@@ -44,7 +44,7 @@ public class SentenceSegmentList {
 			{
 				for (int j = i+1; j < nCount; ++j)
 				{
-	                if ( 2 > waveformData[j] )
+	                if ( 3 > waveformData[j] )
 	                {
 	                    nextIndex = j;
 	                    break;
@@ -133,6 +133,20 @@ public class SentenceSegmentList {
 		ObjectOutputStream objectOutputStream = new ObjectOutputStream (fileOutputStream);
 		objectOutputStream.writeObject(mSegmentList);
 	}
+	
+	public SentenceSegment getCurrentSentenceByOffset( int currentOffset )
+	{
+		return getCurrentSentenceByIndex( getCurrentSentenceIndex( currentOffset ) );
+	}
+	
+	public SentenceSegment getCurrentSentenceByIndex( int index )
+	{
+		if( index >= 0 && index < mSegmentList.length )
+			return mSegmentList[index];
+		
+		return null;
+	}
+	
 	
 	public int getCurrentSentenceIndex( int currentOffset )
 	{

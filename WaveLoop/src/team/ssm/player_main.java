@@ -5,7 +5,9 @@ import java.io.*;
 import android.app.*;
 import android.content.*;
 import android.database.*;
+import android.graphics.Color;
 import android.media.*;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.net.*;
 import android.os.*;
 import android.provider.MediaStore.Audio;
@@ -21,7 +23,9 @@ public class player_main extends Activity {
     Button mPlayBtn; 
     Button mNextBtn;
     Button mPrevBtn;
+    Button mBookmarkBtn;
     
+    long mDataRowID;
     TextView mArtist;
     TextView mTitle;
     TextView mAlbum;
@@ -100,9 +104,13 @@ public class player_main extends Activity {
          mPrevBtn.setOnClickListener(mClickPrev);
          
 
+         mBookmarkBtn = (Button)findViewById(R.id.bookmark);
+         mBookmarkBtn.setOnClickListener(mClickBookmark);
+         
          // 완료 리스너, 시크바 변경 리스너 등록
          //mPlayer.setOnCompletionListener(mOnComplete);
          mPlayer.setOnSeekCompleteListener(mOnSeekComplete);
+         mPlayer.setOnCompletionListener(mOnCompletionListener);
          mProgress = (SeekBar)findViewById(R.id.progress);
          //mProgress.setOnSeekBarChangeListener(mOnSeek);
          //mProgressHandler.sendEmptyMessageDelayed(0,200);
@@ -115,11 +123,11 @@ public class player_main extends Activity {
          Intent intent = getIntent();
          if (intent != null)
          {
-         	long lDataIndex = intent.getIntExtra("오디오파일경로", 0);
+        	mDataRowID = intent.getIntExtra("오디오파일경로", 0);
          	DbAdapter dba = new DbAdapter(getBaseContext());
          	dba.open();
          	Cursor cursor = dba.fetchAllBooks();
-         	cursor.moveToPosition((int) lDataIndex);
+         	cursor.moveToPosition((int) mDataRowID);
          	mFilepath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_FILEPATH));
          	mWavePath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_WAVEPATH));
          	String strMediaDBIndex = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_MEDIA_DB_ID));
@@ -396,6 +404,8 @@ public class player_main extends Activity {
              return false;
          }
          mPlayer.start();
+         mPlayer.seekTo( mPlayer.getDuration() );
+         //mPlayer.seekTo(0);
          mPlayer.pause();
 
          return true;
@@ -450,6 +460,58 @@ public class player_main extends Activity {
         }
     };
     
+    // 문장노트 추가.
+    Button.OnClickListener mClickBookmark = new View.OnClickListener() {
+    	
+    	public String getTimeString( int sec )
+    	{
+    		//String.
+    		int minute = sec/60;
+    		int second = sec - minute*60;
+    		return minute + ":" + second;
+    	}
+    	
+        public void onClick(View v) {
+        	// 이곳에서 문장노트에 추가를 한다.
+        	
+        	// 현재 문장을 가져온다.
+        	SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
+        	if( seg.isSilence )
+        	{
+        		Toast.makeText(player_main.this, "문장만 추가 가능합니다.", Toast.LENGTH_SHORT).show();
+        		return;
+        	}
+        	
+        	// 이미 있는 문장이면 추가하지 않는다.
+        	//DbAdapter dba = new DbAdapter(getBaseContext());
+         	//dba.open();
+        	//dba.close();
+        	
+        	// DB에 추가를 하고.
+        	
+        	
+        	/*
+        	dba.open();
+         	dba.createBook2( mDataRowID, 						// data row id
+         			getTimeString(seg.startOffset), 			// start time
+         			getTimeString(seg.startOffset+seg.size),	// end time
+         			"", 										// memo
+         			0,											// star rate 
+         			Color.GRAY);								// color
+         	
+         	dba.close();
+         	*/
+         	
+        	// 뷰를 업데이트.
+         	
+         	
+         	Toast.makeText(player_main.this, "문장노트에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+         	
+         	
+        }
+    };
+    
+
     
 
     // 재생 정지. 재시작을 위해 미리 준비해 놓는다.
@@ -494,6 +556,14 @@ public class player_main extends Activity {
                   mPlayer.start();
              }
          }
+   };
+   
+   MediaPlayer.OnCompletionListener mOnCompletionListener = new MediaPlayer.OnCompletionListener() {
+	   public void onCompletion(MediaPlayer arg0){
+		   //int duration = mPlayer.getDuration() - mPlayer.getCurrentPosition();
+		   
+	   }
+	   
    };
 
    
