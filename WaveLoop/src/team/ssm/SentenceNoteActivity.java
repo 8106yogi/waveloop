@@ -56,10 +56,12 @@ public class SentenceNoteActivity extends Activity {
 	
 	public void refreshListFromDB()	// 문장노트 리스트의 내용을 새로고침.
 	{
-		/*
+		
 		mArrSentences.clear();
 
 		dba.open();
+		//dba.dropTable2();
+		//dba.createTable2();
 		Cursor cur = dba.fetchAllBooks2();
 		for(int i = 0; i < cur.getCount(); ++i )
 		{
@@ -78,7 +80,7 @@ public class SentenceNoteActivity extends Activity {
 		
        mAdapter.notifyDataSetChanged();
        
-       */
+       
 	}
   
 	public void onResume(){
