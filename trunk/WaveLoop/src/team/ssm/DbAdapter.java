@@ -22,6 +22,7 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 	
 	
 	//필드 이름들2
+	public static final String KEY_ROWID2 = "_id2";
 	public static final String KEY_SENTENCE_MDB_ID = "sentence_mdb_id";	
 	public static final String KEY_START_ID = "start_id";
 	public static final String KEY_END_ID = "end_id";
@@ -54,8 +55,9 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 	
 	//DB 초기화에 필요한 SQL문장 (문장노트 테이블)
 	private static final String DATABASE_CREATE2 =
-		"create table sentence (sentence_mdb_id integer, start_id integer, end_id integer"+
-		"start_time text not null, end_time text not null, memo text not null, star_rate integer not null, color integer not null);";
+		"create table sentence (_id2 integer primary key autoincrement,"+
+		"sentence_mdb_id text not null, start_id text not null, end_id text not null,"+
+		"start_time text not null, end_time text not null, memo text not null, star_rate text not null, color text not null);";
 	
 	//데이터베이스 정보 (테이블 이름, 데이터베이스 이름 등)
 	private static final String DATABASE_NAME = "waveloop.db";
@@ -135,10 +137,8 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 		return mDb.delete(DATABASE_TABLE, KEY_MEDIA_DB_ID + "=" + media_DB_ID, null) > 0;
 	}
 	
-	public boolean deleteBook2(long sentence_mdb_id, long start_id, long end_id){		//레코드 삭제(_id)
-		return mDb.delete(DATABASE_TABLE2, KEY_SENTENCE_MDB_ID + "=" + sentence_mdb_id + 
-				"AND" + KEY_START_ID + "=" + start_id + 
-				"AND" + KEY_END_ID + "=" + end_id, null) > 0;
+	public boolean deleteBook2(long rowID){		//레코드 삭제(_id)
+		return mDb.delete(DATABASE_TABLE2, KEY_ROWID2 + "=" + rowID, null) > 0;
 	}
 	
 	
@@ -164,7 +164,7 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 	}
 	
 	public Cursor fetchAllBooks2(){		//모든 레코드 반환(_id의 역순으로!)
-		return mDb.query(DATABASE_TABLE2, new String[]{KEY_SENTENCE_MDB_ID, KEY_START_ID, KEY_END_ID, KEY_START_TIME, KEY_END_TIME, KEY_MEMO, KEY_STAR_RATE, KEY_COLOR}, null, null, null, null, "_id desc");
+		return mDb.query(DATABASE_TABLE2, new String[]{KEY_ROWID2, KEY_SENTENCE_MDB_ID, KEY_START_ID, KEY_END_ID, KEY_START_TIME, KEY_END_TIME, KEY_MEMO, KEY_STAR_RATE, KEY_COLOR}, null, null, null, null, "_id2 desc");
 		
 	}
 	
@@ -176,12 +176,10 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 		return mCursor;
 	}
 	
-	public Cursor fetchBook2(long sentence_mdb_id, long start_id, long end_id) throws SQLException{		//sentence테이블의 특정 레코드 반환
+	public Cursor fetchBook2(long rowID) throws SQLException{		//sentence테이블의 특정 레코드 반환
 		Cursor mCursor =
-			mDb.query(true, DATABASE_TABLE2, new String[]{KEY_SENTENCE_MDB_ID, KEY_START_ID, KEY_END_ID, KEY_START_TIME, KEY_END_TIME,  KEY_MEMO, KEY_STAR_RATE, KEY_COLOR}, 
-					KEY_SENTENCE_MDB_ID + "=" + sentence_mdb_id + 
-					"AND" + KEY_START_ID + "=" + start_id + 
-					"AND" + KEY_END_ID + "=" + end_id, null, null, null, null, null);
+			mDb.query(true, DATABASE_TABLE2, new String[]{KEY_ROWID2, KEY_SENTENCE_MDB_ID, KEY_START_ID, KEY_END_ID, KEY_START_TIME, KEY_END_TIME,  KEY_MEMO, KEY_STAR_RATE, KEY_COLOR}, 
+					KEY_ROWID2 + "=" + rowID, null, null, null, null, null);
 		if(mCursor != null)
 			mCursor.moveToFirst();
 		return mCursor;
@@ -222,9 +220,8 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 		return mDb.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowID, null) > 0;
 	}
 	
-	public boolean updateBook2(long sentence_mdb_id, long start_id, long end_id, String start_time, String end_time, String memo, String star_rate, long color){	//레코드 업데이트(수정)
+	public boolean updateBook2(long rowID, String sentence_mdb_id, String start_id, String end_id, String start_time, String end_time, String memo, String star_rate, String color){	//레코드 업데이트(수정)
 		ContentValues args = new ContentValues();
-		
 		args.put(KEY_SENTENCE_MDB_ID, sentence_mdb_id); 
 		args.put(KEY_START_ID, start_id);
 		args.put(KEY_END_ID, end_id);
@@ -234,9 +231,7 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 		args.put(KEY_STAR_RATE, star_rate);
 		args.put(KEY_COLOR, color);
 		
-		return mDb.update(DATABASE_TABLE2, args, KEY_SENTENCE_MDB_ID + "=" + sentence_mdb_id
-				+ "AND" + KEY_START_ID + "=" + start_id + 
-				"AND" + KEY_END_ID + "=" + end_id, null) > 0;
+		return mDb.update(DATABASE_TABLE2, args, KEY_ROWID2 + "=" + rowID, null) > 0;
 	}
 
 	
