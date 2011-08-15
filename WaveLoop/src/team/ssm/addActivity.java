@@ -298,6 +298,12 @@ public class addActivity extends Activity {
         	
         } 
         
+        private void setTextViewAlpha( TextView v, boolean isRepeat )
+        {
+        	int alpha = (isRepeat)?60:255;
+        	v.setTextColor(v.getTextColors().withAlpha(alpha));
+        }
+        
         // 각 항목의 뷰 생성
         public View getView(final int position, View convertView, ViewGroup parent) {
                 View v = convertView;
@@ -306,32 +312,33 @@ public class addActivity extends Activity {
                     v = vi.inflate(R.layout.row2, null);
                 }
                 sound p = items.get(position);
-                //final int pos = position; 
-                
-               
                 
                 if (p != null) {
-                        
-                	
-                		TextView tar = (TextView) v.findViewById(R.id.top_artist2);
-                        TextView tal = (TextView) v.findViewById(R.id.top_album2);
-                        TextView bt = (TextView) v.findViewById(R.id.bottom_title2);
-                        CheckBox cb=(CheckBox)v.findViewById(R.id.chk);
-                        if (tar != null){
-                        	tar.setText(p.getArtist());                            
-                        }
-                        if (tal != null){
-                        	tal.setText(p.getAlbum());                            
-                        }
-                        if(bt != null){
-                        		bt.setText(p.getTitle());
-                        }
-                        if(cb != null){
-                        	//CheckBox cbx = (CheckBox) v.findViewById(R.id.chk);
-                            cb.setChecked(isClick[position]);
-                        	
-                            
-                        }
+	        		TextView tar = (TextView) v.findViewById(R.id.top_artist2);
+	                TextView tal = (TextView) v.findViewById(R.id.top_album2);
+	                TextView bt = (TextView) v.findViewById(R.id.bottom_title2);
+	                CheckBox cb=(CheckBox)v.findViewById(R.id.chk);
+	                if (tar != null){
+	                	tar.setText(p.getArtist());
+	                	setTextViewAlpha(tar, isRepet[position]);
+	                	
+	                }
+	                if (tal != null){
+	                	tal.setText(p.getAlbum());
+	                	setTextViewAlpha(tal, isRepet[position]);
+	                }
+	                if(bt != null){
+	                	bt.setText(p.getTitle());
+	                	setTextViewAlpha(bt, isRepet[position]);
+	                    
+	                }
+	                if(cb != null){
+	                	//CheckBox cbx = (CheckBox) v.findViewById(R.id.chk);
+	                    cb.setChecked(isClick[position]);
+	                    cb.setEnabled(!isRepet[position]);
+	                	
+	                    
+	                }
                      
                 }
                 
