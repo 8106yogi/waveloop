@@ -25,6 +25,7 @@ public class player_main extends Activity {
     Button mPrevBtn;
     Button mBookmarkBtn;
     
+    long mMediaDBID;
     long mDataRowID;
     TextView mArtist;
     TextView mTitle;
@@ -128,6 +129,7 @@ public class player_main extends Activity {
          	mWavePath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_WAVEPATH));
          	String strMediaDBIndex = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_MEDIA_DB_ID));
          	dba.close();
+         	mMediaDBID = Long.parseLong(strMediaDBIndex);
          	
          	setAudioInfoUIFromMediaDB(strMediaDBIndex);
          }
@@ -472,6 +474,8 @@ public class player_main extends Activity {
         	
         	// 현재 문장을 가져온다.
         	SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
+        	int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+        	
         	if( seg.isSilence )
         	{
         		Toast.makeText(player_main.this, "문장만 추가 가능합니다.", Toast.LENGTH_SHORT).show();
@@ -479,24 +483,26 @@ public class player_main extends Activity {
         	}
         	
         	// 이미 있는 문장이면 추가하지 않는다.
-        	//DbAdapter dba = new DbAdapter(getBaseContext());
+        	DbAdapter dba = new DbAdapter(getBaseContext());
          	//dba.open();
         	//dba.close();
         	
         	// DB에 추가를 하고.
         	
         	
-        	/*
+        	
         	dba.open();
-         	dba.createBook2( mDataRowID, 						// data row id
-         			getTimeString(seg.startOffset), 			// start time
-         			getTimeString(seg.startOffset+seg.size),	// end time
-         			"", 										// memo
+         	dba.createBook2( mMediaDBID, 						// data row id
+         			segIndex,									// start segment id
+         			segIndex,									// end segment id
+         			getTimeString(seg.startOffset/50), 			// start time
+         			getTimeString((seg.startOffset+seg.size)/50),	// end time
+         			"메모 없음", 										// memo
          			0,											// star rate 
          			Color.GRAY);								// color
          	
          	dba.close();
-         	*/
+         	
          	
         	// 뷰를 업데이트.
          	

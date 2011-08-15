@@ -69,8 +69,25 @@ public class SentenceNoteActivity extends Activity {
 			String strMemo = cur.getString(cur.getColumnIndex(DbAdapter.KEY_MEMO));
 			String strStartTime = cur.getString(cur.getColumnIndex(DbAdapter.KEY_START_TIME));
 			String strFinishTime = cur.getString(cur.getColumnIndex(DbAdapter.KEY_END_TIME));
+			long mediaDBIndex = cur.getLong(cur.getColumnIndex(DbAdapter.KEY_SENTENCE_MDB_ID));
+			String title = "";
 			
-			String strAudioInfo = "[" + strStartTime + ":" + strFinishTime + "]";
+			Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
+
+	    	String selection = "( (_ID LIKE ?) )";
+	    	String[] selectionArgs = { String.valueOf(mediaDBIndex) };
+	    	String sortOrder = Audio.Media.DEFAULT_SORT_ORDER;
+	    	 
+	    	
+	    	//Cursor cursorInt = mCr.query(uriInternal, null, selection, selectionArgs, sortOrder);
+	    	Cursor curMedia = getContentResolver().query(uriExternal, null, selection, selectionArgs, sortOrder);
+	    	if(curMedia.getCount() == 1)
+	    	{
+	    		curMedia.moveToPosition(0);
+		    	title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
+	    	}
+			
+			String strAudioInfo = title + " [" + strStartTime + " - " + strFinishTime + "]";
 			
 			sentence s = new sentence(strMemo, strAudioInfo, 0, 0);
 			mArrSentences.add(s);
