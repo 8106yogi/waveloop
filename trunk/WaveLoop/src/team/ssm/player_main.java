@@ -93,17 +93,13 @@ public class player_main extends Activity {
          // 버튼들의 클릭 리스너 등록
          mPlayBtn = (Button)findViewById(R.id.play);
          mPlayBtn.setOnClickListener(mClickPlay);
-         
 
-         
-
-         mNextBtn = (Button)findViewById(R.id.next);
+         mNextBtn = (Button)findViewById(R.id.next_sentence);
          mNextBtn.setOnClickListener(mClickNext);
          
-         mPrevBtn = (Button)findViewById(R.id.prev);
+         mPrevBtn = (Button)findViewById(R.id.prev_sentence);
          mPrevBtn.setOnClickListener(mClickPrev);
          
-
          mBookmarkBtn = (Button)findViewById(R.id.bookmark);
          mBookmarkBtn.setOnClickListener(mClickBookmark);
          
@@ -374,12 +370,12 @@ public class player_main extends Activity {
     // 액티비티 종료시 재생 강제 종료
     public void onDestroy() {
        super.onDestroy();
-       /*
+       
        if (mPlayer != null) {
          mPlayer.release();
          mPlayer = null;
        }
-       */
+       
        if(mLoadingDialog != null){
     	   mLoadingDialog.dismiss();
     	   mLoadingDialog = null;
