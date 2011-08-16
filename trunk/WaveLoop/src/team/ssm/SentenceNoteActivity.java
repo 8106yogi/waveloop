@@ -87,9 +87,9 @@ public class SentenceNoteActivity extends Activity {
 		    	title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
 	    	}
 			
-			String strAudioInfo = title + " [" + strStartTime + " - " + strFinishTime + "]";
+			String time ="[" + strStartTime + " - " + strFinishTime + "]";
 			
-			sentence s = new sentence(strMemo, strAudioInfo, 0, 0);
+			sentence s = new sentence(strMemo, title, time, 0, 0);
 			mArrSentences.add(s);
 			
 		}
@@ -144,13 +144,17 @@ public class SentenceNoteActivity extends Activity {
                 
                 if (s != null) {
                         TextView memo = (TextView) v.findViewById(R.id.sentence_row_note);
-                        TextView audioInfo = (TextView) v.findViewById(R.id.sentence_row_audio_info);
+                        TextView title = (TextView) v.findViewById(R.id.sentence_row_audio_title);
+                        TextView time = (TextView) v.findViewById(R.id.sentence_row_audio_time);
                         //TextView bt = (TextView) v.findViewById(R.id.bottom_title);
                         if (memo != null){
                         	memo.setText(s.getNote());                            
                         }
-                        if (audioInfo != null){
-                        	audioInfo.setText(s.getAudioInfo());                     
+                        if (title != null){
+                        	title.setText(s.getTitle());                     
+                        }
+                        if (time != null){
+                        	time.setText(s.getTime());                     
                         }
                         
                 }
@@ -162,14 +166,16 @@ public class SentenceNoteActivity extends Activity {
     public class sentence {	
         
         private String note;
-        private String audioInfo;
+        private String title;
+        private String time;
         private int starRate;
         private int color;
         
         
-        public sentence( String note, String audioInfo, int starRate, int color ) {
+        public sentence( String note, String title, String time, int starRate, int color ) {
         	this.note = note;
-        	this.audioInfo = audioInfo;
+        	this.setTitle(title);
+        	this.setTime(time);
         	this.starRate = starRate;
         	this.color = color;
         }
@@ -185,15 +191,7 @@ public class SentenceNoteActivity extends Activity {
 		}
 
 
-		public void setAudioInfo(String audioInfo) {
-			this.audioInfo = audioInfo;
-		}
-
-
-		public String getAudioInfo() {
-			return audioInfo;
-		}
-
+		
 
 		public void setStarRate(int starRate) {
 			this.starRate = starRate;
@@ -212,6 +210,26 @@ public class SentenceNoteActivity extends Activity {
 
 		public int getColor() {
 			return color;
+		}
+
+
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
+
+		public String getTitle() {
+			return title;
+		}
+
+
+		public void setTime(String time) {
+			this.time = time;
+		}
+
+
+		public String getTime() {
+			return time;
 		}
         
 
