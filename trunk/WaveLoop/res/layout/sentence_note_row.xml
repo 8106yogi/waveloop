@@ -24,7 +24,7 @@
             android:layout_weight="1"/>
         
         <TextView android:id="@+id/sentence_row_audio_title"
-        	 android:text="title"
+        	 android:text="이곳에 title이 들어가는 위치임미다. 길이가 길면 쩜쩜"
              android:textColor="#ffffff"
              android:textSize="14sp"
              android:singleLine="true"
