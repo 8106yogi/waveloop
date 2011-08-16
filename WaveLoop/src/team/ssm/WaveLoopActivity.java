@@ -40,8 +40,7 @@ public class WaveLoopActivity extends TabActivity {
 
     	
     }
-    
-    
+
      
    public void onResume(){
 	   super.onResume();

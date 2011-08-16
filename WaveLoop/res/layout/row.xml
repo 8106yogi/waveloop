@@ -3,48 +3,82 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:padding="6dip" 
-    android:orientation="vertical"
-    android:layout_weight="1">
+    android:orientation="horizontal"
+    >
        
-        <LinearLayout
-          android:layout_width="fill_parent"
-          android:layout_height="wrap_content">
+       <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        >
+        
+	        <LinearLayout
+	          android:layout_width="fill_parent"
+	          android:layout_height="wrap_content">
+	          
+	    		
+			        <TextView
+			            android:id="@+id/top_artist"
+			            android:textColor="#ff99ff"
+			            android:textSize="12sp"
+			            android:singleLine="true"
+			            android:layout_marginLeft="1dip"
+			            android:layout_width="0px"
+			            android:layout_height="wrap_content"
+			            android:layout_weight="1"
+			            android:text="artist"/>
+			        
+			        <TextView android:id="@+id/top_album"
+			             android:textColor="#ffff99"
+			             android:textSize="12sp"
+			             android:singleLine="true"
+			             android:layout_marginLeft="8dip"
+			             android:layout_width="0px"
+			             android:layout_height="wrap_content"
+			             android:layout_weight="1"
+			             android:text="album"/>
+		        
         
         
-        <TextView
-            android:id="@+id/top_artist"
-            android:textColor="#ff99ff"
-            android:textSize="12sp"
-            android:singleLine="true"
-            android:layout_marginLeft="1dip"
-            android:layout_width="0px"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+        		</LinearLayout>
         
-        <TextView android:id="@+id/top_album"
-             android:textColor="#ffff99"
-             android:textSize="12sp"
-             android:singleLine="true"
-             android:layout_marginLeft="8dip"
-             android:layout_width="0px"
-             android:layout_height="wrap_content"
-             android:layout_weight="1"/>
-        
-        
-        
-        </LinearLayout>
-        
-        <TextView
-            android:id="@+id/bottom_title"
-            android:textColor="#ffffff"
-            android:textSize="18sp"
-            android:singleLine="true"
-            android:shadowColor="#999999"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-    
+				<TextView
+				   android:id="@+id/bottom_title"
+				   android:textColor="#ffffff"
+				   android:textSize="18sp"
+				   android:singleLine="true"
+				   android:shadowColor="#999999"
+				   android:shadowDx="1"
+				   android:shadowDy="1"
+				   android:shadowRadius="1"
+				   android:layout_width="wrap_content"
+				   android:layout_height="wrap_content"
+				   android:text="title"
+				 />
+			</LinearLayout>
+			
+			
+			
+			<LinearLayout
+	  		android:layout_width="wrap_content"
+	  		android:layout_height="fill_parent"
+	 		android:orientation="vertical"
+	 		>
+      
+			
+				 		<TextView
+				  		android:id="@+id/right_total_time"
+				     	android:textColor="#ffffff"
+				        android:textSize="15sp"
+			            android:singleLine="true"
+			            android:gravity="center_horizontal"
+			            android:layout_marginTop="10dip"
+			            android:layout_marginBottom="10dip"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="00:00"
+			            />
+			</LinearLayout>   
+	    
 </LinearLayout>
