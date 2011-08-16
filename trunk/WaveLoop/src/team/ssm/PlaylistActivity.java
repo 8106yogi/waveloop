@@ -133,7 +133,8 @@ public class PlaylistActivity extends Activity {
         	sound p = m_orders.get(pos);
 	    	String HeaderTitle2=p.getTitle();
         	new AlertDialog.Builder(PlaylistActivity.this)
-        	.setTitle(HeaderTitle2 +" 파일을 목록에서 제거하시겠습니까?")
+        	.setTitle("파일을 목록에서 삭제하시겠습니까?")
+        	.setMessage(HeaderTitle2)
         	.setIcon(android.R.drawable.ic_dialog_alert)
         	.setCancelable(false)
         	.setPositiveButton("삭제", new DialogInterface.OnClickListener(){
@@ -225,8 +226,9 @@ public class PlaylistActivity extends Activity {
 		    	String artist = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ARTIST));
 				String album = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ALBUM));
 				String title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
+				int tTime = curMedia.getInt(curMedia.getColumnIndex(Audio.AudioColumns.DURATION))/1000;
 				
-				sound s = new sound(artist, album, title);
+				sound s = new sound(artist, album, title, tTime);
 				m_orders.add(s);
 				
 				
@@ -277,6 +279,7 @@ public class PlaylistActivity extends Activity {
                         TextView tar = (TextView) v.findViewById(R.id.top_artist);
                         TextView tal = (TextView) v.findViewById(R.id.top_album);
                         TextView bt = (TextView) v.findViewById(R.id.bottom_title);
+                        TextView rtt = (TextView) v.findViewById(R.id.right_total_time);
                         if (tar != null){
                         	tar.setText(p.getArtist());                            
                         }
@@ -285,6 +288,13 @@ public class PlaylistActivity extends Activity {
                         }
                         if(bt != null){
                         		bt.setText(p.getTitle());
+                        }
+                        if(rtt != null){
+                        		int tot_time_sec = p.getTotalTime();
+                        		int tMin = tot_time_sec / 60;
+                				int tSec = tot_time_sec % 60;
+                			    String strTime = String.format("%02d:%02d" , tMin, tSec);
+                    			rtt.setText(strTime);
                         }
                 }
                 return v;
@@ -299,12 +309,13 @@ public class PlaylistActivity extends Activity {
         private String Artist;
         private String Album;
         private String Title;
+        private int tTime;
         
-        
-        public sound(String _Artist, String _Album, String _Title) {
+        public sound(String _Artist, String _Album, String _Title, int _tTime) {
         	this.Artist = _Artist;
         	this.Album = _Album;
         	this.Title = _Title;
+        	this.tTime = _tTime;
         }
         
         public String getArtist() {
@@ -317,7 +328,11 @@ public class PlaylistActivity extends Activity {
         public String getTitle() {
             return Title;
         }
-
+        public int getTotalTime(){
+        
+    	    return tTime;
+    	            
+    	 }
     }
     
     
