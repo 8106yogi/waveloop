@@ -1,24 +1,32 @@
 package team.ssm;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import team.ssm.DbAdapter.DatabaseHelper;
 import team.ssm.PlaylistActivity.sound;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore.Audio;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class SentenceNoteActivity extends Activity {
 
@@ -48,10 +56,42 @@ public class SentenceNoteActivity extends Activity {
     	mListView.setChoiceMode(ListView.CHOICE_MODE_NONE);
     	mListView.setOnItemClickListener(mItemClickListener);	//리스트뷰의 클릭리스너 설정.
         
+    	registerForContextMenu(mListView);
+    	
     	refreshListFromDB();
     	
 	}
 	
+	
+	public void onCreateContextMenu (ContextMenu menu, View v,
+            ContextMenu.ContextMenuInfo menuInfo) {
+		
+		/*
+    		super.onCreateContextMenu(menu, v, menuInfo);
+    		
+    		AdapterContextMenuInfo info =(AdapterContextMenuInfo) menuInfo;
+	      	pos  = info.position; 
+	    	sound p = m_orders.get(pos);
+	    	String HeaderTitle=p.getTitle();
+	    	menu.setHeaderTitle(HeaderTitle);
+	        menu.add(0,1,0,"재생");
+	        menu.add(0,2,0,"목록에서 제거");
+	        
+	      */
+
+    }
+    
+    public boolean onContextItemSelected (MenuItem item) {
+        switch (item.getItemId()) {
+        case 1:	//재생
+        	break;
+        case 2:	//목록에서 제거        	
+        	break;
+        
+        }
+       
+        return true;
+   }
 	
 	
 	public void refreshListFromDB()	// 문장노트 리스트의 내용을 새로고침.
@@ -118,6 +158,9 @@ public class SentenceNoteActivity extends Activity {
         	//i.putExtra("오디오파일경로", path );
         	startActivity(i);
         	*/
+        	
+        	
+        	// 플레이어로 가야하나?
             
         }
    };
@@ -143,19 +186,20 @@ public class SentenceNoteActivity extends Activity {
                 sentence s = items.get(position);
                 
                 if (s != null) {
-                        TextView memo = (TextView) v.findViewById(R.id.sentence_row_note);
-                        TextView title = (TextView) v.findViewById(R.id.sentence_row_audio_title);
-                        TextView time = (TextView) v.findViewById(R.id.sentence_row_audio_time);
-                        //TextView bt = (TextView) v.findViewById(R.id.bottom_title);
-                        if (memo != null){
-                        	memo.setText(s.getNote());                            
-                        }
-                        if (title != null){
-                        	title.setText(s.getTitle());                     
-                        }
-                        if (time != null){
-                        	time.setText(s.getTime());                     
-                        }
+                    TextView memo = (TextView) v.findViewById(R.id.sentence_row_note);
+                    TextView title = (TextView) v.findViewById(R.id.sentence_row_audio_title);
+                    TextView time = (TextView) v.findViewById(R.id.sentence_row_audio_time);
+                    Button editButton = (Button) v.findViewById(R.id.edit_sentence_note_button);
+                    
+                    memo.setText(s.getNote());
+                    title.setText(s.getTitle());
+                    time.setText(s.getTime());
+                    
+                    editButton.setOnClickListener( new View.OnClickListener() {
+						public void onClick(View v) {
+							// 문장노트 수정 액티비티를 시작한다.
+						}
+                    });
                         
                 }
                 return v;
