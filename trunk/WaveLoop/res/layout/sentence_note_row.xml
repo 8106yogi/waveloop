@@ -50,7 +50,7 @@
         
 	        <RatingBar 
 	        	style="?android:attr/ratingBarStyleSmall"
-	        	android:id="@+id/ratingBar1" 
+	        	android:id="@+id/sn_ratingBar" 
 	        	android:numStars="5"
 	        	android:layout_marginLeft="5dip"
 	        	android:layout_marginRight="5dip"

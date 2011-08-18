@@ -220,13 +220,13 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 		return mDb.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowID, null) > 0;
 	}
 	
-	public boolean updateBook2(long rowID, String sentence_mdb_id, String start_id, String end_id, String start_time, String end_time, String memo, String star_rate, String color){	//레코드 업데이트(수정)
+	public boolean updateBook2(long rowID, String memo, String star_rate, String color){	//레코드 업데이트(수정)
 		ContentValues args = new ContentValues();
-		args.put(KEY_SENTENCE_MDB_ID, sentence_mdb_id); 
-		args.put(KEY_START_ID, start_id);
-		args.put(KEY_END_ID, end_id);
-		args.put(KEY_START_TIME, start_time);
-		args.put(KEY_END_TIME, end_time);
+		//args.put(KEY_SENTENCE_MDB_ID, sentence_mdb_id); 
+		//args.put(KEY_START_ID, start_id);
+		//args.put(KEY_END_ID, end_id);
+		//args.put(KEY_START_TIME, start_time);
+		//args.put(KEY_END_TIME, end_time);
 		args.put(KEY_MEMO, memo);
 		args.put(KEY_STAR_RATE, star_rate);
 		args.put(KEY_COLOR, color);

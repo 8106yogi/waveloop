@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -111,6 +112,7 @@ public class SentenceNoteActivity extends Activity {
 			String strStartTime = cur.getString(cur.getColumnIndex(DbAdapter.KEY_START_TIME));
 			String strFinishTime = cur.getString(cur.getColumnIndex(DbAdapter.KEY_END_TIME));
 			long mediaDBIndex = cur.getLong(cur.getColumnIndex(DbAdapter.KEY_SENTENCE_MDB_ID));
+			int rate = cur.getInt(cur.getColumnIndex(DbAdapter.KEY_STAR_RATE));
 			String title = "";
 			
 			Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
@@ -130,7 +132,7 @@ public class SentenceNoteActivity extends Activity {
 			
 			String time ="[" + strStartTime + " - " + strFinishTime + "]";
 			
-			sentence s = new sentence(rowIndex, strMemo, title, time, 0, 0);
+			sentence s = new sentence(rowIndex, strMemo, title, time, rate, 0);
 			mArrSentences.add(s);
 			
 		}
@@ -191,10 +193,12 @@ public class SentenceNoteActivity extends Activity {
                     TextView title = (TextView) v.findViewById(R.id.sentence_row_audio_title);
                     TextView time = (TextView) v.findViewById(R.id.sentence_row_audio_time);
                     Button editButton = (Button) v.findViewById(R.id.edit_sentence_note_button);
+                    RatingBar rate = (RatingBar) v.findViewById(R.id.sn_ratingBar);
                     
                     memo.setText(s.getNote());
                     title.setText(s.getTitle());
                     time.setText(s.getTime());
+                    rate.setRating(s.starRate/2.f);
                     
                     editButton.setOnClickListener( new View.OnClickListener() {
 						public void onClick(View v) {
