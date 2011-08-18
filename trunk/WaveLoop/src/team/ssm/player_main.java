@@ -82,6 +82,7 @@ public class player_main extends Activity {
          mWaveformView.setMediaPlayer(mPlayer);
          mWaveformView.setInnerLayout(mWaveformLayout);
          
+         //int www = mWaveformView.getLayoutParams().width;
          //mWaveformView.dis
          //mWaveformView.setOn
          
@@ -180,7 +181,7 @@ public class player_main extends Activity {
         	         	
         	         	ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
         	         	frameGains = (int[]) objectInputStream.readObject();
-        	         	
+        	         	final int nFrameGainsCount = frameGains.length;
         	         	
         	         	
         	         
@@ -191,9 +192,11 @@ public class player_main extends Activity {
         	         	
         	         	fileInputStream.close();
         	         	
+        	         	//addSideView();
         	         	
-        	         	int widthSum = 0;
-        	         	int widthSum2 = 0;
+        	         	
+        	         	//int widthSum = 0;
+        	         	//int widthSum2 = 0;
     					SentenceSegment[] segs = sentenceSegmentList.getSegments();
     					
     					mWaveformSemgnets = new View[segs.length];
@@ -206,7 +209,7 @@ public class player_main extends Activity {
     						ll.setOrientation(LinearLayout.HORIZONTAL);
     						ll.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) );
     						
-    						widthSum2 += segment.size;
+    						//widthSum2 += segment.size;
     						int count = 0;
             	         	for( int innerOffset = 0; innerOffset < segment.size; innerOffset+=1000 )
             	         	{
@@ -214,37 +217,81 @@ public class player_main extends Activity {
             	         		WaveformView waveformView = new WaveformView(player_main.this);
             		         	waveformView.setData(frameGains, segment.startOffset+innerOffset, 
             		         			segment.startOffset+innerOffset + width, 200 );
-            		         	widthSum += width;
+            		         	//widthSum += width;
             		         	ll.addView( waveformView );
             		         	count++;
             	         	}
             	         	
             	         	mWaveformSemgnets[i] = ll;
-            	         	mLoadingHandler.post( new Runnable()
-                    		{
-                    			public void run()
-                    			{
-                    				
-                    				mWaveformLayout.addView(ll);
-                    				
-                    				//ViewTreeObserver ov =
-                    				//	mWaveformLayout.getViewTreeObserver().;
-                    				//mWaveformLayout.
-                    			}
-                    		});
-        		         	
             	         	
     					}
     					
     					
+        	         	mLoadingHandler.post( new Runnable() {
+        	         		private void addSideView() {
+                				WaveformSideView sideView = new WaveformSideView(player_main.this);
+                				sideView.setSizeCallback(new WaveformSideView.SizeCallback() {
+        							public int getWidth() {
+        								return mWaveformView.getMeasuredWidth();
+        							}
+        							public int getHeight() {
+        								return mWaveformView.getMeasuredHeight();
+        							}
+                				});
+                				mWaveformLayout.addView(sideView);
+                			}
+        	         		
+        	         		private LinearLayout addRulerView() {
+        	         			LinearLayout rulerLayout = new LinearLayout(player_main.this);
+                				rulerLayout.setOrientation(LinearLayout.HORIZONTAL);
+                				rulerLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) );
+                				
+                				int length = nFrameGainsCount;
+                				while(length > 0) {
+                					int width = (length > 50)?50:length; 
+                					rulerLayout.addView(new WaveformRulerView(player_main.this, width));
+                					length -= 50;
+                				}
+                				
+                				return rulerLayout;
+        	         		}
+        	         		
+        	         		private LinearLayout addWaveformLinearView()
+        	         		{
+        	         			final LinearLayout innerLayout = new LinearLayout(player_main.this);
+                				innerLayout.setOrientation(LinearLayout.HORIZONTAL);
+                				innerLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) );
+        						
+                				for(int i = 0; i < mWaveformSemgnets.length; ++i ){
+                					innerLayout.addView(mWaveformSemgnets[i]);
+                				}
+                				return innerLayout;
+        	         		}
+        	         		
+                			public void run() {
+                				addSideView();
+                				
+                				final LinearLayout rulerLayout = addRulerView();
+                				final LinearLayout innerLayout = addWaveformLinearView();
+
+                				
+                				final LinearLayout outerLayout = new LinearLayout(player_main.this);
+                				outerLayout.setOrientation(LinearLayout.VERTICAL);
+                				outerLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) );
+        						
+                				outerLayout.addView(rulerLayout);
+                				outerLayout.addView(innerLayout);
+                				mWaveformLayout.addView(outerLayout);
+
+                				addSideView();
+                			}
+                		});
+    					
+    					
+    					//addSideView();
     					
     					
     					
-    					
-        	         	
-                    	
-        	         	
-        				
         			} catch (StreamCorruptedException e) {
         				// TODO Auto-generated catch block
         				e.printStackTrace();
