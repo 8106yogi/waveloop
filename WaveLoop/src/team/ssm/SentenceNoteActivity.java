@@ -35,7 +35,7 @@ public class SentenceNoteActivity extends Activity {
 	ListView mListView;
 	
 	DbAdapter dba;
-	DatabaseHelper dbh;
+	//DatabaseHelper dbh;
 	
 	
 	
@@ -44,7 +44,7 @@ public class SentenceNoteActivity extends Activity {
     	setContentView(R.layout.sentence_note_activity);
     	
     	dba = new DbAdapter(this); //어댑터 객체 생성.
-    	dbh = dba.new DatabaseHelper(this);	//오픈헬퍼 객체 생성.
+    	//dbh = dba.new DatabaseHelper(this);	//오픈헬퍼 객체 생성.
     	
     	
     	mArrSentences = new ArrayList<sentence>();	// 리스트뷰에 출력할 내용의 원본data를 저장하는 arrayList.        
@@ -106,6 +106,7 @@ public class SentenceNoteActivity extends Activity {
 		for(int i = 0; i < cur.getCount(); ++i )
 		{
 			cur.moveToPosition(i);
+			int rowIndex = cur.getInt(cur.getColumnIndex(DbAdapter.KEY_ROWID2));
 			String strMemo = cur.getString(cur.getColumnIndex(DbAdapter.KEY_MEMO));
 			String strStartTime = cur.getString(cur.getColumnIndex(DbAdapter.KEY_START_TIME));
 			String strFinishTime = cur.getString(cur.getColumnIndex(DbAdapter.KEY_END_TIME));
@@ -129,7 +130,7 @@ public class SentenceNoteActivity extends Activity {
 			
 			String time ="[" + strStartTime + " - " + strFinishTime + "]";
 			
-			sentence s = new sentence(strMemo, title, time, 0, 0);
+			sentence s = new sentence(rowIndex, strMemo, title, time, 0, 0);
 			mArrSentences.add(s);
 			
 		}
@@ -183,7 +184,7 @@ public class SentenceNoteActivity extends Activity {
                     LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     v = vi.inflate(R.layout.sentence_note_row, null);
                 }
-                sentence s = items.get(position);
+                final sentence s = items.get(position);
                 
                 if (s != null) {
                     TextView memo = (TextView) v.findViewById(R.id.sentence_row_note);
@@ -198,6 +199,9 @@ public class SentenceNoteActivity extends Activity {
                     editButton.setOnClickListener( new View.OnClickListener() {
 						public void onClick(View v) {
 							// 문장노트 수정 액티비티를 시작한다.
+							Intent i = new Intent(SentenceNoteActivity.this, SentenceNoteEditActivity.class); 
+			        		i.putExtra("sentence_row_id", s.getId() );
+			        		startActivity(i);
 						}
                     });
                         
@@ -209,6 +213,7 @@ public class SentenceNoteActivity extends Activity {
 	// 리스트 뷰에 출력할 항목
     public class sentence {	
         
+    	private int id;
         private String note;
         private String title;
         private String time;
@@ -216,7 +221,8 @@ public class SentenceNoteActivity extends Activity {
         private int color;
         
         
-        public sentence( String note, String title, String time, int starRate, int color ) {
+        public sentence( int id, String note, String title, String time, int starRate, int color ) {
+        	this.setId(id);
         	this.note = note;
         	this.setTitle(title);
         	this.setTime(time);
@@ -274,6 +280,16 @@ public class SentenceNoteActivity extends Activity {
 
 		public String getTime() {
 			return time;
+		}
+
+
+		public void setId(int id) {
+			this.id = id;
+		}
+
+
+		public int getId() {
+			return id;
 		}
         
 
