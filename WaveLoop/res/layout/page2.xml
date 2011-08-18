@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/page2"
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+>
+				<LinearLayout
+				
+				android:orientation="horizontal"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				>
+				
+					<Button
+					android:id="@+id/prev_sentence"  
+					android:layout_width="0px" 
+					android:layout_height="wrap_content" 
+					android:layout_weight="1" 
+					android:text="이전문장"
+					/>
+					<Button
+					android:id="@+id/play"  
+					android:layout_width="0px" 
+					android:layout_height="wrap_content"
+					android:layout_weight="1" 
+					android:text="Play"
+					/>
+					<Button
+					android:id="@+id/next_sentence"  
+					android:layout_width="0px" 
+					android:layout_height="wrap_content" 
+					android:layout_weight="1" 
+					android:text="다음문장"
+					/>
+					
+					
+				</LinearLayout>    
+
+				<LinearLayout
+				
+				android:orientation="horizontal"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				>
+				
+					<Button
+					android:id="@+id/prev_area"  
+					android:layout_width="0px" 
+					android:layout_height="wrap_content" 
+					android:layout_weight="1" 
+					android:text="Prev Area"
+					/>
+					<Button
+					android:id="@+id/repeat"  
+					android:layout_width="0px" 
+					android:layout_height="wrap_content"
+					android:layout_weight="1" 
+					android:text="반복재생"
+					/>
+					<Button
+					android:id="@+id/next_area"  
+					android:layout_width="0px" 
+					android:layout_height="wrap_content" 
+					android:layout_weight="1" 
+					android:text="Next Area"
+					/>
+					
+				</LinearLayout>
+				<LinearLayout
+				
+				android:orientation="horizontal"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				>
+					<Button
+					android:id="@+id/bookmark"  
+					android:layout_width="fill_parent" 
+					android:layout_height="wrap_content" 
+					android:layout_marginLeft="105dip"
+					android:layout_marginRight="105dip"
+					android:text="북마크"
+					/>
+					
+			
+				</LinearLayout>
+			
+			
+			
+</LinearLayout>

@@ -1,13 +1,14 @@
 package team.ssm;
 
 import java.io.*;
+import java.util.*;
+import java.util.Observable;
 
 import android.app.*;
 import android.content.*;
 import android.database.*;
-import android.graphics.Color;
+import android.graphics.*;
 import android.media.*;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.net.*;
 import android.os.*;
 import android.provider.MediaStore.Audio;
@@ -15,12 +16,12 @@ import android.util.*;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
-import android.widget.AbsListView.OnScrollListener;
 
 public class player_main extends Activity {
     
     static MediaPlayer mPlayer;
     Button mPlayBtn; 
+    Button mPlay2Btn;
     Button mNextBtn;
     Button mPrevBtn;
     Button mBookmarkBtn;
@@ -54,8 +55,8 @@ public class player_main extends Activity {
     
     private Handler mLoadingHandler = new Handler();
     
-   // private int index = 0;
-    //private HFling hf = null;
+    private int index = 0;
+    private HFling hf = null;
     private HorizontalScrollView scrollView;
     private ViewGroup contentView;
 
@@ -85,7 +86,7 @@ public class player_main extends Activity {
          //mWaveformView.setOn
          
          //mWaveformView.setOn
-         //mWaveformView.fling(0);
+         //mWaveformView.fling(0);\
          //mWaveformView.setSmoothScrollingEnabled(false);
          
 
@@ -97,6 +98,7 @@ public class player_main extends Activity {
          mTotaltime = (TextView)findViewById(R.id.total_time);
          
          // 버튼들의 클릭 리스너 등록
+         /*
          mPlayBtn = (Button)findViewById(R.id.play);
          mPlayBtn.setOnClickListener(mClickPlay);
 
@@ -108,6 +110,7 @@ public class player_main extends Activity {
          
          mBookmarkBtn = (Button)findViewById(R.id.bookmark);
          mBookmarkBtn.setOnClickListener(mClickBookmark);
+         */
          
          // 완료 리스너, 시크바 변경 리스너 등록
          //mPlayer.setOnCompletionListener(mOnComplete);
@@ -273,8 +276,8 @@ public class player_main extends Activity {
          } ).start();
 
          //dialog.hide();
-        //this.hf = (HFling)findViewById(R.id.buttonScrollView);
-        //test();
+        this.hf = (HFling)findViewById(R.id.ButtonScrollView);
+        test();
         //initBtn();  
         
         /*
@@ -334,33 +337,76 @@ public class player_main extends Activity {
 		//mPlaytimeHandler.sendEmptyMessageDelayed(0,1000);
 	}
     
-    /*
+    
     private void test() {
+    	/**	Button mPlayBtn, mNextBtn, mPrevBtn, mBookmarkBtn	**/
+        
+    	//ImageView iv1 = new ImageView(this);
+    	//ImageView iv2 = new ImageView(this);
+    	//ImageView iv3 = new ImageView(this);
+    	//ImageView iv4 = new ImageView(this);
     	
-    	ImageView iv1 = new ImageView(this);
-    	ImageView iv2 = new ImageView(this);
-    	ImageView iv3 = new ImageView(this);
-    	ImageView iv4 = new ImageView(this);
+    	/*
+    	LinearLayout page1 =(LinearLayout)findViewById(R.id.page1);
+    	LinearLayout page2 =(LinearLayout)findViewById(R.id.page2);
+    	
+    	page1.setTag(new Integer(10));
+    	page2.setTag(new Integer(11));
+    	
+    	hf.addChildView(page1);
+    	hf.addChildView(page2);
+    	*/
+    	
+    	LinearLayout page1= new LinearLayout(this);
+    	LinearLayout page2= new LinearLayout(this);
+    	//page1.setOrientation(LinearLayout.VERTICAL);
+    	//page1.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) );
+    	
+    	page1 =(LinearLayout)View.inflate(this,R.layout.page1,null);
+    	page2 =(LinearLayout)View.inflate(this,R.layout.page2,null);
+    	/*
+    	mPlayBtn = new Button(this);
+    	mPlayBtn.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT) );
+    	mPlayBtn.setText("Play");
+    	page1.addView(mPlayBtn);
+    	
+    	page2.setOrientation(LinearLayout.VERTICAL);
+    	page2.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) );
+    	
+    	mPlay2Btn = new Button(this);
+    	mPlay2Btn.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT) );
+    	mPlay2Btn.setText("Play2");
+    	page2.addView(mPlay2Btn);
+    	*/
+    	//page1.setTag(new Integer(10));
+    	//page2.setTag(new Integer(11));
+    	   	
+    	hf.addChildView(page1);
+    	hf.addChildView(page2);
+    	
+    	//iv1.setImageResource(R.drawable.oo);
+    	//iv2.setImageResource(R.drawable.ww);
+    	//iv3.setImageResource(R.drawable.oo);
+    	//iv4.setImageResource(R.drawable.ww);
+    	
+    	//iv1.setTag(new Integer(10));
+    	//iv2.setTag(new Integer(11));
+    	//iv3.setTag(new Integer(12));
+    	//iv4.setTag(new Integer(13));
+    	//page1.setTag(new Integer(10));
+    	//page2.setTag(new Integer(11));
     	
     	
-    	iv1.setImageResource(R.drawable.oo);
-    	iv2.setImageResource(R.drawable.ww);
-    	iv3.setImageResource(R.drawable.oo);
-    	iv4.setImageResource(R.drawable.ww);
     	
-    	iv1.setTag(new Integer(10));
-    	iv2.setTag(new Integer(11));
-    	iv3.setTag(new Integer(12));
-    	iv4.setTag(new Integer(13));
-    	
-    	hf.addChildView(iv1);
-    	hf.addChildView(iv2);
-    	hf.addChildView(iv3);
-    	hf.addChildView(iv4);
+    	//hf.addChildView(page1);
+    	//hf.addChildView(page2);
+    	//hf.addChildView(iv3);
+    	//hf.addChildView(iv4);
     	
     	//hf.setObserver(this);
     }
     
+    /*
     private void xx() {
     	Log.i("CC", "ScrollTo");
     	boolean result = hf.ScrollToIndex(index);
@@ -370,7 +416,7 @@ public class player_main extends Activity {
     		index = 0;
     	//hf.smoothScrollTo(hf.getScrollX() + 30, hf.getScrollY());
     }
-    
+    */
     
 	
 	
@@ -380,7 +426,7 @@ public class player_main extends Activity {
 		Integer it = (Integer)v.getTag();
 		Log.i("test", "IT " + it);
 	}
-    */
+    
 
     // 액티비티 종료시 재생 강제 종료
     public void onDestroy() {
