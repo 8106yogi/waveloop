@@ -56,7 +56,7 @@ public class player_main extends Activity {
     private Handler mLoadingHandler = new Handler();
     
     private int index = 0;
-    private HFling hf = null;
+    private RealViewSwitcher hf = null;
     private HorizontalScrollView scrollView;
     private ViewGroup contentView;
 
@@ -98,10 +98,10 @@ public class player_main extends Activity {
          mTotaltime = (TextView)findViewById(R.id.total_time);
          
          // 버튼들의 클릭 리스너 등록
-         /*
+         
          mPlayBtn = (Button)findViewById(R.id.play);
          mPlayBtn.setOnClickListener(mClickPlay);
-
+         
          mNextBtn = (Button)findViewById(R.id.next_sentence);
          mNextBtn.setOnClickListener(mClickNext);
          
@@ -110,7 +110,7 @@ public class player_main extends Activity {
          
          mBookmarkBtn = (Button)findViewById(R.id.bookmark);
          mBookmarkBtn.setOnClickListener(mClickBookmark);
-         */
+         
          
          // 완료 리스너, 시크바 변경 리스너 등록
          //mPlayer.setOnCompletionListener(mOnComplete);
@@ -276,8 +276,8 @@ public class player_main extends Activity {
          } ).start();
 
          //dialog.hide();
-        this.hf = (HFling)findViewById(R.id.ButtonScrollView);
-        test();
+        this.hf = (RealViewSwitcher)findViewById(R.id.ButtonScrollView);
+        //test();
         //initBtn();  
         
         /*
@@ -357,13 +357,16 @@ public class player_main extends Activity {
     	hf.addChildView(page2);
     	*/
     	
-    	LinearLayout page1= new LinearLayout(this);
-    	LinearLayout page2= new LinearLayout(this);
+    	LinearLayout page1;//= new LinearLayout(this);
+    	LinearLayout page2;//= new LinearLayout(this);
     	//page1.setOrientation(LinearLayout.VERTICAL);
     	//page1.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) );
     	
     	page1 =(LinearLayout)View.inflate(this,R.layout.page1,null);
     	page2 =(LinearLayout)View.inflate(this,R.layout.page2,null);
+    	page1.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT) );
+    	page2.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT) );
+    	
     	/*
     	mPlayBtn = new Button(this);
     	mPlayBtn.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT) );
@@ -381,8 +384,8 @@ public class player_main extends Activity {
     	//page1.setTag(new Integer(10));
     	//page2.setTag(new Integer(11));
     	   	
-    	hf.addChildView(page1);
-    	hf.addChildView(page2);
+    	//hf.addView(page1);
+    	//hf.addView(page2);
     	
     	//iv1.setImageResource(R.drawable.oo);
     	//iv2.setImageResource(R.drawable.ww);
