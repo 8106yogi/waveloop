@@ -39,6 +39,7 @@ public class player_main extends Activity {
     String mWavePath;
     WaveformScrollView mWaveformView;
     LinearLayout mWaveformLayout;
+    View[]	mWaveformSemgnets;
     //String strMediaDBIndex;
     WaveLoopActivity wla;
 
@@ -57,7 +58,11 @@ public class player_main extends Activity {
     //private HFling hf = null;
     private HorizontalScrollView scrollView;
     private ViewGroup contentView;
-   
+
+    private int mCurrentSegmentIndex;
+    private boolean mIsLoop;
+    private int mLoopStartIndex;
+    private int mLoopFinishIndex;
     
     
     public void onCreate(Bundle savedInstanceState) {
@@ -179,12 +184,17 @@ public class player_main extends Activity {
         	         	sentenceSegmentList = new SentenceSegmentList();
         	         	sentenceSegmentList.readFromFile(fileInputStream);
         	         	
+        	         	
+        	         	
         	         	fileInputStream.close();
         	         	
         	         	
         	         	int widthSum = 0;
         	         	int widthSum2 = 0;
     					SentenceSegment[] segs = sentenceSegmentList.getSegments();
+    					
+    					mWaveformSemgnets = new View[segs.length];
+    					
     					for(int i = 0; i < segs.length; ++i )
     					{
     						SentenceSegment segment = segs[i];
@@ -206,11 +216,14 @@ public class player_main extends Activity {
             		         	count++;
             	         	}
             	         	
+            	         	mWaveformSemgnets[i] = ll;
             	         	mLoadingHandler.post( new Runnable()
                     		{
                     			public void run()
                     			{
+                    				
                     				mWaveformLayout.addView(ll);
+                    				
                     				//ViewTreeObserver ov =
                     				//	mWaveformLayout.getViewTreeObserver().;
                     				//mWaveformLayout.
@@ -614,9 +627,27 @@ public class player_main extends Activity {
             	 //int width = mWaveformLayout.getMeasuredWidth();
                   int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()) * getPlayerCurrentRate() );
                   mWaveformView.scrollTo(pos, 0);
+                  
+                  updateCurrentSegmentColor();
+                  
              }
              mScrollHandler.sendEmptyMessageDelayed(0,16);
          }
+
+		private void updateCurrentSegmentColor() {
+			int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+			
+			
+				if(mCurrentSegmentIndex != segIndex)
+				{
+					mWaveformSemgnets[mCurrentSegmentIndex].setBackgroundColor(0x00ffffff);
+					if( sentenceSegmentList.getSegments()[segIndex].isSilence == false )
+						mWaveformSemgnets[segIndex].setBackgroundColor(0x33ffffff);
+					mCurrentSegmentIndex = segIndex;
+				}
+			
+			
+		}
     };
 
     // 재생 위치 이동
