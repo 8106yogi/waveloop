@@ -88,19 +88,12 @@
 	   	</LinearLayout>
 	</team.ssm.WaveformScrollView>
 	
-	<team.ssm.HFling
+	<team.ssm.RealViewSwitcher
 	android:id="@+id/ButtonScrollView"
 	
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:layout_weight="1">
-		<!--  
-		<LinearLayout 
-	   	android:id="@+id/ButtonScrollViewLayout" 
-	   	android:layout_width="match_parent" 
-	   	android:layout_height="match_parent" 
-	   	android:orientation="horizontal">
-			
+	android:layout_width="match_parent" android:layout_height="210dp">
+  
+
 			 
 			<LinearLayout
 			android:id="@+id/page1"
@@ -278,10 +271,8 @@
 			
 			
 			</LinearLayout>
-			
-		</LinearLayout>
-		-->
-	</team.ssm.HFling>
+		
+	</team.ssm.RealViewSwitcher>
 	
 	<!--  
 	<HorizontalScrollView 
