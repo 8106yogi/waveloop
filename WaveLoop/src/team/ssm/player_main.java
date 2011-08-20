@@ -57,7 +57,7 @@ public class player_main extends Activity {
     private HorizontalScrollView scrollView;
     private ViewGroup contentView;
 
-    private int mCurrentSegmentIndex;
+    
     private boolean mIsLoop;
     private int mLoopStartIndex;
     private int mLoopFinishIndex;
@@ -78,6 +78,7 @@ public class player_main extends Activity {
          mWaveformView.setSeekBar( (SeekBar)findViewById(R.id.progress) );
          mWaveformView.setMediaPlayer(mPlayer);
          mWaveformView.setInnerLayout(mWaveformLayout);
+         
          
          //int www = mWaveformView.getLayoutParams().width;
          //mWaveformView.dis
@@ -198,6 +199,7 @@ public class player_main extends Activity {
     					
     					mWaveformSemgnets = new View[segs.length];
     					
+    					
     					for(int i = 0; i < segs.length; ++i )
     					{
     						SentenceSegment segment = segs[i];
@@ -222,6 +224,7 @@ public class player_main extends Activity {
             	         	mWaveformSemgnets[i] = ll;
             	         	
     					}
+    					
     					
     					
         	         	mLoadingHandler.post( new Runnable() {
@@ -279,7 +282,9 @@ public class player_main extends Activity {
                 				outerLayout.addView(rulerLayout);
                 				outerLayout.addView(innerLayout);
                 				mWaveformLayout.addView(outerLayout);
-
+                				mWaveformView.setmWaveformSemgnets(mWaveformSemgnets);
+                				mWaveformView.setSentenceSegmentList(sentenceSegmentList);
+                				
                 				addSideView();
                 			}
                 		});
@@ -663,26 +668,13 @@ public class player_main extends Activity {
                   int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()) * getPlayerCurrentRate() );
                   mWaveformView.scrollTo(pos, 0);
                   
-                  updateCurrentSegmentColor();
+                  //updateCurrentSegmentColor();
                   
              }
-             mScrollHandler.sendEmptyMessageDelayed(0,16);
+             mScrollHandler.sendEmptyMessageDelayed(0,30);
          }
 
-		private void updateCurrentSegmentColor() {
-			int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
-			
-			
-				if(mCurrentSegmentIndex != segIndex)
-				{
-					mWaveformSemgnets[mCurrentSegmentIndex].setBackgroundColor(0x00ffffff);
-					if( sentenceSegmentList.getSegments()[segIndex].isSilence == false )
-						mWaveformSemgnets[segIndex].setBackgroundColor(0x33ffffff);
-					mCurrentSegmentIndex = segIndex;
-				}
-			
-			
-		}
+		
     };
 
     // 재생 위치 이동

@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -22,7 +23,15 @@ public class WaveformScrollView extends HorizontalScrollView {
 	//int mMaxScrollY;
 	LinearLayout mWaveformLinearLayout;
 	
+	SentenceSegmentList mSentenceSegmentList;
+	
 	long mLastScroll;
+	
+	
+	public void setSentenceSegmentList(SentenceSegmentList sentenceSegmentList) {
+		mSentenceSegmentList = sentenceSegmentList;
+	}
+	
 	
 	public void setInnerLayout( LinearLayout layout )
 	{
@@ -143,11 +152,28 @@ public class WaveformScrollView extends HorizontalScrollView {
 				
 		}
 		
-		
+		updateCurrentSegmentColor();
 
 		super.onScrollChanged(l, t, oldl, oldt);
 	}
 	
+	private int mCurrentSegmentIndex;
+	private View[]	mWaveformSemgnets;
+	
+	private void updateCurrentSegmentColor() {
+		int segIndex = mSentenceSegmentList.getCurrentSentenceIndex(getScrollX()/2);
+		
+		
+			if(mCurrentSegmentIndex != segIndex)
+			{
+				getmWaveformSemgnets()[mCurrentSegmentIndex].setBackgroundColor(0x00ffffff);
+				if( mSentenceSegmentList.getSegments()[segIndex].isSilence == false )
+					getmWaveformSemgnets()[segIndex].setBackgroundColor(0x33ffffff);
+				mCurrentSegmentIndex = segIndex;
+			}
+		
+		
+	}
 	
 	@Override
 	protected void onAnimationEnd() {
@@ -225,6 +251,18 @@ public class WaveformScrollView extends HorizontalScrollView {
         }
 		
 	}
+
+
+	public void setmWaveformSemgnets(View[] mWaveformSemgnets) {
+		this.mWaveformSemgnets = mWaveformSemgnets;
+	}
+
+
+	public View[] getmWaveformSemgnets() {
+		return mWaveformSemgnets;
+	}
+
+	
 }
 	
 	
