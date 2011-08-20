@@ -1,8 +1,6 @@
 package team.ssm;
 
 import java.io.*;
-import java.util.*;
-import java.util.Observable;
 
 import android.app.*;
 import android.content.*;
@@ -12,7 +10,6 @@ import android.media.*;
 import android.net.*;
 import android.os.*;
 import android.provider.MediaStore.Audio;
-import android.util.*;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
@@ -90,7 +87,7 @@ public class player_main extends Activity {
          //mWaveformView.fling(0);\
          //mWaveformView.setSmoothScrollingEnabled(false);
          
-
+         
          
          mArtist = (TextView)findViewById(R.id.artist);
          mTitle = (TextView)findViewById(R.id.title);
@@ -324,8 +321,7 @@ public class player_main extends Activity {
 
          //dialog.hide();
         this.hf = (RealViewSwitcher)findViewById(R.id.ButtonScrollView);
-        //test();
-        //initBtn();  
+        
         
         /*
         scrollView = (HorizontalScrollView) findViewById(R.id.buttonScrollView);	//가로스크롤뷰
@@ -340,7 +336,8 @@ public class player_main extends Activity {
         */
     }
       
-
+  
+   
 
 
          
@@ -385,97 +382,39 @@ public class player_main extends Activity {
 	}
     
     
-    private void test() {
-    	/**	Button mPlayBtn, mNextBtn, mPrevBtn, mBookmarkBtn	**/
+    
+    
+    
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuItem item=menu.add(0,1,0,"제스쳐");
+        item.setIcon(R.drawable.ic_gesturebuilder);
+        menu.add(0,2,0,"번역").setIcon(android.R.drawable.ic_menu_preferences);
+        //menu.add(0,3,0,"전체삭제").setIcon(android.R.drawable.ic_menu_delete);
         
-    	//ImageView iv1 = new ImageView(this);
-    	//ImageView iv2 = new ImageView(this);
-    	//ImageView iv3 = new ImageView(this);
-    	//ImageView iv4 = new ImageView(this);
-    	
-    	/*
-    	LinearLayout page1 =(LinearLayout)findViewById(R.id.page1);
-    	LinearLayout page2 =(LinearLayout)findViewById(R.id.page2);
-    	
-    	page1.setTag(new Integer(10));
-    	page2.setTag(new Integer(11));
-    	
-    	hf.addChildView(page1);
-    	hf.addChildView(page2);
-    	*/
-    	
-    	LinearLayout page1;//= new LinearLayout(this);
-    	LinearLayout page2;//= new LinearLayout(this);
-    	//page1.setOrientation(LinearLayout.VERTICAL);
-    	//page1.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) );
-    	
-    	page1 =(LinearLayout)View.inflate(this,R.layout.page1,null);
-    	page2 =(LinearLayout)View.inflate(this,R.layout.page2,null);
-    	page1.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT) );
-    	page2.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT) );
-    	
-    	/*
-    	mPlayBtn = new Button(this);
-    	mPlayBtn.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT) );
-    	mPlayBtn.setText("Play");
-    	page1.addView(mPlayBtn);
-    	
-    	page2.setOrientation(LinearLayout.VERTICAL);
-    	page2.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) );
-    	
-    	mPlay2Btn = new Button(this);
-    	mPlay2Btn.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT) );
-    	mPlay2Btn.setText("Play2");
-    	page2.addView(mPlay2Btn);
-    	*/
-    	//page1.setTag(new Integer(10));
-    	//page2.setTag(new Integer(11));
-    	   	
-    	//hf.addView(page1);
-    	//hf.addView(page2);
-    	
-    	//iv1.setImageResource(R.drawable.oo);
-    	//iv2.setImageResource(R.drawable.ww);
-    	//iv3.setImageResource(R.drawable.oo);
-    	//iv4.setImageResource(R.drawable.ww);
-    	
-    	//iv1.setTag(new Integer(10));
-    	//iv2.setTag(new Integer(11));
-    	//iv3.setTag(new Integer(12));
-    	//iv4.setTag(new Integer(13));
-    	//page1.setTag(new Integer(10));
-    	//page2.setTag(new Integer(11));
-    	
-    	
-    	
-    	//hf.addChildView(page1);
-    	//hf.addChildView(page2);
-    	//hf.addChildView(iv3);
-    	//hf.addChildView(iv4);
-    	
-    	//hf.setObserver(this);
+        return true;
     }
     
-    /*
-    private void xx() {
-    	Log.i("CC", "ScrollTo");
-    	boolean result = hf.ScrollToIndex(index);
-    	Log.i("CC", "RESULT " + result);
-    	index++;
-    	if(2 < index) // error case
-    		index = 0;
-    	//hf.smoothScrollTo(hf.getScrollX() + 30, hf.getScrollY());
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case 1:
+              Toast.makeText(this,"제스쳐모드",Toast.LENGTH_SHORT).show();
+              //onGestureMode();
+              //Intent ges_it = new Intent(player_main.this, gestureActivity.class);
+              Intent i = new Intent(player_main.this, gestureActivity.class);
+              startActivity(i);
+              
+              return true;
+        case 2:
+              Toast.makeText(this,"Google Speech API...!!",Toast.LENGTH_SHORT).show();
+              return true;
+        	        
+        }
+        return false;
     }
-    */
-    
-	
 	
     
-	public void update(Observable observable, Object data) {
-		View v = (View)data;
-		Integer it = (Integer)v.getTag();
-		Log.i("test", "IT " + it);
-	}
+	
     
 
     // 액티비티 종료시 재생 강제 종료
