@@ -216,17 +216,20 @@ public class WaveformScrollView extends HorizontalScrollView {
 		
 		long duration = AnimationUtils.currentAnimationTimeMillis() - mLastScroll;
 		
-		if (duration > 250) {
+		if (duration > 200) {
 			Log.i("", "getScroll : " + getScrollX() + ", " + getScrollY() );
 			Log.i("", "target : " + x + ", " + y );
 			if(!mScroller.isFinished() ) { // is flinging
                 mScroller.abortAnimation(); // to stop flinging on touch
         	}
+			
 			mScroller.startScroll(
 					getScrollX()+1, 
 					getScrollY(), 
 					x-getScrollX(), 
-					y-getScrollY() );
+					y-getScrollY(),
+					200 );
+			
 			invalidate();
         } else {
         	if(!mScroller.isFinished() ) { // is flinging
@@ -252,6 +255,10 @@ public class WaveformScrollView extends HorizontalScrollView {
 		
 	}
 
+	public boolean isFling()
+	{
+		return !mScroller.isFinished();
+	}
 
 	public void setmWaveformSemgnets(View[] mWaveformSemgnets) {
 		this.mWaveformSemgnets = mWaveformSemgnets;
