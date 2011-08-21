@@ -22,6 +22,7 @@ public class player_main extends Activity {
     Button mNextBtn;
     Button mPrevBtn;
     Button mBookmarkBtn;
+    ToggleButton mRepeatBtn;
     
     long mMediaDBID;
     long mDataRowID;
@@ -109,6 +110,9 @@ public class player_main extends Activity {
          
          mBookmarkBtn = (Button)findViewById(R.id.bookmark);
          mBookmarkBtn.setOnClickListener(mClickBookmark);
+         
+         mRepeatBtn = (ToggleButton)findViewById(R.id.repeat);
+         mRepeatBtn.setOnClickListener(mClickRepeat);
          
          
          // 완료 리스너, 시크바 변경 리스너 등록
@@ -568,9 +572,19 @@ public class player_main extends Activity {
     
 
     
+	// 재생 정지. 재시작을 위해 미리 준비해 놓는다.
+	Button.OnClickListener mClickRepeat = new View.OnClickListener() {
+        public void onClick(View v) {
+             mIsLoop = mRepeatBtn.isChecked();
+             // 현재 위치 지정.
+             mLoopStartIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+             mLoopFinishIndex = mLoopStartIndex;
 
-    // 재생 정지. 재시작을 위해 미리 준비해 놓는다.
-   Button.OnClickListener mClickStop = new View.OnClickListener() {
+        }
+	};
+   
+	// 재생 정지. 재시작을 위해 미리 준비해 놓는다.
+	Button.OnClickListener mClickStop = new View.OnClickListener() {
         public void onClick(View v) {
              mPlayer.stop();
              mPlayBtn.setText("Play");
@@ -669,6 +683,18 @@ public class player_main extends Activity {
                   mWaveformView.scrollTo(pos, 0);
                   
                   //updateCurrentSegmentColor();
+                  if( mIsLoop == true )
+                  {
+                	  int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+                	  if( segIndex < mLoopStartIndex-1 || segIndex > mLoopFinishIndex )
+                	  {
+                		  int startOffset = sentenceSegmentList.getCurrentSentenceByIndex(mLoopStartIndex).startOffset;
+                		  
+                		  mWaveformView.scrollTo(startOffset*2, 0);
+                		  mPlayer.seekTo((int) ((int) startOffset*20));
+                		  Prepare();
+                	  }
+                  }
                   
              }
              mScrollHandler.sendEmptyMessageDelayed(0,30);

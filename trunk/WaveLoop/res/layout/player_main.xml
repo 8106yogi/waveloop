@@ -161,13 +161,17 @@
 					android:layout_weight="1" 
 					android:text="Prev Area"
 					/>
-					<Button
-					android:id="@+id/repeat"  
+
+					<ToggleButton  
 					android:layout_width="0px" 
-					android:layout_height="wrap_content"
-					android:layout_weight="1" 
-					android:text="반복재생"
-					/>
+					android:layout_height="fill_parent" 
+					android:layout_weight="1"
+					android:text="ToggleButton" 
+					android:id="@+id/repeat"
+					android:textOff="구간반복"
+    				android:textOn="구간반복" 
+					></ToggleButton>
+					
 					<Button
 					android:id="@+id/next_area"  
 					android:layout_width="0px" 
