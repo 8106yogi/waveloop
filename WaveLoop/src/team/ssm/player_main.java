@@ -672,33 +672,37 @@ public class player_main extends Activity {
     	return ((double)mPlayer.getCurrentPosition() / (double)mPlayer.getDuration());
     }
     
- // 0.016초에 한번꼴로 재생 위치 갱신
+    // 0.016초에 한번꼴로 재생 위치 갱신
     Handler mScrollHandler = new Handler() {
-         public void handleMessage(Message msg) {
-             if (mPlayer == null) return;
-             if (mPlayer.isPlaying()) {
-            	 //int duration = mPlayer.getDuration();
-            	 //int width = mWaveformLayout.getMeasuredWidth();
-                  int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()) * getPlayerCurrentRate() );
-                  mWaveformView.scrollTo(pos, 0);
-                  
-                  //updateCurrentSegmentColor();
-                  if( mIsLoop == true )
-                  {
-                	  int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
-                	  if( segIndex < mLoopStartIndex-1 || segIndex > mLoopFinishIndex )
-                	  {
-                		  int startOffset = sentenceSegmentList.getCurrentSentenceByIndex(mLoopStartIndex).startOffset;
-                		  
-                		  mWaveformView.scrollTo(startOffset*2, 0);
-                		  mPlayer.seekTo((int) ((int) startOffset*20));
-                		  Prepare();
-                	  }
-                  }
-                  
-             }
-             mScrollHandler.sendEmptyMessageDelayed(0,30);
-         }
+    	public void handleMessage(Message msg) {
+    		if (mPlayer == null) return;
+			if (mPlayer.isPlaying()) {
+				//int duration = mPlayer.getDuration();
+				//int width = mWaveformLayout.getMeasuredWidth();
+				int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()) * getPlayerCurrentRate() );
+				mWaveformView.scrollTo(pos, 0);
+              
+				//updateCurrentSegmentColor();
+				if( mIsLoop == true )
+				{
+					int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+					if( segIndex < mLoopStartIndex-1 || segIndex > mLoopFinishIndex )
+					{
+						int startOffset = sentenceSegmentList.getCurrentSentenceByIndex(mLoopStartIndex).startOffset;
+            		  
+						//mWaveformView.scrollTo(startOffset*2, 0);
+						//mPlayer.seekTo((int) ((int) startOffset*20));
+						//Prepare();
+						
+						double position = (double)(startOffset*2)/(double)mWaveformLayout.getMeasuredWidth()*(double)mPlayer.getDuration();
+						mPlayer.seekTo( (int)position );
+						Prepare();
+					}
+				}
+              
+			}
+			mScrollHandler.sendEmptyMessageDelayed(0,30);
+		}
 
 		
     };
