@@ -141,12 +141,12 @@ public class WaveformScrollView extends HorizontalScrollView {
 		if( mSeekBar != null && mIsSeekbarTouched == false )
 		{
 			//LinearLayout waveformLinearLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
-			mSeekBar.setMax( mWaveformLinearLayout.getMeasuredWidth() );
+			mSeekBar.setMax( mWaveformLinearLayout.getMeasuredWidth()-getMeasuredWidth() );//TODO 이거 초기화때 호출되도록 수정 예정
 			mSeekBar.setProgress( this.getScrollX() );
 			
 			if( mPlayer != null && mPlayer.isPlaying() == false )
 			{
-				double position = (double)this.getScrollX()/(double)mWaveformLinearLayout.getMeasuredWidth()*(double)mPlayer.getDuration();
+				double position = (double)this.getScrollX()/(double)(mWaveformLinearLayout.getMeasuredWidth()-getMeasuredWidth())*(double)mPlayer.getDuration();
 				mPlayer.seekTo( (int)position );
 			}
 				
