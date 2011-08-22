@@ -862,7 +862,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 			if (mPlayer.isPlaying()) {
 				//int duration = mPlayer.getDuration();
 				//int width = mWaveformLayout.getMeasuredWidth();
-				int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()) * getPlayerCurrentRate() );
+				int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth()) * getPlayerCurrentRate() );
 				mWaveformView.scrollTo(pos, 0);
               
 				//updateCurrentSegmentColor();
