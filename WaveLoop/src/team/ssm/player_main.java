@@ -877,7 +877,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 						//mPlayer.seekTo((int) ((int) startOffset*20));
 						//Prepare();
 						
-						double position = (double)(startOffset*2)/(double)mWaveformLayout.getMeasuredWidth()*(double)mPlayer.getDuration();
+						double position = (double)(startOffset*2)/(double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth())*(double)mPlayer.getDuration();
 						mPlayer.seekTo( (int)position );
 						Prepare();
 					}
