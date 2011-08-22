@@ -141,11 +141,9 @@ public class player_main extends Activity implements OnGesturePerformedListener{
          
          
          // 앱에서 제스쳐를 인식하기 위해서 XML layout에 GestureOverlayView을 추가. 제스쳐리스너 등록.
-         /*
+         
          gestures = (GestureOverlayView)findViewById(R.id.gestures);
-         gestures.setGestureVisible(false);
-         gestures.setEnabled(false);
-         */
+         
          
          // 인텐트로 출력할 파일 결정하는 코드 아래로 옮김.
          Intent intent = getIntent();
@@ -444,7 +442,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
               //frame.addView(gestures);
               //frame.addView(linear);
               //setContentView(frame);
-              gestures = (GestureOverlayView)findViewById(R.id.gestures);
+              
               /*
               gestures.setEnabled(true);
               gestures.setEventsInterceptionEnabled(true);
