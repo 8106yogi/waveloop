@@ -1,9 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout 
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"	
+>	
+	
+	<LinearLayout 
+	android:id="@+id/player"
 	android:orientation="vertical"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:weightSum="1">
+	
+	
+	<!--    
+	<android.gesture.GestureOverlayView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gestures"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gestureStrokeType="multiple"
+    android:eventsInterceptionEnabled="true"
+    android:orientation="vertical">
+	-->
+	
 	<LinearLayout 
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
@@ -103,18 +124,35 @@
 		
 	</FrameLayout>
 	
+	
+	<!--   
+	<android.gesture.GestureOverlayView
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/gestures"
+	    android:layout_width="fill_parent"
+	    android:layout_height="200dip"
+	    android:background="#5b5b5b"
+	    android:gestureStrokeType="multiple"
+	    android:eventsInterceptionEnabled="false"
+	    android:enabled="false"
+	    android:orientation="vertical">
+	-->	
+	
 	<team.ssm.RealViewSwitcher
 	android:id="@+id/ButtonScrollView"
-	
-	android:layout_width="match_parent" android:layout_height="210dp">
-  
-
+	android:layout_width="fill_parent"
+	android:layout_height="200dip"
+	android:orientation="vertical"
+	android:layout_weight="1">
+		  
+			
+				
 			 
 			<LinearLayout
 			android:id="@+id/page1"
 			android:orientation="vertical"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
+			android:layout_width="fill_parent"
+			android:layout_height="200dip"
 			>
 			
 				<LinearLayout
@@ -199,13 +237,14 @@
 					
 			
 				</LinearLayout>
+			
 			</LinearLayout>
 			
 			<LinearLayout
 			android:id="@+id/page2"
 			android:orientation="vertical"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
+			android:layout_width="fill_parent"
+			android:layout_height="200dip"
 			>
 				<LinearLayout
 				
@@ -288,158 +327,26 @@
 				</LinearLayout>
 			
 			
-			
 			</LinearLayout>
+		
 		
 	</team.ssm.RealViewSwitcher>
 	
-	<!--  
-	<HorizontalScrollView 
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content" 
-	android:id="@+id/buttonScrollView" 
-	>
-		
-		<LinearLayout
-		android:id="@+id/button_scroll"
-		android:orientation="vertical"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		>
-		
-			<LinearLayout
-			android:id="@+id/button_scroll_layout"
-			android:orientation="horizontal"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			>
-			
-				<Button
-				android:id="@+id/shuffle"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content" 
-				android:layout_weight="1" 
-				android:text="셔플"
-				/>
-				<Button
-				android:id="@+id/repeat"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content"
-				android:layout_weight="1" 
-				android:text="반복재생"
-				/>
-				<Button
-				android:id="@+id/bookmark"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content" 
-				android:layout_weight="1" 
-				android:text="북마크"
-				/>
-				<Button
-				android:id="@+id/shuffle2"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content" 
-				android:layout_weight="1" 
-				android:text="셔플2"
-				/>
-				<Button
-				android:id="@+id/repeat2"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content"
-				android:layout_weight="1" 
-				android:text="반복재생2"
-				/>
-				<Button
-				android:id="@+id/bookmark2"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content" 
-				android:layout_weight="1" 
-				android:text="북마크2"
-				/>
-			</LinearLayout>    
-
-			<LinearLayout
-			android:id="@+id/button_scroll_layout2"
-			android:orientation="horizontal"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			>
-			
-				<Button
-				android:id="@+id/prev"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content" 
-				android:layout_weight="1" 
-				android:text="Prev"
-				/>
-				<Button
-				android:id="@+id/play"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content"
-				android:layout_weight="1" 
-				android:text="Play"
-				/>
-				<Button
-				android:id="@+id/next"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content" 
-				android:layout_weight="1" 
-				android:text="Next"
-				/>
-				<Button
-				android:id="@+id/prev2"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content" 
-				android:layout_weight="1" 
-				android:text="Prev2"
-				/>
-				<Button
-				android:id="@+id/play2"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content"
-				android:layout_weight="1" 
-				android:text="Play2"
-				/>
-				<Button
-				android:id="@+id/next2"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content" 
-				android:layout_weight="1" 
-				android:text="Next2"
-				/>
-			</LinearLayout>
-			<LinearLayout
-			android:id="@+id/buttonScrollLayout3"
-			android:orientation="horizontal"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			>
-				<Button
-				android:id="@+id/prev_sentence"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content" 
-				android:layout_weight="1" 
-				android:text="이전문장"
-				/>
-				<Button
-				android:id="@+id/pres_sentence"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content"
-				android:layout_weight="1" 
-				android:text="현재문장"
-				/>
-				<Button
-				android:id="@+id/next_sentence"  
-				android:layout_width="0px" 
-				android:layout_height="wrap_content" 
-				android:layout_weight="1" 
-				android:text="다음문장"
-				/>
-		
-			</LinearLayout>
-		</LinearLayout>
-	</HorizontalScrollView>
-	-->
+	<!-- </android.gesture.GestureOverlayView> -->
+	
+	
 
 
 </LinearLayout>
+<android.gesture.GestureOverlayView
+    
+    android:id="@+id/gestures"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gestureStrokeType="multiple"
+    android:eventsInterceptionEnabled="true"
+    android:orientation="vertical"
+    android:background="#55ffffff"
+    android:visibility="invisible">
+</android.gesture.GestureOverlayView>
+</FrameLayout>
