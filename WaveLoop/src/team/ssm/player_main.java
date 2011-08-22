@@ -1,10 +1,13 @@
 package team.ssm;
 
 import java.io.*;
+import java.util.*;
 
 import android.app.*;
 import android.content.*;
 import android.database.*;
+import android.gesture.*;
+import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.graphics.*;
 import android.media.*;
 import android.net.*;
@@ -14,7 +17,7 @@ import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 
-public class player_main extends Activity {
+public class player_main extends Activity implements OnGesturePerformedListener{
     
     static MediaPlayer mPlayer;
     Button mPlayBtn; 
@@ -62,7 +65,11 @@ public class player_main extends Activity {
     private boolean mIsLoop;
     private int mLoopStartIndex;
     private int mLoopFinishIndex;
-    
+    //private final Context mCtx; 
+    private GestureLibrary mLibrary;
+    GestureOverlayView gestures;
+    //LinearLayout linear;
+    FrameLayout frame;
     
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +133,19 @@ public class player_main extends Activity {
          mScrollHandler.sendEmptyMessageDelayed(0,16);
 
          
+         // 기정의된 제스쳐를 앱에서 반드시 로드하여 사용. GestureLibraries 클래스를 사용..
+         mLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures);
+         if (!mLibrary.load()) {
+             finish();
+         }
+         
+         
+         // 앱에서 제스쳐를 인식하기 위해서 XML layout에 GestureOverlayView을 추가. 제스쳐리스너 등록.
+         /*
+         gestures = (GestureOverlayView)findViewById(R.id.gestures);
+         gestures.setGestureVisible(false);
+         gestures.setEnabled(false);
+         */
          
          // 인텐트로 출력할 파일 결정하는 코드 아래로 옮김.
          Intent intent = getIntent();
@@ -348,9 +368,6 @@ public class player_main extends Activity {
     }
       
   
-   
-
-
          
     
 
@@ -392,7 +409,8 @@ public class player_main extends Activity {
 		//mPlaytimeHandler.sendEmptyMessageDelayed(0,1000);
 	}
     
-    
+
+  
     
     
     
@@ -406,16 +424,37 @@ public class player_main extends Activity {
         return true;
     }
     
+    
+    
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case 1:
               Toast.makeText(this,"제스쳐모드",Toast.LENGTH_SHORT).show();
               //onGestureMode();
               //Intent ges_it = new Intent(player_main.this, gestureActivity.class);
-              Intent i = new Intent(player_main.this, gestureActivity.class);
-              startActivity(i);
               
-              return true;
+              
+              
+              //GestureOverlayView gestures = (GestureOverlayView) findViewById(R.id.gestures);
+              
+           
+              //gestures = (GestureOverlayView)View.inflate(this, R.layout.gesture_overlay_view, null);
+              //gestures = (GestureOverlayView)findViewById(R.id.gestures);
+              //gestures.addOnGesturePerformedListener(this);
+              //frame.addView(gestures);
+              //frame.addView(linear);
+              //setContentView(frame);
+              gestures = (GestureOverlayView)findViewById(R.id.gestures);
+              /*
+              gestures.setEnabled(true);
+              gestures.setEventsInterceptionEnabled(true);
+              gestures.setGestureVisible(true);
+              gestures.addOnGesturePerformedListener(this);
+       		*/
+              gestures.setVisibility(View.VISIBLE);
+              gestures.addOnGesturePerformedListener(this);
+               return true;
+        
         case 2:
               Toast.makeText(this,"Google Speech API...!!",Toast.LENGTH_SHORT).show();
               return true;
@@ -424,9 +463,57 @@ public class player_main extends Activity {
         return false;
     }
 	
-    
+    public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
+  		ArrayList<Prediction> predictions = mLibrary.recognize(gesture);
+  		
+  		// We want at least one prediction
+  		if (predictions.size() > 0) {
+  			Prediction prediction = predictions.get(0);
+  			// We want at least some confidence in the result
+  				if (prediction.score > 1.0) {
+  				// Show the spell
+	  				if(prediction.name.equals("play / pause")){
+	  					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+		  				  if (mPlayer.isPlaying() == false) {
+		  					Toast.makeText(this, "play", Toast.LENGTH_SHORT).show();
+		  				  }
+		  				  else{
+		  					Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();  
+		  				  }
+		  				  gesturePlay();
+	  					
+	  				}
+	  				if(prediction.name.equals("prev")){
+	  					Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+	  					//mp.pause();
+	  		        	gesturePrev();
+	  				}
+	  				if(prediction.name.equals("next")){
+	  					Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+	  					//mp.pause();
+	  					gestureNext();
+	  				}
+	  				if(prediction.name.equals("bookmark")){
+	  					Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+	  					gestureBookmark();
+	  					
+	  				}
+	  				if(prediction.name.equals("repeat")){
+	  					Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+	  					gestureRepeat();
+	  				}
+	  				
+  			}
+  		}
+  	}
 	
-    
+    public void onBackPressed(){
+    	if(gestures.getVisibility() == View.VISIBLE){
+    		gestures.setVisibility(View.INVISIBLE);
+    	}
+    	else
+    		finish();
+    }
 
     // 액티비티 종료시 재생 강제 종료
     public void onDestroy() {
@@ -479,6 +566,101 @@ public class player_main extends Activity {
          return true;
    }
 
+   
+   // 해당 제스쳐(재생/일지정지, 이전문장, 다음문장, 북마크, 반복재생)가 입력될때 호출되는 메소드
+   public String getTimeString( int sec )
+	{
+		//String.
+		int minute = sec/60;
+		int second = sec - minute*60;
+		return minute + ":" + second;
+	}
+    
+   public void gesturePlay(){
+	    if (mPlayer.isPlaying() == false) {
+		   	 mWaveformView.forceStop();
+		   	 //mWaveformView.smoothScrollTo(mWaveformView.getScrollX(), mWaveformView.getScrollY());
+		   	 mPlayer.start();
+		   	 
+		      mPlayBtn.setText("Pause");
+		      // 여기서 스크롤뷰를 세팅하고.
+		        
+	    } else {
+	        mPlayer.pause();
+	        mPlayBtn.setText("Play");
+	    }
+   }
+   
+   public void gesturePrev(){
+	   	mPlayer.pause();
+	   	int offset = sentenceSegmentList.getPrevSentenceOffset(mWaveformView.getScrollX()/2);
+	   	mWaveformView.scrollSmoothTo(offset*2, 0);
+	   	mWaveformView.forceStop();
+	   	mPlayer.start();
+   }
+   
+   public void gestureNext(){
+	   	mPlayer.pause();
+	   	int offset = sentenceSegmentList.getNextSentenceOffset(mWaveformView.getScrollX()/2);
+	   	mWaveformView.scrollSmoothTo(offset*2, 0);
+	   	mWaveformView.forceStop();
+	   	mPlayer.start();
+   }
+   
+   public void gestureRepeat(){
+	   //mPlayer.pause();
+	   mIsLoop=!mIsLoop; //토글
+	   mRepeatBtn.setChecked(mIsLoop);
+		
+	   // 현재 위치 지정.
+       mLoopStartIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+       mLoopFinishIndex = mLoopStartIndex;
+   }
+   
+   public void gestureBookmark(){
+   	
+       	// 이곳에서 문장노트에 추가를 한다.
+       	
+       	// 현재 문장을 가져온다.
+       	SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
+       	int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+       	
+       	if( seg.isSilence )
+       	{
+       		Toast.makeText(player_main.this, "문장만 추가 가능합니다.", Toast.LENGTH_SHORT).show();
+       		return;
+       	}
+       	
+       	// 이미 있는 문장이면 추가하지 않는다.
+       	DbAdapter dba = new DbAdapter(getBaseContext());
+        	//dba.open();
+       	//dba.close();
+       	
+       	// DB에 추가를 하고.
+       	
+       	
+       	
+       	dba.open();
+        	dba.createBook2( mMediaDBID, 						// data row id
+        			segIndex,									// start segment id
+        			segIndex,									// end segment id
+        			getTimeString(seg.startOffset/50), 			// start time
+        			getTimeString((seg.startOffset+seg.size)/50),	// end time
+        			"메모 없음", 										// memo
+        			0,											// star rate 
+        			Color.GRAY);								// color
+        	
+        	dba.close();
+        	
+        	
+       	// 뷰를 업데이트.
+              	
+        	Toast.makeText(player_main.this, "문장노트에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+       
+   }
+   
+   
+   
    // 재생 및 일시 정지
    Button.OnClickListener mClickPlay = new View.OnClickListener() {
          public void onClick(View v) {
@@ -496,6 +678,7 @@ public class player_main extends Activity {
              }
          }
     };
+    
     
     // 다음문장으로 이동.
     Button.OnClickListener mClickNext = new View.OnClickListener() {
