@@ -56,12 +56,14 @@ public class SentenceNoteActivity extends Activity {
     	mListView.setAdapter(mAdapter);	// 어댑터와 리스트뷰를 연결
     	mListView.setChoiceMode(ListView.CHOICE_MODE_NONE);
     	mListView.setOnItemClickListener(mItemClickListener);	//리스트뷰의 클릭리스너 설정.
-        
+    	mListView.setItemsCanFocus(true);
+    	
     	registerForContextMenu(mListView);
     	
     	refreshListFromDB();
     	
 	}
+	
 	
 	
 	public void onCreateContextMenu (ContextMenu menu, View v,
@@ -151,20 +153,37 @@ public class SentenceNoteActivity extends Activity {
 	
 	// 어댑터뷰의 클릭리스너
     AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+    	
+    	int getMediaDBIndex( int sentenceRowId )
+    	{
+    		dba.open();
+        	Cursor cursor = dba.fetchBook2( sentenceRowId );
+        	cursor.moveToPosition(0);
+        	int mediaDBIndex = cursor.getInt( cursor.getColumnIndex(DbAdapter.KEY_SENTENCE_MDB_ID) );
+        	dba.close();
+        	return mediaDBIndex;
+    	}
+    	
+    	int getDataIndexFromMediaIndex( int mediaIndex )
+    	{
+    		dba.open();
+        	Cursor cursor = dba.fetchBookFromMediaID( mediaIndex );
+        	cursor.moveToPosition(0);
+        	int rowID = cursor.getInt( cursor.getColumnIndex(DbAdapter.KEY_ROWID) );
+        	dba.close();
+        	return rowID;
+    	}
+    	
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            /*
-        	//dba.open();
-        	//int idx = 0;
-        	//mPos = position;
-        	Intent i = new Intent(PlaylistActivity.this, player_main.class); 
-        	i.putExtra("오디오파일경로", position );
-        	//i.putExtra("오디오파일경로", path );
-        	startActivity(i);
-        	*/
-        	
-        	
-        	// 플레이어로 가야하나?
             
+        	int rowID = mArrSentences.get(position).id;
+        	int mediaDBIndex = getMediaDBIndex(rowID);
+        	int dataRowID = getDataIndexFromMediaIndex(mediaDBIndex);
+        	
+        	Intent i = new Intent(SentenceNoteActivity.this, player_main.class); 
+        	i.putExtra("오디오파일경로", dataRowID );
+        	startActivity(i);
+        	
         }
    };
 	
@@ -200,6 +219,7 @@ public class SentenceNoteActivity extends Activity {
                     time.setText(s.getTime());
                     rate.setRating(s.starRate/2.f);
                     
+                    editButton.setFocusable(false);
                     editButton.setOnClickListener( new View.OnClickListener() {
 						public void onClick(View v) {
 							// 문장노트 수정 액티비티를 시작한다.
