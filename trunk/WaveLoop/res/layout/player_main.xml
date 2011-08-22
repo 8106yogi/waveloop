@@ -89,7 +89,8 @@
 		   	android:id="@+id/WaveformScrollViewLayout" 
 		   	android:layout_width="match_parent" 
 		   	android:layout_height="match_parent" 
-		   	android:orientation="horizontal">
+		   	android:orientation="horizontal"
+		   	>
 		   		
 		    
 		   	</LinearLayout>
@@ -120,26 +121,26 @@
 				android:orientation="horizontal"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				>
+				android:layout_weight="1">
 				
 					<Button
 					android:id="@+id/prev_sentence"  
 					android:layout_width="0px" 
-					android:layout_height="wrap_content" 
+					android:layout_height="fill_parent" 
 					android:layout_weight="1" 
 					android:text="이전문장"
 					/>
 					<Button
 					android:id="@+id/play"  
 					android:layout_width="0px" 
-					android:layout_height="wrap_content"
+					android:layout_height="fill_parent"
 					android:layout_weight="1" 
 					android:text="Play"
 					/>
 					<Button
 					android:id="@+id/next_sentence"  
 					android:layout_width="0px" 
-					android:layout_height="wrap_content" 
+					android:layout_height="fill_parent" 
 					android:layout_weight="1" 
 					android:text="다음문장"
 					/>
@@ -152,12 +153,12 @@
 				android:orientation="horizontal"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				>
+				android:layout_weight="1">
 				
 					<Button
 					android:id="@+id/prev_area"  
 					android:layout_width="0px" 
-					android:layout_height="wrap_content" 
+					android:layout_height="fill_parent" 
 					android:layout_weight="1" 
 					android:text="Prev Area"
 					/>
@@ -175,7 +176,7 @@
 					<Button
 					android:id="@+id/next_area"  
 					android:layout_width="0px" 
-					android:layout_height="wrap_content" 
+					android:layout_height="fill_parent" 
 					android:layout_weight="1" 
 					android:text="Next Area"
 					/>
@@ -186,11 +187,11 @@
 				android:orientation="horizontal"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				>
+				android:layout_weight="1">
 					<Button
 					android:id="@+id/bookmark"  
 					android:layout_width="fill_parent" 
-					android:layout_height="wrap_content" 
+					android:layout_height="fill_parent" 
 					android:layout_marginLeft="105dip"
 					android:layout_marginRight="105dip"
 					android:text="북마크"
