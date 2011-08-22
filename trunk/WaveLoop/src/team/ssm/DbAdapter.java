@@ -176,6 +176,14 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 		return mCursor;
 	}
 	
+	public Cursor fetchBookFromMediaID(long mediaID) throws SQLException{		//data테이블의 특정 레코드 반환
+		Cursor mCursor =
+			mDb.query(true, DATABASE_TABLE, new String[]{KEY_ROWID, KEY_FILEPATH, KEY_WAVEPATH,  KEY_MEDIA_DB_ID}, KEY_MEDIA_DB_ID + "=" + mediaID, null, null, null, null, null);
+		if(mCursor != null)
+			mCursor.moveToFirst();
+		return mCursor;
+	}
+	
 	public Cursor fetchBook2(long rowID) throws SQLException{		//sentence테이블의 특정 레코드 반환
 		Cursor mCursor =
 			mDb.query(true, DATABASE_TABLE2, new String[]{KEY_ROWID2, KEY_SENTENCE_MDB_ID, KEY_START_ID, KEY_END_ID, KEY_START_TIME, KEY_END_TIME,  KEY_MEMO, KEY_STAR_RATE, KEY_COLOR}, 
