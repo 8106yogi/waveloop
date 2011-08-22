@@ -132,10 +132,12 @@ public class player_main extends Activity {
          if (intent != null)
          {
         	mDataRowID = intent.getIntExtra("오디오파일경로", 0);
+        	final int startSegmentIndex = intent.getIntExtra("start_segment_index", 0);
          	DbAdapter dba = new DbAdapter(getBaseContext());
          	dba.open();
-         	Cursor cursor = dba.fetchAllBooks();
-         	cursor.moveToPosition((int) mDataRowID);
+         	Cursor cursor = dba.fetchBook(mDataRowID);
+         	//cursor.moveToPosition((int) mDataRowID);
+         	cursor.moveToPosition(0);
          	mFilepath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_FILEPATH));
          	mWavePath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_WAVEPATH));
          	String strMediaDBIndex = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_MEDIA_DB_ID));

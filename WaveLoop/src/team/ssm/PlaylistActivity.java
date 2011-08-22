@@ -125,8 +125,9 @@ public class PlaylistActivity extends Activity {
     public boolean onContextItemSelected (MenuItem item) {
         switch (item.getItemId()) {
         case 1:	//재생
+        		int rowID = m_orders.get(pos).getRowID();
         	   	Intent i = new Intent(PlaylistActivity.this, player_main.class); 
-        		i.putExtra("오디오파일경로", pos );
+        		i.putExtra("오디오파일경로", rowID );
         		startActivity(i);
               return true;
         case 2:	//목록에서 제거        	
@@ -182,11 +183,10 @@ public class PlaylistActivity extends Activity {
 			리스트뷰에 나타나는 각각의 오디오 파일을 클릭했을 때 일어나는 동작을 정의하는 부분.
             "파일을 클릭하면 재생 화면으로 넘어간다." 
         	*****************/
-        	//dba.open();
-        	//int idx = 0;
-        	//mPos = position;
+        	
+        	int rowID = m_orders.get(position).getRowID(); 
         	Intent i = new Intent(PlaylistActivity.this, player_main.class); 
-        	i.putExtra("오디오파일경로", position );
+        	i.putExtra("오디오파일경로", rowID );
         	//i.putExtra("오디오파일경로", path );
         	startActivity(i);
         	
@@ -208,6 +208,7 @@ public class PlaylistActivity extends Activity {
 		for(int i = 0; i < cur.getCount(); ++i )
 		{
 			cur.moveToPosition(i);
+			int rowID = cur.getInt(cur.getColumnIndex(DbAdapter.KEY_ROWID));
 			String strMediaDBIndex = cur.getString(cur.getColumnIndex(DbAdapter.KEY_MEDIA_DB_ID));
 			
 			
@@ -228,7 +229,7 @@ public class PlaylistActivity extends Activity {
 				String title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
 				int tTime = curMedia.getInt(curMedia.getColumnIndex(Audio.AudioColumns.DURATION))/1000;
 				
-				sound s = new sound(artist, album, title, tTime);
+				sound s = new sound(rowID, artist, album, title, tTime);
 				m_orders.add(s);
 				
 				
@@ -305,13 +306,14 @@ public class PlaylistActivity extends Activity {
     
     // 리스트 뷰에 출력할 항목
     public class sound {	
-        
+        private int rowID;
         private String Artist;
         private String Album;
         private String Title;
         private int tTime;
         
-        public sound(String _Artist, String _Album, String _Title, int _tTime) {
+        public sound(int rowID, String _Artist, String _Album, String _Title, int _tTime) {
+        	this.rowID = rowID;
         	this.Artist = _Artist;
         	this.Album = _Album;
         	this.Title = _Title;
@@ -333,6 +335,10 @@ public class PlaylistActivity extends Activity {
     	    return tTime;
     	            
     	 }
+
+		public int getRowID() {
+			return rowID;
+		}
     }
     
     
