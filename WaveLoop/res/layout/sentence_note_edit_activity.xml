@@ -6,24 +6,29 @@
   android:layout_height="match_parent" android:weightSum="1">
     
 	<TextView android:layout_width="wrap_content" android:id="@+id/sne_title" android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_marginLeft="8dip" android:singleLine="true" android:text="Title - 제목이 나오는 부분이다.rmfjsrjtdl" android:layout_marginRight="8dip"></TextView>
-	<TextView android:layout_width="wrap_content" android:id="@+id/sne_time" android:layout_height="wrap_content" android:layout_marginRight="8dip" android:layout_marginLeft="8dip" android:text="[00:00 - 00:00]"></TextView>
+	<TextView android:layout_width="wrap_content" android:id="@+id/sne_time" android:layout_height="wrap_content" android:layout_marginRight="8dip" android:layout_marginLeft="8dip" android:text="[00:00 - 00:00]" android:layout_gravity="center"></TextView>
     
-    <EditText android:layout_width="match_parent" android:id="@+id/sne_note" android:layout_height="wrap_content" android:inputType="textMultiLine" android:layout_marginLeft="8dip" android:layout_marginRight="8dip" android:layout_marginBottom="8dip" android:layout_marginTop="8dip" android:layout_weight="1" android:gravity="top">
+    <EditText android:layout_width="match_parent" android:id="@+id/sne_note" android:layout_height="wrap_content" android:inputType="textMultiLine" android:layout_marginLeft="8dip" android:layout_marginRight="8dip" android:layout_marginBottom="8dip" android:layout_marginTop="8dip" android:layout_weight="1" android:gravity="top"
+    android:background="#E0FFFF">
+        
         <requestFocus></requestFocus>
     </EditText>
-    <RatingBar android:id="@+id/sne_ratingBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center"></RatingBar>
-    <RadioGroup android:id="@+id/radioGroup1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_gravity="center">
-        <RadioButton android:id="@+id/radio0" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true"></RadioButton>
-        <RadioButton android:id="@+id/radio1" android:layout_width="wrap_content" android:layout_height="wrap_content" ></RadioButton>
-        <RadioButton android:id="@+id/radio2" android:layout_width="wrap_content" android:layout_height="wrap_content" ></RadioButton>
-        <RadioButton android:id="@+id/radio3" android:layout_width="wrap_content" android:layout_height="wrap_content" ></RadioButton>
-        <RadioButton android:id="@+id/radio4" android:layout_width="wrap_content" android:layout_height="wrap_content" ></RadioButton>
-        <RadioButton android:id="@+id/radio5" android:layout_width="wrap_content" android:layout_height="wrap_content" ></RadioButton>
-        <RadioButton android:id="@+id/radio6" android:layout_width="wrap_content" android:layout_height="wrap_content" ></RadioButton>
-        <RadioButton android:id="@+id/radio7" android:layout_width="wrap_content" android:layout_height="wrap_content" ></RadioButton>
-        
-        
-    </RadioGroup>
+    <RatingBar android:layout_width="wrap_content" android:id="@+id/sne_ratingBar" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:layout_weight="0"></RatingBar>
+    
+    <LinearLayout android:id="@+id/linearLayout1" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:layout_width="wrap_content">
+        <ImageButton android:layout_width="wrap_content" android:src="@android:drawable/ic_menu_gallery" android:id="@+id/NoteColor1" android:layout_height="wrap_content"></ImageButton>
+        <ImageButton android:layout_width="wrap_content" android:src="@android:drawable/ic_menu_gallery" android:id="@+id/NoteColor2" android:layout_height="wrap_content"></ImageButton>
+        <ImageButton android:layout_width="wrap_content" android:src="@android:drawable/ic_menu_gallery" android:id="@+id/NoteColor3" android:layout_height="wrap_content"></ImageButton>
+        <ImageButton android:layout_width="wrap_content" android:src="@android:drawable/ic_menu_gallery" android:id="@+id/NoteColor4" android:layout_height="wrap_content"></ImageButton>
+        <ImageButton android:layout_width="wrap_content" android:src="@android:drawable/ic_menu_gallery" android:id="@+id/NoteColor5" android:layout_height="wrap_content"></ImageButton>
+    
+    
+    
+    </LinearLayout>
+    
+    
+    
+    
     
     <LinearLayout 
 	android:layout_height="wrap_content"
