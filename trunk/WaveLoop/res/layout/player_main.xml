@@ -161,7 +161,9 @@ android:layout_height="fill_parent"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:background="@drawable/bg_btn">
+				android:background="@drawable/bg_btn"
+				android:paddingLeft="20dip"
+				android:paddingRight="20dip">
 				
 					<ImageButton
 					android:id="@+id/prev_sentence"  
@@ -202,32 +204,46 @@ android:layout_height="fill_parent"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:background="@drawable/bg_btn"
-				android:layout_weight="1">
+				android:layout_weight="1"
+				android:paddingLeft="20dip"
+				android:paddingRight="20dip">
 				
-					<Button
+					<ImageButton
 					android:id="@+id/prev_area"  
-					android:layout_width="0px" 
+					android:layout_width="fill_parent" 
 					android:layout_height="fill_parent" 
 					android:layout_weight="1" 
 					android:text="Prev Area"
+					android:src="@android:drawable/ic_media_previous"
+					
 					/>
 
-					<ToggleButton  
-					android:layout_width="0px" 
+					<FrameLayout
+					android:layout_width="fill_parent" 
 					android:layout_height="fill_parent" 
 					android:layout_weight="1"
-					android:text="ToggleButton" 
-					android:id="@+id/repeat"
-					android:textOff="구간반복"
-    				android:textOn="구간반복" 
-					></ToggleButton>
+					>
+						<ToggleButton  
+						android:layout_width="wrap_content" 
+						android:layout_height="wrap_content"
+						android:layout_gravity="center" 
+						
+						android:text="ToggleButton" 
+						android:id="@+id/repeat"
+						android:textOff=""
+	    				android:textOn="" 
+	    				android:background="@android:drawable/ic_menu_revert"
+						></ToggleButton>
+					</FrameLayout>
 					
-					<Button
+					<ImageButton
 					android:id="@+id/next_area"  
-					android:layout_width="0px" 
+					android:layout_width="fill_parent" 
 					android:layout_height="fill_parent" 
 					android:layout_weight="1" 
 					android:text="Next Area"
+					android:src="@android:drawable/ic_media_next"
+					
 					/>
 					
 				</LinearLayout>
@@ -237,14 +253,19 @@ android:layout_height="fill_parent"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:background="@drawable/bg_btn"
-				android:layout_weight="1">
-					<Button
+				android:layout_weight="1"
+				android:paddingLeft="20dip"
+				android:paddingRight="20dip"
+				>
+					<ImageButton
 					android:id="@+id/bookmark"  
 					android:layout_width="fill_parent" 
 					android:layout_height="fill_parent" 
 					android:layout_marginLeft="105dip"
 					android:layout_marginRight="105dip"
 					android:text="북마크"
+					android:src="@android:drawable/ic_menu_add"
+					android:background="#00000000"
 					/>
 					
 			

@@ -24,10 +24,10 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     Button mPlay2Btn;
     ImageButton mNextBtn;
     ImageButton mPrevBtn;
-    Button mBookmarkBtn;
+    ImageButton mBookmarkBtn;
     ToggleButton mRepeatBtn;
-    Button mRepeatPrevBtn;
-    Button mRepeatNextBtn;
+    ImageButton mRepeatPrevBtn;
+    ImageButton mRepeatNextBtn;
     
     long mMediaDBID;
     long mDataRowID;
@@ -110,17 +110,17 @@ public class player_main extends Activity implements OnGesturePerformedListener{
          mPrevBtn = (ImageButton)findViewById(R.id.prev_sentence);
          mPrevBtn.setOnClickListener(mClickPrev);
          
-         mBookmarkBtn = (Button)findViewById(R.id.bookmark);
+         mBookmarkBtn = (ImageButton)findViewById(R.id.bookmark);
          mBookmarkBtn.setOnClickListener(mClickBookmark);
          
          mRepeatBtn = (ToggleButton)findViewById(R.id.repeat);
          mRepeatBtn.setOnClickListener(mClickRepeat);
          
-         mRepeatPrevBtn = (Button)findViewById(R.id.prev_area);
+         mRepeatPrevBtn = (ImageButton)findViewById(R.id.prev_area);
          mRepeatPrevBtn.setOnClickListener(mClickRepeatPrev);
          mRepeatPrevBtn.setEnabled(false);
          
-         mRepeatNextBtn = (Button)findViewById(R.id.next_area);
+         mRepeatNextBtn = (ImageButton)findViewById(R.id.next_area);
          mRepeatNextBtn.setOnClickListener(mClickRepeatNext);
          mRepeatNextBtn.setEnabled(false);
          
