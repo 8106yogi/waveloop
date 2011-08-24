@@ -36,7 +36,7 @@ android:layout_height="fill_parent"
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content" 
 		android:layout_gravity="center"
-		android:textSize="12sp"
+		android:textSize="14sp"
 		android:text="Artist"
 		/>
 		<TextView
@@ -45,7 +45,8 @@ android:layout_height="fill_parent"
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 		android:layout_gravity="center" 
-		android:textSize="12sp"
+		android:textSize="14sp"
+		android:textStyle="bold"
 		android:text="Title"
 		/>
 		<TextView
@@ -54,7 +55,7 @@ android:layout_height="fill_parent"
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 		android:layout_gravity="center" 
-		android:textSize="12sp"
+		android:textSize="14sp"
 		android:text="Album"
 		/>
 			<RelativeLayout 
@@ -64,7 +65,7 @@ android:layout_height="fill_parent"
 			>
 				<TextView
 				android:id="@+id/cur_time"
-				android:textColor="#ffff99"  
+				android:textColor="#ffffff"  
 				android:layout_width="wrap_content" 
 				android:layout_height="wrap_content"
 				android:layout_alignParentLeft="true"
