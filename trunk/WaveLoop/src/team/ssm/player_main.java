@@ -26,6 +26,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     Button mPrevBtn;
     Button mBookmarkBtn;
     ToggleButton mRepeatBtn;
+    Button mRepeatPrevBtn;
+    Button mRepeatNextBtn;
     
     long mMediaDBID;
     long mDataRowID;
@@ -64,6 +66,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     
     private boolean mIsLoop;
     private int mLoopStartIndex;
+    private int mLoopCenterIndex;
     private int mLoopFinishIndex;
     //private final Context mCtx; 
     private GestureLibrary mLibrary;
@@ -75,6 +78,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_main);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        
+        //this.setWallpaper(new Bitmap());
 
         mPlayer = new MediaPlayer();
          
@@ -109,6 +114,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
          mPlayBtn = (Button)findViewById(R.id.play);
          mPlayBtn.setOnClickListener(mClickPlay);
          
+         //mPlayBtn.setEnabled(false);
+         
          mNextBtn = (Button)findViewById(R.id.next_sentence);
          mNextBtn.setOnClickListener(mClickNext);
          
@@ -120,6 +127,14 @@ public class player_main extends Activity implements OnGesturePerformedListener{
          
          mRepeatBtn = (ToggleButton)findViewById(R.id.repeat);
          mRepeatBtn.setOnClickListener(mClickRepeat);
+         
+         mRepeatPrevBtn = (Button)findViewById(R.id.prev_area);
+         mRepeatPrevBtn.setOnClickListener(mClickRepeatPrev);
+         mRepeatPrevBtn.setEnabled(false);
+         
+         mRepeatNextBtn = (Button)findViewById(R.id.next_area);
+         mRepeatNextBtn.setOnClickListener(mClickRepeatNext);
+         mRepeatNextBtn.setEnabled(false);
          
          
          // 완료 리스너, 시크바 변경 리스너 등록
@@ -239,7 +254,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
             	         		int width = ((innerOffset+1000)<segment.size)?1000:segment.size-innerOffset;
             	         		WaveformView waveformView = new WaveformView(player_main.this);
             		         	waveformView.setData(frameGains, segment.startOffset+innerOffset, 
-            		         			segment.startOffset+innerOffset + width, 200 );
+            		         			segment.startOffset+innerOffset + width, 250 );
             		         	//widthSum += width;
             		         	ll.addView( waveformView );
             		         	count++;
@@ -609,10 +624,14 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 	   //mPlayer.pause();
 	   mIsLoop=!mIsLoop; //토글
 	   mRepeatBtn.setChecked(mIsLoop);
+	   mRepeatPrevBtn.setEnabled(mIsLoop);
+       mRepeatNextBtn.setEnabled(mIsLoop);
+	   
 		
 	   // 현재 위치 지정.
-       mLoopStartIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
-       mLoopFinishIndex = mLoopStartIndex;
+       mLoopCenterIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+       mLoopStartIndex = mLoopCenterIndex;
+       mLoopFinishIndex = mLoopCenterIndex;
    }
    
    public void gestureBookmark(){
@@ -759,12 +778,60 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 	Button.OnClickListener mClickRepeat = new View.OnClickListener() {
         public void onClick(View v) {
              mIsLoop = mRepeatBtn.isChecked();
+             mRepeatPrevBtn.setEnabled(mIsLoop);
+             mRepeatNextBtn.setEnabled(mIsLoop);
+             
              // 현재 위치 지정.
-             mLoopStartIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
-             mLoopFinishIndex = mLoopStartIndex;
+             mLoopCenterIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+             mLoopFinishIndex = mLoopCenterIndex;
+             mLoopStartIndex = mLoopCenterIndex;
 
         }
 	};
+	
+	// 구간반복 왼쪽 확장.
+	Button.OnClickListener mClickRepeatPrev = new View.OnClickListener() {
+        public void onClick(View v) {
+        	
+        	if(mLoopStartIndex == mLoopFinishIndex) {
+        		mLoopStartIndex-=2;
+        		if(mLoopStartIndex < 0)
+        			mLoopStartIndex = 0;
+        	} else if(mLoopCenterIndex > mLoopStartIndex) {
+        		mLoopStartIndex-=2;
+        		if(mLoopStartIndex < 0)
+        			mLoopStartIndex = 0;
+        	} else if(mLoopCenterIndex < mLoopFinishIndex) {
+        		
+        		mLoopFinishIndex-=2;
+        		if(mLoopFinishIndex < mLoopCenterIndex)
+        			mLoopFinishIndex = mLoopCenterIndex;
+        	}
+        }
+	};
+	
+	// 구간반복 오른쪽 확장.
+	Button.OnClickListener mClickRepeatNext = new View.OnClickListener() {
+        public void onClick(View v) {
+        	
+        	if(mLoopStartIndex == mLoopFinishIndex) {
+        		mLoopFinishIndex+=2;
+        		//if(mLoopFinishIndex < 0)
+        		//	mLoopFinishIndex = 0;
+        	} else if(mLoopCenterIndex > mLoopStartIndex) {
+        		mLoopStartIndex+=2;
+        		if(mLoopStartIndex > mLoopCenterIndex)
+        			mLoopStartIndex = mLoopCenterIndex;
+        	} else if(mLoopCenterIndex < mLoopFinishIndex) {
+        		
+        		mLoopFinishIndex+=2;
+        		//if(mLoopFinishIndex < mLoopCenterIndex)
+        		//	mLoopFinishIndex = mLoopCenterIndex;
+        	}
+        }
+	};
+	
+	
    
 	// 재생 정지. 재시작을 위해 미리 준비해 놓는다.
 	Button.OnClickListener mClickStop = new View.OnClickListener() {
