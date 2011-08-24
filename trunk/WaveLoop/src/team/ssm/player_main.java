@@ -34,7 +34,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     TextView mArtist;
     TextView mTitle;
     TextView mAlbum;
-    TextView mCurtime;
+    static TextView mCurtime;
     TextView mTotaltime;
     
     SeekBar mProgress;
@@ -68,10 +68,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     private int mLoopStartIndex;
     private int mLoopCenterIndex;
     private int mLoopFinishIndex;
-    //private final Context mCtx; 
     private GestureLibrary mLibrary;
     GestureOverlayView gestures;
-    //LinearLayout linear;
     FrameLayout frame;
     
     public void onCreate(Bundle savedInstanceState) {
@@ -91,17 +89,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
          mWaveformView.setSeekBar( (SeekBar)findViewById(R.id.progress) );
          mWaveformView.setMediaPlayer(mPlayer);
          mWaveformView.setInnerLayout(mWaveformLayout);
-         
-         
-         //int www = mWaveformView.getLayoutParams().width;
-         //mWaveformView.dis
-         //mWaveformView.setOn
-         
-         //mWaveformView.setOn
-         //mWaveformView.fling(0);\
-         //mWaveformView.setSmoothScrollingEnabled(false);
-         
-         
+    
          
          mArtist = (TextView)findViewById(R.id.artist);
          mTitle = (TextView)findViewById(R.id.title);
@@ -364,20 +352,10 @@ public class player_main extends Activity implements OnGesturePerformedListener{
          } ).start();
 
          //dialog.hide();
-        this.hf = (RealViewSwitcher)findViewById(R.id.ButtonScrollView);
+        //this.hf = (RealViewSwitcher)findViewById(R.id.ButtonScrollView);
         
         
-        /*
-        scrollView = (HorizontalScrollView) findViewById(R.id.buttonScrollView);	//가로스크롤뷰
-        contentView = (ViewGroup) findViewById(R.id.button_scroll);	//가로스크롤뷰에 담긴 전체 리니어레이아웃
-        scrollView.setOnTouchListener(new ScrollPager(scrollView, contentView));
-        scrollView.post(new Runnable() {
-	        public void run() {
-	          //scrollView.scrollTo(0, contentView.getPaddingTop());
-	          scrollView.scrollTo(contentView.getPaddingLeft(), 0);
-	         }
-        });
-        */
+        
     }
       
   
@@ -419,7 +397,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 		    mTotaltime.setText(strTime);
 		    //mTotaltime.setText(cur);
 		}
-		//mPlaytimeHandler.sendEmptyMessageDelayed(0,1000);
+		
 	}
     
 
@@ -443,27 +421,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
         switch (item.getItemId()) {
         case 1:
               Toast.makeText(this,"제스쳐모드",Toast.LENGTH_SHORT).show();
-              //onGestureMode();
-              //Intent ges_it = new Intent(player_main.this, gestureActivity.class);
-              
-              
-              
-              //GestureOverlayView gestures = (GestureOverlayView) findViewById(R.id.gestures);
-              
-           
-              //gestures = (GestureOverlayView)View.inflate(this, R.layout.gesture_overlay_view, null);
-              //gestures = (GestureOverlayView)findViewById(R.id.gestures);
-              //gestures.addOnGesturePerformedListener(this);
-              //frame.addView(gestures);
-              //frame.addView(linear);
-              //setContentView(frame);
-              
-              /*
-              gestures.setEnabled(true);
-              gestures.setEventsInterceptionEnabled(true);
-              gestures.setGestureVisible(true);
-              gestures.addOnGesturePerformedListener(this);
-       		*/
+    
               gestures.setVisibility(View.VISIBLE);
               gestures.addOnGesturePerformedListener(this);
                return true;
@@ -608,16 +566,16 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 	   	mPlayer.pause();
 	   	int offset = sentenceSegmentList.getPrevSentenceOffset(mWaveformView.getScrollX()/2);
 	   	mWaveformView.scrollSmoothTo(offset*2, 0);
-	   	mWaveformView.forceStop();
-	   	mPlayer.start();
+	   	//mWaveformView.forceStop();
+	   	//mPlayer.start();
    }
    
    public void gestureNext(){
 	   	mPlayer.pause();
 	   	int offset = sentenceSegmentList.getNextSentenceOffset(mWaveformView.getScrollX()/2);
 	   	mWaveformView.scrollSmoothTo(offset*2, 0);
-	   	mWaveformView.forceStop();
-	   	mPlayer.start();
+	   	//mWaveformView.forceStop();
+	   	//mPlayer.start();
    }
    
    public void gestureRepeat(){
@@ -901,7 +859,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
    */
     
     //1초에 한 번씩 재생시간 갱신
-    Handler mPlaytimeHandler = new Handler() {
+   
+   Handler mPlaytimeHandler = new Handler() {
         public void handleMessage(Message msg) {
             
         	if (mPlayer == null) return;
@@ -963,8 +922,13 @@ public class player_main extends Activity implements OnGesturePerformedListener{
              if (fromUser) {
                   //mPlayer.seekTo(progress);
             	 //int cur = mPlayer.getCurrentPosition()/1000;
-                
-            	
+            	 	/*
+            	 	int cur =  mPlayer.getCurrentPosition()/1000;
+	           	 	int cMin = cur/60;
+	                int cSec = cur%60;
+	                String strTime = String.format("%02d:%02d" , cMin, cSec);
+	                mCurtime.setText(strTime);
+            		*/
                  
              }
          }

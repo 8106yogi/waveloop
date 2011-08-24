@@ -9,10 +9,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
-import android.widget.Scroller;
-import android.widget.SeekBar;
+import android.widget.*;
 
 public class WaveformScrollView extends HorizontalScrollView {
 	SeekBar mSeekBar;
@@ -62,7 +59,22 @@ public class WaveformScrollView extends HorizontalScrollView {
             	 
             	double position = (double)progress/(double)mSeekBar.getMax()*(double)mPlayer.getDuration();
  				mPlayer.seekTo( (int)position );
+ 				 	/*
+ 				    int cur =  mPlayer.getCurrentPosition()/1000;
+	           	 	int cMin = cur/60;
+	                int cSec = cur%60;
+	                String strTime = String.format("%02d:%02d" , cMin, cSec);
+	                TextView mCur = player_main.mCurtime;
+	                mCur.setText(strTime);
+	                */
         	}
+        	int cur =  mPlayer.getCurrentPosition()/1000;
+       	 	int cMin = cur/60;
+            int cSec = cur%60;
+            String strTime = String.format("%02d:%02d" , cMin, cSec);
+            TextView mCur = player_main.mCurtime;
+            mCur.setText(strTime);
+        	
         }
 
          public void onStartTrackingTouch(SeekBar seekBar) {
