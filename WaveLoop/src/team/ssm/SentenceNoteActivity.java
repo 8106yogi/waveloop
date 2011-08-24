@@ -34,7 +34,7 @@ public class SentenceNoteActivity extends Activity {
 	ArrayList<sentence> mArrSentences;
 	ArrayAdapter<sentence> mAdapter;
 	ListView mListView;
-	
+	int pos;
 	DbAdapter dba;
 	//DatabaseHelper dbh;
 	
@@ -69,18 +69,20 @@ public class SentenceNoteActivity extends Activity {
 	public void onCreateContextMenu (ContextMenu menu, View v,
             ContextMenu.ContextMenuInfo menuInfo) {
 		
-		/*
+		
     		super.onCreateContextMenu(menu, v, menuInfo);
     		
     		AdapterContextMenuInfo info =(AdapterContextMenuInfo) menuInfo;
 	      	pos  = info.position; 
-	    	sound p = m_orders.get(pos);
-	    	String HeaderTitle=p.getTitle();
+	    	//sound p = m_orders.get(pos);
+	    	sentence s =mArrSentences.get(pos);
+	      	String HeaderTitle=s.getTitle()+"\n"+s.getTime();
 	    	menu.setHeaderTitle(HeaderTitle);
-	        menu.add(0,1,0,"재생");
-	        menu.add(0,2,0,"목록에서 제거");
 	        
-	      */
+	    	menu.add(0,1,0,"재생");
+	        menu.add(0,2,0,"편집");
+	        menu.add(0,3,0,"삭제");
+     
 
     }
     
@@ -88,7 +90,9 @@ public class SentenceNoteActivity extends Activity {
         switch (item.getItemId()) {
         case 1:	//재생
         	break;
-        case 2:	//목록에서 제거        	
+        case 2:	//편집        	
+        	break;
+        case 3:	//삭제        	
         	break;
         
         }
@@ -149,6 +153,11 @@ public class SentenceNoteActivity extends Activity {
     	super.onResume();
     	refreshListFromDB();
     }
+	
+	 public void onDestroy(){
+	    	super.onDestroy();
+	    	dba.close();
+	    }
 	
 	
 	// 어댑터뷰의 클릭리스너
