@@ -159,28 +159,37 @@ android:layout_height="fill_parent"
 				android:orientation="horizontal"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:layout_weight="1">
+				android:layout_weight="1"
+				android:background="@drawable/bg_btn">
 				
-					<Button
+					<ImageButton
 					android:id="@+id/prev_sentence"  
 					android:layout_width="0px" 
 					android:layout_height="fill_parent" 
 					android:layout_weight="1" 
 					android:text="이전문장"
+					android:src="@android:drawable/ic_media_rew"
+					android:background="#00000000"
 					/>
-					<Button
+					<ImageButton
 					android:id="@+id/play"  
 					android:layout_width="0px" 
-					android:layout_height="fill_parent"
-					android:layout_weight="1" 
+					android:layout_height="fill_parent" 
+					android:layout_weight="1"
 					android:text="Play"
+					android:src="@android:drawable/ic_media_play"
+					android:background="#00000000"
+					
 					/>
-					<Button
+					<ImageButton
 					android:id="@+id/next_sentence"  
 					android:layout_width="0px" 
 					android:layout_height="fill_parent" 
 					android:layout_weight="1" 
 					android:text="다음문장"
+					android:src="@android:drawable/ic_media_ff"
+					android:background="#00000000"
+					
 					/>
 					
 					
@@ -191,6 +200,7 @@ android:layout_height="fill_parent"
 				android:orientation="horizontal"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
+				android:background="@drawable/bg_btn"
 				android:layout_weight="1">
 				
 					<Button
@@ -225,6 +235,7 @@ android:layout_height="fill_parent"
 				android:orientation="horizontal"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
+				android:background="@drawable/bg_btn"
 				android:layout_weight="1">
 					<Button
 					android:id="@+id/bookmark"  

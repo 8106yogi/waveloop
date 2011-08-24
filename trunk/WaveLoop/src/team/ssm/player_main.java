@@ -20,10 +20,10 @@ import android.widget.*;
 public class player_main extends Activity implements OnGesturePerformedListener{
     
     static MediaPlayer mPlayer;
-    Button mPlayBtn; 
+    ImageButton mPlayBtn; 
     Button mPlay2Btn;
-    Button mNextBtn;
-    Button mPrevBtn;
+    ImageButton mNextBtn;
+    ImageButton mPrevBtn;
     Button mBookmarkBtn;
     ToggleButton mRepeatBtn;
     Button mRepeatPrevBtn;
@@ -111,15 +111,15 @@ public class player_main extends Activity implements OnGesturePerformedListener{
          
          // 버튼들의 클릭 리스너 등록
          
-         mPlayBtn = (Button)findViewById(R.id.play);
+         mPlayBtn = (ImageButton)findViewById(R.id.play);
          mPlayBtn.setOnClickListener(mClickPlay);
          
          //mPlayBtn.setEnabled(false);
          
-         mNextBtn = (Button)findViewById(R.id.next_sentence);
+         mNextBtn = (ImageButton)findViewById(R.id.next_sentence);
          mNextBtn.setOnClickListener(mClickNext);
          
-         mPrevBtn = (Button)findViewById(R.id.prev_sentence);
+         mPrevBtn = (ImageButton)findViewById(R.id.prev_sentence);
          mPrevBtn.setOnClickListener(mClickPrev);
          
          mBookmarkBtn = (Button)findViewById(R.id.bookmark);
@@ -595,12 +595,12 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 		   	 //mWaveformView.smoothScrollTo(mWaveformView.getScrollX(), mWaveformView.getScrollY());
 		   	 mPlayer.start();
 		   	 
-		      mPlayBtn.setText("Pause");
+		      //mPlayBtn.setText("Pause");
 		      // 여기서 스크롤뷰를 세팅하고.
 		        
 	    } else {
 	        mPlayer.pause();
-	        mPlayBtn.setText("Play");
+	        //mPlayBtn.setText("Play");
 	    }
    }
    
@@ -686,12 +686,12 @@ public class player_main extends Activity implements OnGesturePerformedListener{
             	 //mWaveformView.smoothScrollTo(mWaveformView.getScrollX(), mWaveformView.getScrollY());
             	 mPlayer.start();
             	 
-                 mPlayBtn.setText("Pause");
+                 //mPlayBtn.setText("Pause");
                  // 여기서 스크롤뷰를 세팅하고.
                  
              } else {
                  mPlayer.pause();
-                 mPlayBtn.setText("Play");
+                 //mPlayBtn.setText("Play");
              }
          }
     };
@@ -837,7 +837,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 	Button.OnClickListener mClickStop = new View.OnClickListener() {
         public void onClick(View v) {
              mPlayer.stop();
-             mPlayBtn.setText("Play");
+             //mPlayBtn.setText("Play");
              //mProgress.setProgress(0);
              Prepare();
         }
@@ -847,7 +847,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 	   	public boolean onTouch(View v, MotionEvent event) {
 	   		if (mPlayer.isPlaying() == true) {
 				mPlayer.pause();
-            	mPlayBtn.setText("Play");
+            	//mPlayBtn.setText("Play");
 			}
 			return false;
 		}
