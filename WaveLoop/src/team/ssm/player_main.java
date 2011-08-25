@@ -313,7 +313,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
                 				mWaveformLayout.addView(outerLayout);
                 				mWaveformView.setmWaveformSemgnets(mWaveformSemgnets);
                 				mWaveformView.setSentenceSegmentList(sentenceSegmentList);
-                				mProgress.setMax( nFrameGainsCount );
+                				mProgress.setMax( nFrameGainsCount*2 );
                 				//mSeekBar.setProgress( this.getScrollX() );
                 				
                 				addSideView();
@@ -813,9 +813,15 @@ public class player_main extends Activity implements OnGesturePerformedListener{
  		
         
         // 현재 위치 지정.
-        mLoopCenterIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
-        mLoopFinishIndex = mLoopCenterIndex;
-        mLoopStartIndex = mLoopCenterIndex;
+        if(mIsLoop) {
+        	mLoopCenterIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+            mLoopFinishIndex = mLoopCenterIndex;
+            mLoopStartIndex = mLoopCenterIndex;
+            
+            //mWaveformSemgnets[mLoopCenterIndex]
+            
+        }
+        
     }
     
 	// 구간반복.
