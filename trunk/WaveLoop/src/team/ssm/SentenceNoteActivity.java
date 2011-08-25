@@ -85,15 +85,80 @@ public class SentenceNoteActivity extends Activity {
      
 
     }
-    
+	
+	int getMediaDBIndex( int sentenceRowId )
+	{
+		dba.open();
+    	Cursor cursor = dba.fetchBook2( sentenceRowId );
+    	cursor.moveToPosition(0);
+    	int mediaDBIndex = cursor.getInt( cursor.getColumnIndex(DbAdapter.KEY_SENTENCE_MDB_ID) );
+    	dba.close();
+    	return mediaDBIndex;
+	}
+	
+	int getDataIndexFromMediaIndex( int mediaIndex )
+	{
+		dba.open();
+    	Cursor cursor = dba.fetchBookFromMediaID( mediaIndex );
+    	cursor.moveToPosition(0);
+    	int rowID = cursor.getInt( cursor.getColumnIndex(DbAdapter.KEY_ROWID) );
+    	dba.close();
+    	return rowID;
+	}
+	
     public boolean onContextItemSelected (MenuItem item) {
         switch (item.getItemId()) {
         case 1:	//재생
+        	int rowID = mArrSentences.get(pos).id;
+            int mediaDBIndex = getMediaDBIndex(rowID);
+            int dataRowID = getDataIndexFromMediaIndex(mediaDBIndex);
+            	
+            Intent i = new Intent(SentenceNoteActivity.this, player_main.class); 
+            i.putExtra("오디오파일경로", dataRowID );
+            startActivity(i);
+            	
+           
         	break;
         case 2:	//편집        	
+        	sentence s =mArrSentences.get(pos);
+        	Intent it = new Intent(SentenceNoteActivity.this, SentenceNoteEditActivity.class); 
+    		it.putExtra("sentence_row_id", s.getId() );
+    		startActivity(it);
+        	
         	break;
         case 3:	//삭제        	
-        	break;
+        	sentence se =mArrSentences.get(pos);
+        	String HeaderTitle2=se.getTitle()+"\n"+se.getTime();
+        	new AlertDialog.Builder(SentenceNoteActivity.this)
+        	.setTitle("문장노트를 목록에서 삭제하시겠습니까?")
+        	.setMessage(HeaderTitle2)
+        	.setIcon(android.R.drawable.ic_dialog_alert)
+        	.setCancelable(false)
+        	.setPositiveButton("삭제", new DialogInterface.OnClickListener(){
+        		public void onClick(DialogInterface dialog, int which){
+        			// DB에 접근하여 파일패스를 얻어내고
+        			dba.open();
+        			Cursor cursor = dba.fetchAllBooks2();
+                	cursor.moveToPosition(pos);
+                	
+        			int rowId = cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_ROWID2));     
+        				
+	        		dba.deleteBook2(rowId);
+	        			
+	        		Toast.makeText(SentenceNoteActivity.this,"파일이 제거되었습니다.",Toast.LENGTH_SHORT).show();	
+	        		
+        			dba.close();
+        			refreshListFromDB();
+        			
+        		}
+        	} )
+        	.setNegativeButton("취소", null)
+        	.show();
+        	
+        		
+        	
+              return true;
+        	
         
         }
        
