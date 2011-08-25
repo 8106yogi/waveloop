@@ -17,11 +17,11 @@ import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 
-public class player_main extends Activity implements OnGesturePerformedListener{
+public class player_main extends Activity {
     
     static MediaPlayer mPlayer;
     ImageButton mPlayBtn; 
-    Button mPlay2Btn;
+    //Button mPlay2Btn;
     ImageButton mNextBtn;
     ImageButton mPrevBtn;
     ImageButton mBookmarkBtn;
@@ -448,8 +448,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 	    	 return true;
     	 }
     	 return false;
-    	 
-    	
+ 
     }
     
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -459,8 +458,9 @@ public class player_main extends Activity implements OnGesturePerformedListener{
         	showToastMessage("제스쳐모드");
         	
             gestures.setVisibility(View.VISIBLE);
-            gestures.addOnGesturePerformedListener(this);
-             
+            gestures.addOnGesturePerformedListener(mListener);
+            
+            
             return true;
         
         case 2:
@@ -472,16 +472,20 @@ public class player_main extends Activity implements OnGesturePerformedListener{
         return false;
     }
 	
-    public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
-  		predictions = mLibrary.recognize(gesture);
+      		
+    OnGesturePerformedListener mListener = new OnGesturePerformedListener() {
+    	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
+    
+    		predictions = mLibrary.recognize(gesture);
   		
   		// We want at least one prediction
-  		if (predictions.size() > 0) {
+  		if (predictions.size() != 0) {
   			Prediction prediction = predictions.get(0);
+  			String name = prediction.name;
   			// We want at least some confidence in the result
   				if (prediction.score > 1.0) {
   				// Show the spell
-	  				if(prediction.name.equals("play / pause")){
+	  				if(name.equals("play / pause")){
 	  					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
 		  				/*  
 	  					if (mPlayer.isPlaying() == false) {
@@ -494,25 +498,25 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 		  				  gesturePlay();
 	  					
 	  				}
-	  				if(prediction.name.equals("prev")){
+	  				else if(name.equals("prev")){
 	  					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
 	  					showToastMessage(prediction.name);
 	  					//mp.pause();
 	  		        	gesturePrev();
 	  				}
-	  				if(prediction.name.equals("next")){
+	  				else if(name.equals("next")){
 	  					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
 	  					showToastMessage(prediction.name);
 	  					//mp.pause();
 	  					gestureNext();
 	  				}
-	  				if(prediction.name.equals("bookmark")){
+	  				else if(name.equals("bookmark")){
 	  					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
 	  					showToastMessage(prediction.name);
 	  					gestureBookmark();
 	  					
 	  				}
-	  				if(prediction.name.equals("repeat")){
+	  				else if(name.equals("repeat")){
 	  					/*
 	  					if(!mIsLoop){
 	  						Toast.makeText(this, "repeat on", Toast.LENGTH_SHORT).show();
@@ -523,16 +527,21 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 	  					*/
 	  					gestureRepeat();
 	  				}
-	  				
+	  				return;
   			}
+  				return;
   		}
-  	}
+  		return;
+    }
+   };
+    
 	
     public void onBackPressed(){
     	if(gestures.getVisibility() == View.VISIBLE){
     		gestures.setVisibility(View.INVISIBLE);
+    		gestures.removeOnGesturePerformedListener(mListener);
+    		predictions.clear();
     		
-    		//predictions.clear();
     	}
     	else
     		finish();
@@ -600,19 +609,20 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 	}
     
    public void gesturePlay(){
-	    if (mPlayer.isPlaying() == false) {
+	   
+	  	 if (mPlayer.isPlaying() == false) {
 		   	 mWaveformView.forceStop();
 		   	 //mWaveformView.smoothScrollTo(mWaveformView.getScrollX(), mWaveformView.getScrollY());
-		   	 mPlayer.start();
+		   	mPlayer.start();
 		   	 //Toast.makeText(this, "play", Toast.LENGTH_SHORT).show();
-		   	showToastMessage("재생");
+		   	showToastMessage("play");
 		      //mPlayBtn.setText("Pause");
 		      
 		        
 	    } else {
-	        mPlayer.pause();
+	    	mPlayer.pause();
 	        //Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();
-	        showToastMessage("일시정지");
+	        showToastMessage("pause");
 	        //mPlayBtn.setText("Play");
 	    }
 	    
@@ -636,7 +646,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
    
    public void gestureRepeat(){
 
-	  
+	   mRepeatBtn.toggle();
 	   processRepeat();
 
    }
