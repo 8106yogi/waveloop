@@ -29,7 +29,6 @@ public class WaveformScrollView extends HorizontalScrollView {
 		mSentenceSegmentList = sentenceSegmentList;
 	}
 	
-	
 	public void setInnerLayout( LinearLayout layout )
 	{
 		mWaveformLinearLayout = layout;
@@ -164,7 +163,7 @@ public class WaveformScrollView extends HorizontalScrollView {
 				
 		}
 		
-		updateCurrentSegmentColor();
+		//updateCurrentSegmentColor();
 
 		super.onScrollChanged(l, t, oldl, oldt);
 	}
@@ -182,6 +181,8 @@ public class WaveformScrollView extends HorizontalScrollView {
 				if( mSentenceSegmentList.getSegments()[segIndex].isSilence == false )
 					getmWaveformSemgnets()[segIndex].setBackgroundColor(0x33ffffff);
 				mCurrentSegmentIndex = segIndex;
+				
+				
 			}
 		
 		
