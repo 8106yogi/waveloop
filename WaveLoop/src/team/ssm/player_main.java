@@ -311,6 +311,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
                 				mWaveformLayout.addView(outerLayout);
                 				mWaveformView.setmWaveformSemgnets(mWaveformSemgnets);
                 				mWaveformView.setSentenceSegmentList(sentenceSegmentList);
+                				mProgress.setMax( nFrameGainsCount );
+                				//mSeekBar.setProgress( this.getScrollX() );
                 				
                 				addSideView();
                 			}
