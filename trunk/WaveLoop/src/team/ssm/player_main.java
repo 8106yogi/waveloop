@@ -579,17 +579,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
    }
    
    public void gestureRepeat(){
-	   //mPlayer.pause();
-	   mIsLoop=!mIsLoop; //토글
-	   mRepeatBtn.setChecked(mIsLoop);
-	   mRepeatPrevBtn.setEnabled(mIsLoop);
-       mRepeatNextBtn.setEnabled(mIsLoop);
-	   
-		
-	   // 현재 위치 지정.
-       mLoopCenterIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
-       mLoopStartIndex = mLoopCenterIndex;
-       mLoopFinishIndex = mLoopCenterIndex;
+	   processRepeat();
    }
    
    public void gestureBookmark(){
@@ -731,19 +721,34 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     };
     
 
+    void processRepeat()
+    {
+    	boolean isLoop = mRepeatBtn.isChecked();
+    	if(isLoop) {
+    		// 문장인지 확인하고 
+    		SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
+    		if(seg.isSilence) {
+    			Toast.makeText(getApplicationContext(), "문장만 구간반복이 가능합니다.", Toast.LENGTH_SHORT).show();
+    			mRepeatBtn.setChecked(false);
+    			return;
+    		}
+    	}
+    	
+    	
+        mIsLoop = isLoop;
+        mRepeatPrevBtn.setEnabled(mIsLoop);
+        mRepeatNextBtn.setEnabled(mIsLoop);
+         
+        // 현재 위치 지정.
+        mLoopCenterIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+        mLoopFinishIndex = mLoopCenterIndex;
+        mLoopStartIndex = mLoopCenterIndex;
+    }
     
-	// 재생 정지. 재시작을 위해 미리 준비해 놓는다.
+	// 구간반복.
 	Button.OnClickListener mClickRepeat = new View.OnClickListener() {
         public void onClick(View v) {
-             mIsLoop = mRepeatBtn.isChecked();
-             mRepeatPrevBtn.setEnabled(mIsLoop);
-             mRepeatNextBtn.setEnabled(mIsLoop);
-             
-             // 현재 위치 지정.
-             mLoopCenterIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
-             mLoopFinishIndex = mLoopCenterIndex;
-             mLoopStartIndex = mLoopCenterIndex;
-
+        	processRepeat();
         }
 	};
 	
