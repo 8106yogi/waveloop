@@ -147,6 +147,10 @@ public class SentenceSegmentList {
 		return null;
 	}
 	
+	public int getCurrentStartOffsetByIndex( int index )
+	{
+		return mSegmentList[index].startOffset;
+	}
 	
 	public int getCurrentSentenceIndex( int currentOffset )
 	{
@@ -160,43 +164,57 @@ public class SentenceSegmentList {
 		return 0;
 	}
 	
-	public int getNextSentenceOffset( int currentOffset )
+	public int getNextSentenceIndex( int currentOffset )
 	{
+		
 		int currentIndex = getCurrentSentenceIndex(currentOffset);
+		int nextIndex = currentIndex;
 		
 		if( mSegmentList[currentIndex].isSilence )
-			currentIndex++;
+			nextIndex = currentIndex+1;
 		else
-			currentIndex+=2;
+			nextIndex = currentIndex+2;
 		
-		if( currentIndex >= mSegmentList.length )
+		if( nextIndex >= mSegmentList.length )
+			nextIndex = currentIndex;
+		
+		return nextIndex;		
+	}
+	
+	public int getNextSentenceOffset( int currentOffset )
+	{
+		int nextIndex = getNextSentenceIndex(currentOffset);
+		if( nextIndex >= mSegmentList.length )
 			return currentOffset;
-			
 		
-		return mSegmentList[currentIndex].startOffset;
+		return mSegmentList[nextIndex].startOffset;
+	}
+	
+	public int getPrevSentenceIndex( int currentOffset )
+	{
+		int currentIndex = getCurrentSentenceIndex(currentOffset);
+		int prevIndex = currentIndex;
+		// startOffset으로부터 일정사이즈 이상이면 현재 문장 처음으로 이동하고.
+		// startOffset에 가까우면 앞문장의 startOffset으로 이동한다.
+		if( mSegmentList[currentIndex].isSilence )
+			prevIndex = currentIndex-1;
+		else if( currentOffset - mSegmentList[currentIndex].startOffset < 15 )//0.3초 이하이면 앞문장으로.
+			prevIndex = currentIndex-2;
+
+		if( prevIndex <= 0 )
+			prevIndex = 0;
+
+		return prevIndex;
+		
 	}
 	
 	public int getPrevSentenceOffset( int currentOffset )
 	{
-		int currentIndex = getCurrentSentenceIndex(currentOffset);
-		
-		// startOffset으로부터 일정사이즈 이상이면 현재 문장 처음으로 이동하고.
-		// startOffset에 가까우면 앞문장의 startOffset으로 이동한다.
-		if( mSegmentList[currentIndex].isSilence )
-			currentIndex--;
-		else
-		{
-			if( currentOffset - mSegmentList[currentIndex].startOffset < 15 )//0.3초 이하이면 앞문장으로.
-			{
-				currentIndex-=2;
-			}
-			
-		}
+		int prevIndex = getPrevSentenceIndex(currentOffset);
+		if( prevIndex <= 0 )
+			return currentOffset;
 
-		if( currentIndex < 0 )
-			currentIndex = 0;
-		
-		return mSegmentList[currentIndex].startOffset;
+		return mSegmentList[prevIndex].startOffset;
 	}
 
 	

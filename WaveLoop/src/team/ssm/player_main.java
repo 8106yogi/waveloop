@@ -644,12 +644,29 @@ public class player_main extends Activity implements OnGesturePerformedListener{
          }
     };
     
+    private boolean isWithinRepeatArea( int index )
+    {
+    	if( index < mLoopStartIndex ||
+    		index > mLoopFinishIndex ) {
+    		return false;
+    	}
+    	
+    	return true;
+    }
+    
     
     // 다음문장으로 이동.
     Button.OnClickListener mClickNext = new View.OnClickListener() {
         public void onClick(View v) {
+
+        	int nextIndex = sentenceSegmentList.getNextSentenceIndex(mWaveformView.getScrollX()/2);
+        	if(mIsLoop) {
+        		if( false == isWithinRepeatArea(nextIndex) )
+        			return;
+        	}
+        	
         	mPlayer.pause();
-        	int offset = sentenceSegmentList.getNextSentenceOffset(mWaveformView.getScrollX()/2);
+        	int offset = sentenceSegmentList.getCurrentStartOffsetByIndex(nextIndex);
         	mWaveformView.scrollSmoothTo(offset*2, 0);
         	
         }
@@ -658,8 +675,15 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     // 이전문장으로 이동.
     Button.OnClickListener mClickPrev = new View.OnClickListener() {
         public void onClick(View v) {
+        	
+        	int nextIndex = sentenceSegmentList.getPrevSentenceIndex(mWaveformView.getScrollX()/2);
+        	if(mIsLoop) {
+        		if( false == isWithinRepeatArea(nextIndex) )
+        			return;
+        	}
+        	
         	mPlayer.pause();
-        	int offset = sentenceSegmentList.getPrevSentenceOffset(mWaveformView.getScrollX()/2);
+        	int offset = sentenceSegmentList.getCurrentStartOffsetByIndex(nextIndex);
         	mWaveformView.scrollSmoothTo(offset*2, 0);
         	
         }
