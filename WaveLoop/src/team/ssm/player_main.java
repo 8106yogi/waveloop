@@ -571,8 +571,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
              return false;
          }
          mPlayer.start();
-         mPlayer.seekTo( mPlayer.getDuration() );
-         //mPlayer.seekTo(0);
+         //mPlayer.seekTo( mPlayer.getDuration() );
+         mPlayer.seekTo(0);
          mPlayer.pause();
 
          return true;
