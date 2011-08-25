@@ -71,6 +71,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     private GestureLibrary mLibrary;
     GestureOverlayView gestures;
     FrameLayout frame;
+    ArrayList<Prediction> predictions;
+    MenuItem item;
     
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -409,7 +411,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        MenuItem item=menu.add(0,1,0,"제스쳐");
+        item=menu.add(0,1,0,"제스쳐");
         item.setIcon(R.drawable.ic_gesturebuilder);
         menu.add(0,2,0,"번역").setIcon(android.R.drawable.ic_menu_preferences);
         //menu.add(0,3,0,"전체삭제").setIcon(android.R.drawable.ic_menu_delete);
@@ -417,7 +419,28 @@ public class player_main extends Activity implements OnGesturePerformedListener{
         return true;
     }
     
-    
+    public boolean onPrepareOptionsMenu(Menu menu){
+    	
+    	switch (item.getItemId()) {
+	     case 1: 
+	    	
+		    	if(gestures.getVisibility() == View.VISIBLE){
+		       	 	item.setEnabled(false);
+		         }
+		         else{
+		        	 item.setEnabled(true);
+		         }
+	  	   	
+	    	return true;
+	    
+	    	
+	     case 2:
+	    	 return true;
+    	 }
+    	 return false;
+    	 
+    	
+    }
     
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -426,7 +449,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     
               gestures.setVisibility(View.VISIBLE);
               gestures.addOnGesturePerformedListener(this);
-               return true;
+             
+              return true;
         
         case 2:
               Toast.makeText(this,"Google Speech API...!!",Toast.LENGTH_SHORT).show();
@@ -437,7 +461,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     }
 	
     public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
-  		ArrayList<Prediction> predictions = mLibrary.recognize(gesture);
+  		predictions = mLibrary.recognize(gesture);
   		
   		// We want at least one prediction
   		if (predictions.size() > 0) {
@@ -447,12 +471,14 @@ public class player_main extends Activity implements OnGesturePerformedListener{
   				// Show the spell
 	  				if(prediction.name.equals("play / pause")){
 	  					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
-		  				  if (mPlayer.isPlaying() == false) {
+		  				/*  
+	  					if (mPlayer.isPlaying() == false) {
 		  					Toast.makeText(this, "play", Toast.LENGTH_SHORT).show();
 		  				  }
 		  				  else{
 		  					Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();  
 		  				  }
+		  				  */
 		  				  gesturePlay();
 	  					
 	  				}
@@ -472,7 +498,14 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 	  					
 	  				}
 	  				if(prediction.name.equals("repeat")){
-	  					Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+	  					/*
+	  					if(!mIsLoop){
+	  						Toast.makeText(this, "repeat on", Toast.LENGTH_SHORT).show();
+	  					}
+	  					else{
+	  						Toast.makeText(this, "repeat off", Toast.LENGTH_SHORT).show();
+	  					}
+	  					*/
 	  					gestureRepeat();
 	  				}
 	  				
@@ -483,6 +516,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     public void onBackPressed(){
     	if(gestures.getVisibility() == View.VISIBLE){
     		gestures.setVisibility(View.INVISIBLE);
+    		
+    		//predictions.clear();
     	}
     	else
     		finish();
@@ -554,14 +589,16 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 		   	 mWaveformView.forceStop();
 		   	 //mWaveformView.smoothScrollTo(mWaveformView.getScrollX(), mWaveformView.getScrollY());
 		   	 mPlayer.start();
-		   	 
+		   	 Toast.makeText(this, "play", Toast.LENGTH_SHORT).show();
 		      //mPlayBtn.setText("Pause");
-		      // 여기서 스크롤뷰를 세팅하고.
+		      
 		        
 	    } else {
 	        mPlayer.pause();
+	        Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();
 	        //mPlayBtn.setText("Play");
 	    }
+	    
    }
    
    public void gesturePrev(){
@@ -581,7 +618,10 @@ public class player_main extends Activity implements OnGesturePerformedListener{
    }
    
    public void gestureRepeat(){
+
+	  
 	   processRepeat();
+
    }
    
    public void gestureBookmark(){
@@ -764,7 +804,14 @@ public class player_main extends Activity implements OnGesturePerformedListener{
         mIsLoop = isLoop;
         mRepeatPrevBtn.setEnabled(mIsLoop);
         mRepeatNextBtn.setEnabled(mIsLoop);
-         
+        if(mIsLoop){
+ 		   Toast.makeText(this, "repeat on", Toast.LENGTH_SHORT).show();
+ 	   	}
+ 	   else{
+ 		   Toast.makeText(this, "repeat off", Toast.LENGTH_SHORT).show();
+ 	   }
+ 		
+        
         // 현재 위치 지정.
         mLoopCenterIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
         mLoopFinishIndex = mLoopCenterIndex;
