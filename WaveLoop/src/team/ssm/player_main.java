@@ -73,6 +73,7 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     FrameLayout frame;
     ArrayList<Prediction> predictions;
     MenuItem item;
+    Toast mToast;
     
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +82,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
         
         //this.setWallpaper(new Bitmap());
 
+        mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+        
         mPlayer = new MediaPlayer();
          
          // 웨이브폼 스크롤뷰 추가
@@ -173,8 +176,9 @@ public class player_main extends Activity implements OnGesturePerformedListener{
          
          // 첫 곡 읽기 및 준비
          if (LoadMedia() == false) {
-             Toast.makeText(this, "파일을 읽을 수 없습니다.", Toast.LENGTH_LONG).show();
-             finish();
+             //Toast.makeText(this, "파일을 읽을 수 없습니다.", Toast.LENGTH_LONG).show();
+        	 showToastMessage("파일을 읽을 수 없습니다.");
+        	 finish();
          }
         
          
@@ -361,7 +365,13 @@ public class player_main extends Activity implements OnGesturePerformedListener{
         
         
     }
-      
+    
+    public void showToastMessage( String strMessage )
+    {
+    	//mToast.cancel();
+    	mToast.setText(strMessage);
+   	 	mToast.show();
+    }
   
          
     
@@ -445,16 +455,18 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case 1:
-              Toast.makeText(this,"제스쳐모드",Toast.LENGTH_SHORT).show();
-    
-              gestures.setVisibility(View.VISIBLE);
-              gestures.addOnGesturePerformedListener(this);
+            //Toast.makeText(this,"제스쳐모드",Toast.LENGTH_SHORT).show();
+        	showToastMessage("제스쳐모드");
+        	
+            gestures.setVisibility(View.VISIBLE);
+            gestures.addOnGesturePerformedListener(this);
              
-              return true;
+            return true;
         
         case 2:
-              Toast.makeText(this,"Google Speech API...!!",Toast.LENGTH_SHORT).show();
-              return true;
+            //Toast.makeText(this,"Google Speech API...!!",Toast.LENGTH_SHORT).show();
+        	showToastMessage("Google Speech API...!!");
+            return true;
         	        
         }
         return false;
@@ -483,17 +495,20 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 	  					
 	  				}
 	  				if(prediction.name.equals("prev")){
-	  					Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+	  					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+	  					showToastMessage(prediction.name);
 	  					//mp.pause();
 	  		        	gesturePrev();
 	  				}
 	  				if(prediction.name.equals("next")){
-	  					Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+	  					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+	  					showToastMessage(prediction.name);
 	  					//mp.pause();
 	  					gestureNext();
 	  				}
 	  				if(prediction.name.equals("bookmark")){
-	  					Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+	  					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
+	  					showToastMessage(prediction.name);
 	  					gestureBookmark();
 	  					
 	  				}
@@ -589,13 +604,15 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 		   	 mWaveformView.forceStop();
 		   	 //mWaveformView.smoothScrollTo(mWaveformView.getScrollX(), mWaveformView.getScrollY());
 		   	 mPlayer.start();
-		   	 Toast.makeText(this, "play", Toast.LENGTH_SHORT).show();
+		   	 //Toast.makeText(this, "play", Toast.LENGTH_SHORT).show();
+		   	showToastMessage("재생");
 		      //mPlayBtn.setText("Pause");
 		      
 		        
 	    } else {
 	        mPlayer.pause();
-	        Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();
+	        //Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();
+	        showToastMessage("일시정지");
 	        //mPlayBtn.setText("Play");
 	    }
 	    
@@ -634,7 +651,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
        	
        	if( seg.isSilence )
        	{
-       		Toast.makeText(player_main.this, "문장만 추가 가능합니다.", Toast.LENGTH_SHORT).show();
+       		//Toast.makeText(player_main.this, "문장만 추가 가능합니다.", Toast.LENGTH_SHORT).show();
+       		showToastMessage("문장만 추가 가능합니다.");
        		return;
        	}
        	
@@ -662,8 +680,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
         	
        	// 뷰를 업데이트.
               	
-        	Toast.makeText(player_main.this, "문장노트에 추가되었습니다.", Toast.LENGTH_SHORT).show();
-       
+        	//Toast.makeText(player_main.this, "문장노트에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+        	showToastMessage("문장노트에 추가되었습니다.");
    }
    
    
@@ -751,7 +769,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
         	
         	if( seg.isSilence )
         	{
-        		Toast.makeText(player_main.this, "문장만 추가 가능합니다.", Toast.LENGTH_SHORT).show();
+        		//Toast.makeText(player_main.this, "문장만 추가 가능합니다.", Toast.LENGTH_SHORT).show();
+        		showToastMessage("문장만 추가 가능합니다.");
         		return;
         	}
         	
@@ -780,7 +799,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
         	// 뷰를 업데이트.
          	
          	
-         	Toast.makeText(player_main.this, "문장노트에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+         	//Toast.makeText(player_main.this, "문장노트에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+         	showToastMessage("문장노트에 추가되었습니다.");
          	
          	
         }
@@ -794,7 +814,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
     		// 문장인지 확인하고 
     		SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
     		if(seg.isSilence) {
-    			Toast.makeText(getApplicationContext(), "문장만 구간반복이 가능합니다.", Toast.LENGTH_SHORT).show();
+    			//Toast.makeText(getApplicationContext(), "문장만 구간반복이 가능합니다.", Toast.LENGTH_SHORT).show();
+    			showToastMessage("문장만 구간반복이 가능합니다.");
     			mRepeatBtn.setChecked(false);
     			return;
     		}
@@ -804,12 +825,16 @@ public class player_main extends Activity implements OnGesturePerformedListener{
         mIsLoop = isLoop;
         mRepeatPrevBtn.setEnabled(mIsLoop);
         mRepeatNextBtn.setEnabled(mIsLoop);
-        if(mIsLoop){
+        
+        
+        showToastMessage( "repeat " + ((mIsLoop)?"on":"off") );
+        
+        /*if(mIsLoop){
  		   Toast.makeText(this, "repeat on", Toast.LENGTH_SHORT).show();
  	   	}
  	   else{
  		   Toast.makeText(this, "repeat off", Toast.LENGTH_SHORT).show();
- 	   }
+ 	   }*/
  		
         
         // 현재 위치 지정.
@@ -819,9 +844,20 @@ public class player_main extends Activity implements OnGesturePerformedListener{
             mLoopStartIndex = mLoopCenterIndex;
             
             //mWaveformSemgnets[mLoopCenterIndex]
-            
+            updateRepeatArea(true);
+        }
+        else
+        {
+        	updateRepeatArea(false);
         }
         
+    }
+    
+    private void updateRepeatArea( boolean isLoop )
+    {
+		for(int i = mLoopStartIndex; i < mLoopFinishIndex+1; ++i )
+			mWaveformSemgnets[i].setBackgroundColor( (isLoop)?Color.MAGENTA:0x00000000 );
+    	
     }
     
 	// 구간반복.
@@ -834,6 +870,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
 	// 구간반복 왼쪽 확장.
 	Button.OnClickListener mClickRepeatPrev = new View.OnClickListener() {
         public void onClick(View v) {
+        	
+        	updateRepeatArea(false);
         	
         	if(mLoopStartIndex == mLoopFinishIndex) {
         		mLoopStartIndex-=2;
@@ -849,12 +887,16 @@ public class player_main extends Activity implements OnGesturePerformedListener{
         		if(mLoopFinishIndex < mLoopCenterIndex)
         			mLoopFinishIndex = mLoopCenterIndex;
         	}
+        	
+        	updateRepeatArea(true);
         }
 	};
 	
 	// 구간반복 오른쪽 확장.
 	Button.OnClickListener mClickRepeatNext = new View.OnClickListener() {
         public void onClick(View v) {
+        	
+        	updateRepeatArea(false);
         	
         	if(mLoopStartIndex == mLoopFinishIndex) {
         		mLoopFinishIndex+=2;
@@ -870,6 +912,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
         		//if(mLoopFinishIndex < mLoopCenterIndex)
         		//	mLoopFinishIndex = mLoopCenterIndex;
         	}
+        	
+        	updateRepeatArea(true);
         }
 	};
 	
@@ -905,7 +949,8 @@ public class player_main extends Activity implements OnGesturePerformedListener{
    MediaPlayer.OnErrorListener mOnError = new MediaPlayer.OnErrorListener() {
          public boolean onError(MediaPlayer mp, int what, int extra) {
              String err = "OnError occured. what = " + what + " ,extra = " + extra;
-             Toast.makeText(player_main.this, err, Toast.LENGTH_LONG).show();
+             //Toast.makeText(player_main.this, err, Toast.LENGTH_LONG).show();
+             showToastMessage(err);
              return false;
          }
    };
