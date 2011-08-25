@@ -141,6 +141,9 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 		return mDb.delete(DATABASE_TABLE2, KEY_ROWID2 + "=" + rowID, null) > 0;
 	}
 	
+	public boolean deleteBook2(String sentence_mdb_id){		//레코드 삭제(media_db_id)
+		return mDb.delete(DATABASE_TABLE, KEY_SENTENCE_MDB_ID + "=" + sentence_mdb_id, null) > 0;
+	}
 	
 	public void createTable() {	//테이블 생성.
 		mDb.execSQL(DATABASE_CREATE);
