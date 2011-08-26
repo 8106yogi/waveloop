@@ -19,7 +19,6 @@
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:singleLine="true"
-            android:layout_marginLeft="5dip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
@@ -30,7 +29,6 @@
              android:textSize="14sp"
              android:textStyle="bold"
              android:singleLine="true"
-             android:layout_marginLeft="5dip"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:layout_weight="1"/>
@@ -44,7 +42,6 @@
 	             android:textColor="#E0FFFF"
 	             android:textSize="12sp"
 	             android:singleLine="true"
-	             android:layout_marginLeft="5dip"
 	             android:layout_width="wrap_content"
 	             android:layout_height="wrap_content"
 	             android:layout_weight="1"/>
@@ -53,8 +50,6 @@
 	        	style="?android:attr/ratingBarStyleSmall"
 	        	android:id="@+id/sn_ratingBar" 
 	        	android:numStars="5"
-	        	android:layout_marginLeft="5dip"
-	        	android:layout_marginRight="5dip"
 	        	android:layout_width="wrap_content" 
 	        	android:layout_height="wrap_content"
 	        	android:layout_gravity="center_vertical"
@@ -66,14 +61,16 @@
         </LinearLayout>
         
         
-        <Button  
+        <ImageButton  
         android:id="@+id/edit_sentence_note_button"
         android:text="Edit"
-        android:layout_width="wrap_content" 
-        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:src="@android:drawable/ic_menu_more"
+        android:layout_width="60dip" 
+        android:layout_height="fill_parent"
         android:layout_gravity="center"
-        android:layout_marginLeft="5dip"
-	    android:layout_marginRight="4dip"
+        
+	    
 	    />
         
     
