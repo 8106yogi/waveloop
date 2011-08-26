@@ -116,7 +116,7 @@ public class PlaylistActivity extends Activity {
 	    	String HeaderTitle=p.getTitle();
 	    	menu.setHeaderTitle(HeaderTitle);
 	        menu.add(0,1,0,"재생");
-	        menu.add(0,2,0,"목록에서 제거");
+	        menu.add(0,2,0,"목록에서 삭제");
 	        
 	      
 
