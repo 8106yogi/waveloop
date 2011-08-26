@@ -39,6 +39,7 @@ public class player_main extends Activity {
     
     SeekBar mProgress;
     boolean wasPlaying;
+    String strMediaDBIndex;
     String mFilepath;
     String mWavePath;
     WaveformScrollView mWaveformView;
@@ -167,9 +168,9 @@ public class player_main extends Activity {
          	cursor.moveToPosition(0);
          	mFilepath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_FILEPATH));
          	mWavePath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_WAVEPATH));
-         	String strMediaDBIndex = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_MEDIA_DB_ID));
+         	strMediaDBIndex = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_MEDIA_DB_ID));
          	dba.close();
-         	mMediaDBID = Long.parseLong(strMediaDBIndex);
+         	//mMediaDBID = Long.parseLong(strMediaDBIndex);
          	
          	setAudioInfoUIFromMediaDB(strMediaDBIndex);
          }
@@ -425,7 +426,7 @@ public class player_main extends Activity {
         item=menu.add(0,1,0,"제스쳐");
         item.setIcon(R.drawable.ic_gesturebuilder);
         menu.add(0,2,0,"번역").setIcon(android.R.drawable.ic_menu_preferences);
-        //menu.add(0,3,0,"전체삭제").setIcon(android.R.drawable.ic_menu_delete);
+        
         
         return true;
     }
@@ -669,15 +670,24 @@ public class player_main extends Activity {
        	
        	// 이미 있는 문장이면 추가하지 않는다.
        	DbAdapter dba = new DbAdapter(getBaseContext());
-        	//dba.open();
-       	//dba.close();
-       	
-       	// DB에 추가를 하고.
-       	
+       	dba.open();
+    	Cursor cur2 = dba.fetchBookFromMediaID2(strMediaDBIndex);
+    	for(int i = 0; i < cur2.getCount(); ++i )
+		{
+			cur2.moveToPosition(i);
+			//long sentence_mdb_id = cur2.getLong(cur2.getColumnIndex(DbAdapter.KEY_SENTENCE_MDB_ID));
+			int start_id = cur2.getInt(cur2.getColumnIndex(DbAdapter.KEY_START_ID));
+			//long end_id = cur2.getLong(cur2.getColumnIndex(DbAdapter.KEY_END_ID));
+			
+			if(segIndex == start_id){
+				showToastMessage("이미 존재하는 문장입니다.");
+				return;
+			}
+		}
        	
        	
        	dba.open();
-        	dba.createBook2( mMediaDBID, 						// data row id
+        	dba.createBook2( strMediaDBIndex, 						// data row id
         			segIndex,									// start segment id
         			segIndex,									// end segment id
         			getTimeString(seg.startOffset/50), 			// start time
@@ -777,6 +787,7 @@ public class player_main extends Activity {
         	// 현재 문장을 가져온다.
         	SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
         	int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+        	int sametime=0;
         	
         	if( seg.isSilence )
         	{
@@ -787,22 +798,30 @@ public class player_main extends Activity {
         	
         	// 이미 있는 문장이면 추가하지 않는다.
         	DbAdapter dba = new DbAdapter(getBaseContext());
-         	//dba.open();
-        	//dba.close();
-        	
-        	// DB에 추가를 하고.
-        	
-        	
-        	
-        	dba.open();
-         	dba.createBook2( mMediaDBID, 						// data row id
-         			segIndex,									// start segment id
-         			segIndex,									// end segment id
-         			getTimeString(seg.startOffset/50), 			// start time
-         			getTimeString((seg.startOffset+seg.size)/50),	// end time
-         			"메모 없음", 										// memo
-         			0,											// star rate 
-         			Color.GRAY);								// color
+         	dba.open();
+        	Cursor cur2 = dba.fetchBookFromMediaID2(strMediaDBIndex);
+        	for(int i = 0; i < cur2.getCount(); ++i )
+    		{
+    			cur2.moveToPosition(i);
+    			//long sentence_mdb_id = cur2.getLong(cur2.getColumnIndex(DbAdapter.KEY_SENTENCE_MDB_ID));
+    			int start_id = cur2.getInt(cur2.getColumnIndex(DbAdapter.KEY_START_ID));
+    			//long end_id = cur2.getLong(cur2.getColumnIndex(DbAdapter.KEY_END_ID));
+    			
+    			if(segIndex == start_id){
+    				showToastMessage("이미 존재하는 문장입니다.");
+    				return;
+    			}
+    		}
+         	
+         	
+	        	dba.createBook2( strMediaDBIndex, 						// data row id
+	         			segIndex,									// start segment id
+	         			segIndex,									// end segment id
+	         			getTimeString(seg.startOffset/50), 			// start time
+	         			getTimeString((seg.startOffset+seg.size)/50),	// end time
+	         			"메모 없음", 										// memo
+	         			0,											// star rate 
+	         			Color.GRAY);								// color
          	
          	dba.close();
          	
