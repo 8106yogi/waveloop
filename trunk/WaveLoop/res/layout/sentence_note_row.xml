@@ -25,7 +25,7 @@
         
         <TextView android:id="@+id/sentence_row_audio_title"
         	 android:text="Title................."
-             android:textColor="#FAFAD2"
+             android:textColor="#ff99ff"
              android:textSize="14sp"
              android:textStyle="bold"
              android:singleLine="true"
@@ -39,7 +39,7 @@
         
         	<TextView android:id="@+id/sentence_row_audio_time"
 	        	 android:text="[00:00 - 00.00]"
-	             android:textColor="#E0FFFF"
+	             android:textColor="#ffff99"
 	             android:textSize="12sp"
 	             android:singleLine="true"
 	             android:layout_width="wrap_content"
