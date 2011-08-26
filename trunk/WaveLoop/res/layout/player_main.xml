@@ -149,6 +149,7 @@ android:layout_height="fill_parent"
 			android:layout_height="200dip"
 			>
 			
+					
 				<LinearLayout
 				android:orientation="horizontal"
 				android:layout_width="fill_parent"
@@ -167,6 +168,10 @@ android:layout_height="fill_parent"
 					android:src="@drawable/prev"
 					android:background="#00000000"
 					/>
+					<LinearLayout style="@style/VerticalDividerForList"
+					android:layout_width="1px"
+					android:layout_marginTop="15px"
+					android:layout_marginBottom="15px" />
 					<ImageButton
 					android:id="@+id/play"  
 					android:layout_width="0px" 
@@ -175,8 +180,11 @@ android:layout_height="fill_parent"
 					android:text="Play"
 					android:src="@drawable/play"
 					android:background="#00000000"
-					
 					/>
+					<LinearLayout style="@style/VerticalDividerForList"
+					android:layout_width="1px"
+					android:layout_marginTop="15px"
+					android:layout_marginBottom="15px" />
 					<ImageButton
 					android:id="@+id/next_sentence"  
 					android:layout_width="0px" 
@@ -208,8 +216,11 @@ android:layout_height="fill_parent"
 					android:layout_weight="1" 
 					android:text="Prev Area"
 					android:src="@android:drawable/ic_media_previous"
-					
 					/>
+					<LinearLayout style="@style/VerticalDividerForList"
+					android:layout_width="1px"
+					android:layout_marginTop="15px"
+					android:layout_marginBottom="15px" />
 
 					<FrameLayout
 					android:layout_width="fill_parent" 
@@ -228,6 +239,11 @@ android:layout_height="fill_parent"
 	    				android:background="@android:drawable/ic_menu_revert"
 						></ToggleButton>
 					</FrameLayout>
+					
+					<LinearLayout style="@style/VerticalDividerForList"
+					android:layout_width="1px"
+					android:layout_marginTop="15px"
+					android:layout_marginBottom="15px" />
 					
 					<ImageButton
 					android:id="@+id/next_area"  
@@ -261,7 +277,6 @@ android:layout_height="fill_parent"
 					android:background="#00000000"
 					/>
 					
-			
 				</LinearLayout>
 			
 			</LinearLayout>
