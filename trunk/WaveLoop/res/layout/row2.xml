@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_weight="1"
+        android:paddingRight="6dip"
         >
         
 	        <LinearLayout
@@ -20,6 +21,7 @@
         
 	        <TextView
 	            android:id="@+id/top_artist2"
+	            android:text="artist"
 	            android:textColor="#ff99ff"
 	            android:textSize="12sp"
 	            android:singleLine="true"
@@ -30,6 +32,7 @@
 	            />
 	        
 	        <TextView android:id="@+id/top_album2"
+	        	 android:text="album"
 	             android:textColor="#ffff99"
 	             android:textSize="12sp"
 	             android:singleLine="true"
@@ -41,19 +44,37 @@
 	    
         	</LinearLayout>
         
+        <LinearLayout
+	          android:layout_width="fill_parent"
+	          android:layout_height="wrap_content">
         
-        <TextView
-           android:id="@+id/bottom_title2"
-           android:textColor="#ffffff"
-           android:textSize="18sp"
-           android:singleLine="true"
-           android:shadowColor="#999999"
-           android:shadowDx="1"
-           android:shadowDy="1"
-           android:shadowRadius="1"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-        />
+	        <TextView
+	           android:id="@+id/bottom_title2"
+	           android:text="Title Title Title Title Title"
+	           android:textColor="#ffffff"
+	           android:textSize="18sp"
+	           android:singleLine="true"
+	           android:shadowColor="#999999"
+	           android:shadowDx="1"
+	           android:shadowDy="1"
+	           android:shadowRadius="1"
+	           android:layout_width="fill_parent"
+	           android:layout_height="wrap_content"
+	           android:layout_weight="1"
+	        />
+	        
+	         <TextView
+		  		android:id="@+id/right_total_time2"
+		     	android:textColor="#bbbbbb"
+		        android:textSize="12sp"
+	            android:singleLine="true"
+	            android:gravity="bottom"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="00:00"
+	         />
+		         
+	        </LinearLayout>
         
         
 	</LinearLayout>
