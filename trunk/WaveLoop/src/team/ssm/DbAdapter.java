@@ -114,7 +114,7 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 		return mDb.insert(DATABASE_TABLE, null, initialValues);
 	}
 	
-	public long createBook2(long sentence_mdb_id , long start_id, long end_id, String start_time, String end_time, String memo, long star_rate, long color){		//레코드 생성(추가)
+	public long createBook2(String sentence_mdb_id , long start_id, long end_id, String start_time, String end_time, String memo, long star_rate, long color){		//레코드 생성(추가)
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_SENTENCE_MDB_ID, sentence_mdb_id);
 		initialValues.put(KEY_START_ID, start_id);
@@ -191,6 +191,15 @@ public class DbAdapter {	//DB 어댑터. 데이터베이스에 접근하여 수�
 		Cursor mCursor =
 			mDb.query(true, DATABASE_TABLE2, new String[]{KEY_ROWID2, KEY_SENTENCE_MDB_ID, KEY_START_ID, KEY_END_ID, KEY_START_TIME, KEY_END_TIME,  KEY_MEMO, KEY_STAR_RATE, KEY_COLOR}, 
 					KEY_ROWID2 + "=" + rowID, null, null, null, null, null);
+		if(mCursor != null)
+			mCursor.moveToFirst();
+		return mCursor;
+	}
+	
+	public Cursor fetchBookFromMediaID2(String sentence_mdb_id) throws SQLException{		//sentence테이블의 특정 레코드 반환
+		Cursor mCursor =
+			mDb.query(true, DATABASE_TABLE2, new String[]{KEY_ROWID2, KEY_SENTENCE_MDB_ID, KEY_START_ID, KEY_END_ID, KEY_START_TIME, KEY_END_TIME,  KEY_MEMO, KEY_STAR_RATE, KEY_COLOR}, 
+					KEY_SENTENCE_MDB_ID + "=" + sentence_mdb_id, null, null, null, null, null);
 		if(mCursor != null)
 			mCursor.moveToFirst();
 		return mCursor;
