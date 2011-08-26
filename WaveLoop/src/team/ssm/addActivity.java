@@ -103,8 +103,9 @@ public class addActivity extends Activity {
 		    	String artist = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.ARTIST));
 				String album = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.ALBUM));
 				String title = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.TITLE));
+				int tTime = mCursor.getInt(mCursor.getColumnIndex(Audio.AudioColumns.DURATION))/1000;
 				
-				sound s = new sound(artist, album, title);
+				sound s = new sound(artist, album, title, tTime);
 				m_orders2.add(s);
 	    		
 	    	}
@@ -317,6 +318,8 @@ public class addActivity extends Activity {
 	        		TextView tar = (TextView) v.findViewById(R.id.top_artist2);
 	                TextView tal = (TextView) v.findViewById(R.id.top_album2);
 	                TextView bt = (TextView) v.findViewById(R.id.bottom_title2);
+	                TextView rtt = (TextView) v.findViewById(R.id.right_total_time2);
+	                
 	                CheckBox cb=(CheckBox)v.findViewById(R.id.chk);
 	                if (tar != null){
 	                	tar.setText(p.getArtist());
@@ -332,6 +335,15 @@ public class addActivity extends Activity {
 	                	setTextViewAlpha(bt, isRepet[position]);
 	                    
 	                }
+	                if(rtt != null){
+                		int tot_time_sec = p.getTotalTime();
+                		int tMin = tot_time_sec / 60;
+        				int tSec = tot_time_sec % 60;
+        			    String strTime = String.format("%02d:%02d" , tMin, tSec);
+            			rtt.setText(strTime);
+            			setTextViewAlpha(rtt, isRepet[position]);
+                }
+	                
 	                if(cb != null){
 	                	//CheckBox cbx = (CheckBox) v.findViewById(R.id.chk);
 	                    cb.setChecked(isClick[position]);
@@ -356,12 +368,14 @@ public class addActivity extends Activity {
         private String Artist;
         private String Album;
         private String Title;
+        private int tTime;
         
         
-        public sound(String _Artist, String _Album, String _Title) {
+        public sound(String _Artist, String _Album, String _Title, int _tTime) {
         	this.Artist = _Artist;
         	this.Album = _Album;
         	this.Title = _Title;
+        	this.tTime = _tTime;
         }
         
         public String getArtist() {
@@ -374,6 +388,9 @@ public class addActivity extends Activity {
         public String getTitle() {
             return Title;
         }
+        public int getTotalTime(){
+    	    return tTime;
+    	}
         
 
     }
