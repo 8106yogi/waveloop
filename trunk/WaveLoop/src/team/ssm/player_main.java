@@ -90,6 +90,7 @@ public class player_main extends Activity {
          mWaveformView = (WaveformScrollView)findViewById(R.id.WaveformScrollView);
          mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
          
+         mWaveformView.setHorizontalScrollBarEnabled(false);
          mWaveformView.setOnTouchListener(mOnScrollViewTouchListener);
          mWaveformView.setSeekBar( (SeekBar)findViewById(R.id.progress) );
          mWaveformView.setMediaPlayer(mPlayer);
