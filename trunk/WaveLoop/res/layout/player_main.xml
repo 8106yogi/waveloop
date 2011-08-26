@@ -164,7 +164,7 @@ android:layout_height="fill_parent"
 					android:layout_height="fill_parent" 
 					android:layout_weight="1" 
 					android:text="이전문장"
-					android:src="@android:drawable/ic_media_rew"
+					android:src="@drawable/prev"
 					android:background="#00000000"
 					/>
 					<ImageButton
@@ -173,7 +173,7 @@ android:layout_height="fill_parent"
 					android:layout_height="fill_parent" 
 					android:layout_weight="1"
 					android:text="Play"
-					android:src="@android:drawable/ic_media_play"
+					android:src="@drawable/play"
 					android:background="#00000000"
 					
 					/>
@@ -183,7 +183,7 @@ android:layout_height="fill_parent"
 					android:layout_height="fill_parent" 
 					android:layout_weight="1" 
 					android:text="다음문장"
-					android:src="@android:drawable/ic_media_ff"
+					android:src="@drawable/next"
 					android:background="#00000000"
 					
 					/>
