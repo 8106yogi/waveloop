@@ -165,26 +165,25 @@ public class SentenceNoteActivity extends Activity {
 		dba.open();
 		//dba.dropTable2();
 		//dba.createTable2();
-		Cursor cur = dba.fetchAllBooks2();
-		for(int i = 0; i < cur.getCount(); ++i )
+		
+		Cursor cur2= dba.fetchAllBooks2();	// sentence 테이블의 커서
+		for(int i = 0; i < cur2.getCount(); ++i )
 		{
-			cur.moveToPosition(i);
-			int rowIndex = cur.getInt(cur.getColumnIndex(DbAdapter.KEY_ROWID2));
-			String strMemo = cur.getString(cur.getColumnIndex(DbAdapter.KEY_MEMO));
-			String strStartTime = cur.getString(cur.getColumnIndex(DbAdapter.KEY_START_TIME));
-			String strFinishTime = cur.getString(cur.getColumnIndex(DbAdapter.KEY_END_TIME));
-			long mediaDBIndex = cur.getLong(cur.getColumnIndex(DbAdapter.KEY_SENTENCE_MDB_ID));
-			int rate = cur.getInt(cur.getColumnIndex(DbAdapter.KEY_STAR_RATE));
+			cur2.moveToPosition(i);
+			int rowIndex = cur2.getInt(cur2.getColumnIndex(DbAdapter.KEY_ROWID2));
+			String strMemo = cur2.getString(cur2.getColumnIndex(DbAdapter.KEY_MEMO));
+			String strStartTime = cur2.getString(cur2.getColumnIndex(DbAdapter.KEY_START_TIME));
+			String strFinishTime = cur2.getString(cur2.getColumnIndex(DbAdapter.KEY_END_TIME));
+			long sentence_mdb_id = cur2.getLong(cur2.getColumnIndex(DbAdapter.KEY_SENTENCE_MDB_ID));
+			int rate = cur2.getInt(cur2.getColumnIndex(DbAdapter.KEY_STAR_RATE));
 			String title = "";
 			
+			
 			Uri uriExternal = Audio.Media.EXTERNAL_CONTENT_URI;
-
-	    	String selection = "( (_ID LIKE ?) )";
-	    	String[] selectionArgs = { String.valueOf(mediaDBIndex) };
+			String selection = "( (_ID LIKE ?) )";
+	    	String[] selectionArgs = { String.valueOf(sentence_mdb_id) };
 	    	String sortOrder = Audio.Media.DEFAULT_SORT_ORDER;
-	    	 
-	    	
-	    	//Cursor cursorInt = mCr.query(uriInternal, null, selection, selectionArgs, sortOrder);
+	    		    	
 	    	Cursor curMedia = getContentResolver().query(uriExternal, null, selection, selectionArgs, sortOrder);
 	    	if(curMedia.getCount() == 1)
 	    	{
@@ -197,7 +196,10 @@ public class SentenceNoteActivity extends Activity {
 			sentence s = new sentence(rowIndex, strMemo, title, time, rate, 0);
 			mArrSentences.add(s);
 			
+			
 		}
+		
+		
 		dba.close();
 		
        mAdapter.notifyDataSetChanged();

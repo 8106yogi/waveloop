@@ -151,13 +151,21 @@ public class PlaylistActivity extends Activity {
         			if(file.delete()){
         			
         				Toast.makeText(PlaylistActivity.this,"파일이 제거되었습니다.",Toast.LENGTH_SHORT).show();
-        			
-	        			
-	        			dba.deleteBook(m_db_id);
-	        			//dba.dropTable();
-	        			//dba.createTable();
-	        			
-	        		}
+             			dba.deleteBook(m_db_id);
+	        	        			
+	        			Cursor cur2= dba.fetchAllBooks2();
+	        			for(int i = 0; i < cur2.getCount(); ++i )
+	        			{
+	        				cur2.moveToPosition(i);
+	        				String sentence_mdb_id = cur2.getString(cur2.getColumnIndex(DbAdapter.KEY_SENTENCE_MDB_ID));
+	        				
+	        				if(sentence_mdb_id.equals(m_db_id)){
+	        					
+	        					dba.deleteBook2(sentence_mdb_id);
+	        				}
+	        				
+	        			}
+        			}
         			dba.close();
         			refreshListFromDB();
         			
@@ -403,6 +411,11 @@ public class PlaylistActivity extends Activity {
     public void onResume(){
     	super.onResume();
     	refreshListFromDB();
+    }
+    
+    public void onDestroy(){
+    	super.onDestroy();
+    	dba.close();
     }
     
     public void mOnClick(View v) {
