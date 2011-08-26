@@ -33,7 +33,7 @@
     <LinearLayout 
 	android:layout_height="wrap_content"
 	android:layout_width="fill_parent"
-	android:background="#5b5b5b">
+	android:background="@android:drawable/bottom_bar">
 
 		<Button android:id="@+id/sne_save"
 		android:layout_height="wrap_content"
