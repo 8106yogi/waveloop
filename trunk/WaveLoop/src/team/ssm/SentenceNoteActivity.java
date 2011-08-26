@@ -185,11 +185,16 @@ public class SentenceNoteActivity extends Activity {
 	    	String sortOrder = Audio.Media.DEFAULT_SORT_ORDER;
 	    		    	
 	    	Cursor curMedia = getContentResolver().query(uriExternal, null, selection, selectionArgs, sortOrder);
-	    	if(curMedia.getCount() == 1)
+	    	if(curMedia != null)
 	    	{
-	    		curMedia.moveToPosition(0);
-		    	title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
+	    		if(curMedia.getCount() == 1)
+		    	{
+		    		curMedia.moveToPosition(0);
+			    	title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
+		    	}
+	    		curMedia.close();
 	    	}
+	    	
 			
 			String time ="[" + strStartTime + " - " + strFinishTime + "]";
 			

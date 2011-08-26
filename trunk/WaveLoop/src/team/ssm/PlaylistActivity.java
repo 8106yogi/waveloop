@@ -229,37 +229,31 @@ public class PlaylistActivity extends Activity {
 	    	
 	    	//Cursor cursorInt = mCr.query(uriInternal, null, selection, selectionArgs, sortOrder);
 	    	Cursor curMedia = getContentResolver().query(uriExternal, null, selection, selectionArgs, sortOrder);
-	    	if(curMedia.getCount() == 1)
+	    	if(curMedia != null)
 	    	{
-	    		curMedia.moveToPosition(0);
-		    	String artist = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ARTIST));
-				String album = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ALBUM));
-				String title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
-				int tTime = curMedia.getInt(curMedia.getColumnIndex(Audio.AudioColumns.DURATION))/1000;
-				
-				sound s = new sound(rowID, artist, album, title, tTime);
-				m_orders.add(s);
-				
-				
-	    	}
-	    	else
-	    	{
-	    		// 오디오 파일을 삭제하면 이곳에 들어올 것임.
-	    		// 자동으로 삭제할지, 수동으로 삭제할지 생각해보자.
+	    		if(curMedia.getCount() == 1)
+		    	{
+		    		curMedia.moveToPosition(0);
+			    	String artist = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ARTIST));
+					String album = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.ALBUM));
+					String title = curMedia.getString(curMedia.getColumnIndex(Audio.AudioColumns.TITLE));
+					int tTime = curMedia.getInt(curMedia.getColumnIndex(Audio.AudioColumns.DURATION))/1000;
+					
+					sound s = new sound(rowID, artist, album, title, tTime);
+					m_orders.add(s);
+					
+					
+		    	}
+		    	else
+		    	{
+		    		// 오디오 파일을 삭제하면 이곳에 들어올 것임.
+		    		// 자동으로 삭제할지, 수동으로 삭제할지 생각해보자.
+		    	}
+	    		
+	    		curMedia.close();
+		    	
 	    	}
 	    	
-			//String strFilePath = cur.getString(cur.getColumnIndex(DbAdapter.KEY_FILEPATH));
-			//String strWavePath = cur.getString(cur.getColumnIndex(DbAdapter.KEY_WAVEPATH));
-			//m_orders.add(strFilePath);// 여기 뭔가 수정되어야 할듯!?
-			/*
-			mCursor.moveToPosition(i);
-			String artist = cur.getString(mCursor.getColumnIndex(Audio.AudioColumns.ARTIST));
-			String album = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.ALBUM));
-			String title = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.TITLE));
-			
-			sound s1 = new sound(artist, album, title);
-			m_orders.add(s1);
-			*/
 		}
 		dba.close();
 		
