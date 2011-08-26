@@ -7,8 +7,10 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore.Audio;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -20,9 +22,12 @@ public class SentenceNoteEditActivity extends Activity {
 	TextView mTimeView;
 	EditText mNoteView;
 	RatingBar mRatingBar;
+	ImageButton[] mNoteColorBtn;
 	
 	DbAdapter dba;
 	long mSentenceRowIndex;
+	int mNoteColor;
+	
 	
 	
 	
@@ -34,6 +39,36 @@ public class SentenceNoteEditActivity extends Activity {
     	mTimeView = (TextView)findViewById(R.id.sne_time);
     	mNoteView = (EditText)findViewById(R.id.sne_note);
     	mRatingBar = (RatingBar)findViewById(R.id.sne_ratingBar);
+    	
+    	mNoteColorBtn = new ImageButton[5];
+    	mNoteColorBtn[0] = (ImageButton)findViewById(R.id.NoteColor1);
+    	mNoteColorBtn[1] = (ImageButton)findViewById(R.id.NoteColor2);
+    	mNoteColorBtn[2] = (ImageButton)findViewById(R.id.NoteColor3);
+    	mNoteColorBtn[3] = (ImageButton)findViewById(R.id.NoteColor4);
+    	mNoteColorBtn[4] = (ImageButton)findViewById(R.id.NoteColor5);
+    	
+    	for( int i = 0; i < mNoteColorBtn.length; ++i )
+    	{
+    		final int index = i;
+    		mNoteColorBtn[i].setOnTouchListener(new View.OnTouchListener() {
+				public boolean onTouch(View arg0, MotionEvent arg1) {
+					
+					switch( index ) {
+					case 0: mNoteColor = Color.BLUE;	break;
+					case 1: mNoteColor = Color.CYAN;	break;
+					case 2: mNoteColor = Color.GRAY;	break;
+					case 3: mNoteColor = Color.MAGENTA;	break;
+					case 4: mNoteColor = Color.RED;		break;
+					}
+					
+					mNoteView.setBackgroundColor(mNoteColor);
+
+					return false;
+				}
+			});
+    	}
+    	
+    	
     	
     	dba = new DbAdapter(this); //어댑터 객체 생성. 
     	
@@ -52,7 +87,7 @@ public class SentenceNoteEditActivity extends Activity {
         	String strFinishTime = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_END_TIME));
         	String strNote = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_MEMO));
         	int rate = cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_STAR_RATE));
-        	int color = cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_COLOR));
+        	mNoteColor = cursor.getInt(cursor.getColumnIndex(DbAdapter.KEY_COLOR));
         	dba.close();
         	
         	String title = "";
@@ -76,6 +111,7 @@ public class SentenceNoteEditActivity extends Activity {
         	mTitleView.setText(title);
         	mTimeView.setText( "[" + strStartTime + " - " + strFinishTime + "]" );
         	mNoteView.setText(strNote);
+        	mNoteView.setBackgroundColor(mNoteColor);
         	
         	
         	mRatingBar.setRating(rate/2.f);
@@ -96,7 +132,11 @@ public class SentenceNoteEditActivity extends Activity {
 	    	
     		// 여기다가 저장좀 하고.
     		dba.open();
-    		dba.updateBook2(mSentenceRowIndex, mNoteView.getText().toString(), String.valueOf((int)(mRatingBar.getRating()*2.f)) , "0");
+    		dba.updateBook2(
+    				mSentenceRowIndex, 
+    				mNoteView.getText().toString(), 
+    				String.valueOf((int)(mRatingBar.getRating()*2.f)), 
+    				String.valueOf(mNoteColor) );
     		dba.close();
     		
     		
