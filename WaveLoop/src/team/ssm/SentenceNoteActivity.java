@@ -136,7 +136,7 @@ public class SentenceNoteActivity extends Activity {
 	        		//dba.deleteBook2(rowId);
         			dba.deleteBook2( mSelectedSentence.getId() );
 	        			
-	        		Toast.makeText(SentenceNoteActivity.this,"파일이 제거되었습니다.",Toast.LENGTH_SHORT).show();	
+	        		Toast.makeText(SentenceNoteActivity.this,"문장노트가 삭제되었습니다.",Toast.LENGTH_SHORT).show();	
 	        		
         			dba.close();
         			refreshListFromDB();
