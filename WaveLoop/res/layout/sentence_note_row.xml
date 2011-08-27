@@ -65,7 +65,7 @@
         
         <ImageButton  
         android:id="@+id/edit_sentence_note_button"
-        android:src="@android:drawable/ic_menu_more"
+        android:src="@android:drawable/ic_media_play"
         android:background="@drawable/ic_menu_more_bkgnd"
         android:gravity="center_vertical"
         android:scaleType="fitCenter"
