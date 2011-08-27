@@ -5,7 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent" android:weightSum="1">
     
-	<TextView android:layout_width="wrap_content" android:id="@+id/sne_title" android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_marginLeft="8dip" android:singleLine="true" android:text="Title - 제목이 나오는 부분이다.rmfjsrjtdl" android:layout_marginRight="8dip"></TextView>
+	<TextView android:layout_width="wrap_content" android:id="@+id/sne_title" android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_marginLeft="8dip" android:singleLine="true" android:text="Title - 제목이 나오는 부분이다.rmfjsrjtdl" android:layout_marginRight="8dip" android:layout_gravity="center"></TextView>
 	<TextView android:layout_width="wrap_content" android:id="@+id/sne_time" android:layout_height="wrap_content" android:layout_marginRight="8dip" android:layout_marginLeft="8dip" android:text="[00:00 - 00:00]" android:layout_gravity="center"></TextView>
     
     <EditText android:layout_width="match_parent" android:id="@+id/sne_note" android:layout_height="wrap_content" android:inputType="textMultiLine" android:layout_marginLeft="8dip" android:layout_marginRight="8dip" android:layout_marginBottom="8dip" android:layout_marginTop="8dip" android:layout_weight="1" android:gravity="top"

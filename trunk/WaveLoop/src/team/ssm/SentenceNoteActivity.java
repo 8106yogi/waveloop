@@ -246,7 +246,7 @@ public class SentenceNoteActivity extends Activity {
 	// 어댑터뷰의 클릭리스너
     AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            
+            /*
         	int rowID = mArrSentences.get(position).id;
         	int mediaDBIndex = getMediaDBIndex(rowID);
         	int dataRowID = getDataIndexFromMediaIndex(mediaDBIndex);
@@ -254,6 +254,12 @@ public class SentenceNoteActivity extends Activity {
         	Intent i = new Intent(SentenceNoteActivity.this, player_main.class); 
         	i.putExtra("오디오파일경로", dataRowID );
         	startActivity(i);
+        	*/
+        	// 문장노트 수정 액티비티를 시작한다.
+        	int rowID = mArrSentences.get(position).id;
+        	Intent i = new Intent(SentenceNoteActivity.this, SentenceNoteEditActivity.class); 
+    		i.putExtra("sentence_row_id", rowID );
+    		startActivity(i);
         	
         }
    };
@@ -294,8 +300,16 @@ public class SentenceNoteActivity extends Activity {
                     editButton.setOnClickListener( new View.OnClickListener() {
 						public void onClick(View v) {
 							//mSelectedRowID = s.getId();
-							mSelectedSentence = s;
-							openContextMenu(v);
+							//mSelectedSentence = s;
+							//openContextMenu(v);
+							
+				        	int mediaDBIndex = getMediaDBIndex( s.getId() );
+				        	int dataRowID = getDataIndexFromMediaIndex(mediaDBIndex);
+				        	
+				        	Intent i = new Intent(SentenceNoteActivity.this, player_main.class); 
+				        	i.putExtra("오디오파일경로", dataRowID );
+				        	startActivity(i);
+							
 						}
                     });
                         
