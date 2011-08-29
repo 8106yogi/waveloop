@@ -11,14 +11,55 @@
 	android:id="@+id/view1"
 	android:orientation="vertical">
 	
-	
+	<FrameLayout 
+	android:layout_height="fill_parent"
+	android:layout_width="fill_parent"
+	android:layout_weight="1"
+	>
 	<ListView
 	android:id="@+id/list"
 	android:layout_height="fill_parent"
 	android:layout_width="fill_parent"
-	android:layout_weight="1"
+	
 	/>
 	
+	<LinearLayout 
+	android:layout_height="fill_parent"
+	android:layout_width="fill_parent"
+	android:id="@+id/view_help"
+	android:orientation="vertical"
+	android:gravity="bottom"
+	>
+		<TextView
+		android:text="'추가하기' 버튼을 눌러"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        />
+        <TextView
+		android:text="재생 목록을 추가할 수 있습니다."
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        />
+        <ImageView
+        android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/arrow"
+        android:scaleType="center"
+        
+		></ImageView>		
+        
+	</LinearLayout>
+	
+	</FrameLayout>
 	
 	
 	<LinearLayout 

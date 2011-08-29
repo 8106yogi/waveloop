@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ public class PlaylistActivity extends Activity {
  
     Cursor mCursor;
     ListView list;
+    LinearLayout mHelpView;
     //ArrayList<String> items;
     ArrayList<sound> m_orders;
     //ArrayList<sound> m_ReverseOrders;	//비어있는 sort용 ArrayList
@@ -76,7 +78,9 @@ public class PlaylistActivity extends Activity {
     	m_orders = new ArrayList<sound>();	// 리스트뷰에 출력할 내용의 원본data를 저장하는 arrayList.        
     	//m_ReverseOrders = new ArrayList<sound>(); //m_orders의 역순으로 데이터를 저장할 ArrayList
     	list = (ListView)findViewById(R.id.list);		// 사용자가 추가한 오디오 파일을 보여주는 리스트뷰
-      
+    	mHelpView = (LinearLayout)findViewById(R.id.view_help);
+    	
+    	
     	m_adapter = new SoundAdapter(this, R.layout.row, m_orders); // 원본; m_orders의 내용을 리스트뷰; list에 연결해주는 어댑터.
     	//m_adapter = new SoundAdapter(this, R.layout.row, m_ReverseOrders);
         
@@ -258,6 +262,17 @@ public class PlaylistActivity extends Activity {
 		dba.close();
 		
        m_adapter.notifyDataSetChanged();
+       
+       if( m_orders.isEmpty() )
+       {
+    	   mHelpView.setVisibility(View.VISIBLE);
+    	   list.setVisibility(View.INVISIBLE);
+       }
+       else
+       {
+    	   mHelpView.setVisibility(View.INVISIBLE);
+    	   list.setVisibility(View.VISIBLE);
+       }
 	}
   
 //	어댑터 클래스
