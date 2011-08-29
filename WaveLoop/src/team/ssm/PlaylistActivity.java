@@ -138,7 +138,7 @@ public class PlaylistActivity extends Activity {
         	sound p = m_orders.get(pos);
 	    	String HeaderTitle2=p.getTitle();
         	new AlertDialog.Builder(PlaylistActivity.this)
-        	.setTitle("파일을 목록에서 삭제하시겠습니까?")
+        	.setTitle("이 목록을 삭제하시겠습니까?")
         	.setMessage(HeaderTitle2)
         	.setIcon(android.R.drawable.ic_dialog_alert)
         	.setCancelable(false)
@@ -154,7 +154,7 @@ public class PlaylistActivity extends Activity {
         			
         			if(file.delete()){
         			
-        				Toast.makeText(PlaylistActivity.this,"파일이 제거되었습니다.",Toast.LENGTH_SHORT).show();
+        				Toast.makeText(PlaylistActivity.this,"정상적으로 삭제되었습니다.",Toast.LENGTH_SHORT).show();
              			dba.deleteBook(m_db_id);
 	        	        			
 	        			Cursor cur2= dba.fetchAllBooks2();
