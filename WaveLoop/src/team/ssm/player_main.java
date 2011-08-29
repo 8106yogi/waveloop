@@ -672,10 +672,11 @@ public class player_main extends Activity {
    }
    
    public void gestureRepeat(){
-
+	   
 	   mRepeatBtn.toggle();
+	   showToastMessage( "repeat " + ((mRepeatBtn.isChecked())?"on":"off") );
 	   processRepeat();
-
+	   
    }
    
    public void gestureBookmark(){
@@ -888,7 +889,7 @@ public class player_main extends Activity {
         mRepeatNextBtn.setEnabled(mIsLoop);
         
         
-        showToastMessage( "repeat " + ((mIsLoop)?"on":"off") );
+        //showToastMessage( "repeat " + ((mIsLoop)?"on":"off") );
         
         /*if(mIsLoop){
  		   Toast.makeText(this, "repeat on", Toast.LENGTH_SHORT).show();
