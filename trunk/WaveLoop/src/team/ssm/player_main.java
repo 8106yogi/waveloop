@@ -850,7 +850,7 @@ public class player_main extends Activity {
 	         			getTimeString((seg.startOffset+seg.size)/50),	// end time
 	         			"메모 없음", 										// memo
 	         			0,											// star rate 
-	         			Color.GRAY);								// color
+	         			Color.YELLOW);								// color
          	
          	dba.close();
          	
