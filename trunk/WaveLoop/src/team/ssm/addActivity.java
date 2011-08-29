@@ -256,7 +256,7 @@ public class addActivity extends Activity {
 			switch(result)
 			{
 			case eFR_OK:
-				message = "성공적으로 처리되었습니다.";
+				message = "성공적으로 추가되었습니다.";
 				break;
 			case eFR_FILEERROR:
 				message = "잘못된 파일입니다.";
