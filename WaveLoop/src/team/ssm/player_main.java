@@ -70,6 +70,9 @@ public class player_main extends Activity {
     private int mLoopCenterIndex;
     private int mLoopFinishIndex;
     private GestureLibrary mLibrary;
+    
+    private int mStartSegmentIndex;
+    
     GestureOverlayView gestures;
     FrameLayout frame;
     ArrayList<Prediction> predictions;
@@ -86,7 +89,12 @@ public class player_main extends Activity {
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
         
         mPlayer = new MediaPlayer();
-         
+        
+        mStartSegmentIndex = 0;
+        
+        
+        
+        
          // 웨이브폼 스크롤뷰 추가
          mWaveformView = (WaveformScrollView)findViewById(R.id.WaveformScrollView);
          mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
@@ -160,7 +168,8 @@ public class player_main extends Activity {
          if (intent != null)
          {
         	mDataRowID = intent.getIntExtra("오디오파일경로", 0);
-        	final int startSegmentIndex = intent.getIntExtra("start_segment_index", 0);
+        	
+        	mStartSegmentIndex = intent.getIntExtra("start_segment_index", 0);
          	DbAdapter dba = new DbAdapter(getBaseContext());
          	dba.open();
          	Cursor cursor = dba.fetchBook(mDataRowID);
@@ -320,9 +329,20 @@ public class player_main extends Activity {
                 				mWaveformView.setmWaveformSemgnets(mWaveformSemgnets);
                 				mWaveformView.setSentenceSegmentList(sentenceSegmentList);
                 				mProgress.setMax( nFrameGainsCount*2 );
-                				//mSeekBar.setProgress( this.getScrollX() );
                 				
                 				addSideView();
+                				
+                				
+                				mWaveformView.post(new Runnable() {
+                				    public void run() {
+                				    	final int startOffset = sentenceSegmentList.getCurrentStartOffsetByIndex(mStartSegmentIndex);
+                				    	mWaveformView.scrollTo(startOffset*2, 0);
+                				    	
+                				    	double position = (double)(startOffset*2)/(double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth())*(double)mPlayer.getDuration();
+                				    	mPlayer.seekTo((int)position);
+                				    } 
+                				});
+                				
                 			}
                 		});
     					
