@@ -235,7 +235,8 @@ android:layout_height="fill_parent"
 						android:id="@+id/repeat"
 						android:textOff=""
 	    				android:textOn="" 
-	    				android:background="@drawable/repeat_bkgnd"
+	    				android:src="@drawable/repeat_bkgnd"
+	    				android:background="#00000000"
 	    				>
 	    				<!--  android:background="@drawable/repeat_bkgnd"-->
 	    				
@@ -253,8 +254,8 @@ android:layout_height="fill_parent"
 					android:layout_height="fill_parent" 
 					android:layout_weight="1" 
 					android:text="Next Area"
-					android:src="@android:drawable/ic_media_next"
-					
+					android:src="@drawable/next_area_bkgnd"
+					android:background="#00000000"
 					/>
 					
 				</LinearLayout>
@@ -275,7 +276,7 @@ android:layout_height="fill_parent"
 					android:layout_marginLeft="105dip"
 					android:layout_marginRight="105dip"
 					
-					android:src="@android:drawable/ic_menu_add"
+					android:src="@drawable/bookmark_bkgnd"
 					android:background="#00000000"
 					/>
 					
