@@ -54,11 +54,11 @@ public class SentenceNoteEditActivity extends Activity {
 				public boolean onTouch(View arg0, MotionEvent arg1) {
 					
 					switch( index ) {
-					case 0: mNoteColor = Color.BLUE;	break;
-					case 1: mNoteColor = Color.CYAN;	break;
-					case 2: mNoteColor = Color.GRAY;	break;
-					case 3: mNoteColor = Color.MAGENTA;	break;
-					case 4: mNoteColor = Color.RED;		break;
+					case 0: mNoteColor = Color.YELLOW;	break;
+					case 1: mNoteColor = Color.MAGENTA;		break;
+					case 2: mNoteColor = Color.GREEN;		break;
+					case 3: mNoteColor = Color.BLUE;	break;
+					case 4: mNoteColor = Color.LTGRAY;	break;
 					}
 					
 					mNoteView.setBackgroundColor(mNoteColor);
