@@ -102,6 +102,8 @@ public class SentenceNoteActivity extends Activity {
         	
         	Intent i = new Intent(SentenceNoteActivity.this, player_main.class); 
         	i.putExtra("오디오파일경로", dataRowID );
+        	i.putExtra("start_segment_index", mSelectedSentence.getStartIndex() );
+        	
         	startActivity(i);
         }
         	
@@ -176,6 +178,9 @@ public class SentenceNoteActivity extends Activity {
 			String strFinishTime = cur2.getString(cur2.getColumnIndex(DbAdapter.KEY_END_TIME));
 			long sentence_mdb_id = cur2.getLong(cur2.getColumnIndex(DbAdapter.KEY_SENTENCE_MDB_ID));
 			int rate = cur2.getInt(cur2.getColumnIndex(DbAdapter.KEY_STAR_RATE));
+			int startIndex = cur2.getInt(cur2.getColumnIndex(DbAdapter.KEY_START_ID));
+			int finishIndex = cur2.getInt(cur2.getColumnIndex(DbAdapter.KEY_END_ID));
+			
 			String title = "";
 			
 			
@@ -198,7 +203,8 @@ public class SentenceNoteActivity extends Activity {
 			
 			String time ="[" + strStartTime + " - " + strFinishTime + "]";
 			
-			sentence s = new sentence(rowIndex, strMemo, title, time, rate, 0);
+			sentence s = new sentence(rowIndex, strMemo, title,
+					startIndex, finishIndex, time, rate, 0);
 			mArrSentences.add(s);
 			
 			
@@ -308,6 +314,7 @@ public class SentenceNoteActivity extends Activity {
 				        	
 				        	Intent i = new Intent(SentenceNoteActivity.this, player_main.class); 
 				        	i.putExtra("오디오파일경로", dataRowID );
+				        	i.putExtra("start_segment_index", s.getStartIndex() );
 				        	startActivity(i);
 							
 						}
@@ -327,15 +334,21 @@ public class SentenceNoteActivity extends Activity {
         private String time;
         private int starRate;
         private int color;
+        private int startIndex;
+        private int finishIndex;
         
         
-        public sentence( int id, String note, String title, String time, int starRate, int color ) {
+        public sentence(
+        		int id, String note, String title, int startIndex, int finishIndex, 
+        		String time, int starRate, int color ) {
         	this.setId(id);
         	this.note = note;
         	this.setTitle(title);
         	this.setTime(time);
         	this.starRate = starRate;
         	this.color = color;
+        	this.startIndex = startIndex;
+        	this.finishIndex = finishIndex;
         }
 
 
@@ -398,6 +411,26 @@ public class SentenceNoteActivity extends Activity {
 
 		public int getId() {
 			return id;
+		}
+
+
+		public void setStartIndex(int startIndex) {
+			this.startIndex = startIndex;
+		}
+
+
+		public int getStartIndex() {
+			return startIndex;
+		}
+
+
+		public void setFinishIndex(int finishIndex) {
+			this.finishIndex = finishIndex;
+		}
+
+
+		public int getFinishIndex() {
+			return finishIndex;
 		}
         
 
