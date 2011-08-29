@@ -20,7 +20,7 @@ import android.widget.*;
 public class player_main extends Activity {
     
     static MediaPlayer mPlayer;
-    ImageButton mPlayBtn; 
+    static ImageButton mPlayBtn; 
     //Button mPlay2Btn;
     ImageButton mNextBtn;
     ImageButton mPrevBtn;
@@ -129,6 +129,7 @@ public class player_main extends Activity {
          mBookmarkBtn.setOnClickListener(mClickBookmark);
          
          mRepeatBtn = (ToggleButton)findViewById(R.id.repeat);
+         //mRepeatBtn.setBackgroundDrawable(getResources().getDrawable(android.R.drawable.ic_menu_revert)); 
          mRepeatBtn.setOnClickListener(mClickRepeat);
          
          mRepeatPrevBtn = (ImageButton)findViewById(R.id.prev_area);
@@ -636,6 +637,7 @@ public class player_main extends Activity {
 		   	 mWaveformView.forceStop();
 		   	 //mWaveformView.smoothScrollTo(mWaveformView.getScrollX(), mWaveformView.getScrollY());
 		   	mPlayer.start();
+		   	mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
 		   	 //Toast.makeText(this, "play", Toast.LENGTH_SHORT).show();
 		   	showToastMessage("play");
 		      //mPlayBtn.setText("Pause");
@@ -643,6 +645,7 @@ public class player_main extends Activity {
 		        
 	    } else {
 	    	mPlayer.pause();
+	    	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
 	        //Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();
 	        showToastMessage("pause");
 	        //mPlayBtn.setText("Play");
@@ -652,6 +655,7 @@ public class player_main extends Activity {
    
    public void gesturePrev(){
 	   	mPlayer.pause();
+	   	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
 	   	int offset = sentenceSegmentList.getPrevSentenceOffset(mWaveformView.getScrollX()/2);
 	   	mWaveformView.scrollSmoothTo(offset*2, 0);
 	   	//mWaveformView.forceStop();
@@ -660,6 +664,7 @@ public class player_main extends Activity {
    
    public void gestureNext(){
 	   	mPlayer.pause();
+	   	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
 	   	int offset = sentenceSegmentList.getNextSentenceOffset(mWaveformView.getScrollX()/2);
 	   	mWaveformView.scrollSmoothTo(offset*2, 0);
 	   	//mWaveformView.forceStop();
@@ -734,12 +739,13 @@ public class player_main extends Activity {
             	 mWaveformView.forceStop();
             	 //mWaveformView.smoothScrollTo(mWaveformView.getScrollX(), mWaveformView.getScrollY());
             	 mPlayer.start();
-            	 
-                 //mPlayBtn.setText("Pause");
+            	 mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
+            	 //mPlayBtn.setText("Pause");
                  // 여기서 스크롤뷰를 세팅하고.
                  
              } else {
                  mPlayer.pause();
+                 mPlayBtn.setImageResource(R.drawable.play_bkgnd);
                  //mPlayBtn.setText("Play");
              }
          }
@@ -767,6 +773,7 @@ public class player_main extends Activity {
         	}
         	
         	mPlayer.pause();
+        	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
         	int offset = sentenceSegmentList.getCurrentStartOffsetByIndex(nextIndex);
         	mWaveformView.scrollSmoothTo(offset*2, 0);
         	
@@ -784,6 +791,7 @@ public class player_main extends Activity {
         	}
         	
         	mPlayer.pause();
+        	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
         	int offset = sentenceSegmentList.getCurrentStartOffsetByIndex(nextIndex);
         	mWaveformView.scrollSmoothTo(offset*2, 0);
         	
@@ -861,6 +869,7 @@ public class player_main extends Activity {
     {
     	boolean isLoop = mRepeatBtn.isChecked();
     	if(isLoop) {
+    		//mRepeatBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.repeat_pressed)); 
     		// 문장인지 확인하고 
     		SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
     		if(seg.isSilence) {
@@ -870,7 +879,9 @@ public class player_main extends Activity {
     			return;
     		}
     	}
-    	
+    	else{
+    		//mRepeatBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.repeat_bkgnd)); 
+    	}
     	
         mIsLoop = isLoop;
         mRepeatPrevBtn.setEnabled(mIsLoop);
@@ -983,7 +994,7 @@ public class player_main extends Activity {
 	   	public boolean onTouch(View v, MotionEvent event) {
 	   		if (mPlayer.isPlaying() == true) {
 				mPlayer.pause();
-            	//mPlayBtn.setText("Play");
+            	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
 			}
 			return false;
 		}
@@ -1116,6 +1127,7 @@ public class player_main extends Activity {
              wasPlaying = mPlayer.isPlaying();
              if (wasPlaying) {
                   mPlayer.pause();
+                  mPlayBtn.setImageResource(R.drawable.play_bkgnd);
              }
          }
 

@@ -64,7 +64,7 @@ android:layout_height="fill_parent"
 				/>
 				<TextView
 				android:id="@+id/total_time"
-				android:textColor="#ffff99"  
+				android:textColor="#ffffff"  
 				android:layout_width="wrap_content" 
 				android:layout_height="wrap_content"
 				android:layout_alignParentRight="true"
@@ -164,23 +164,24 @@ android:layout_height="fill_parent"
 					android:layout_width="0px" 
 					android:layout_height="fill_parent" 
 					android:layout_weight="1" 
-					android:text="이전문장"
-					android:src="@drawable/prev"
-					android:background="#00000000"
-					/>
+					android:src="@drawable/prev_sentence_bkgnd"
+					android:background="#00000000"/>					
+					
 					<LinearLayout style="@style/VerticalDividerForList"
 					android:layout_width="1px"
 					android:layout_marginTop="15px"
 					android:layout_marginBottom="15px" />
+					
 					<ImageButton
 					android:id="@+id/play"  
 					android:layout_width="0px" 
 					android:layout_height="fill_parent" 
 					android:layout_weight="1"
-					android:text="Play"
-					android:src="@drawable/play"
-					android:background="#00000000"
-					/>
+					android:src="@drawable/play_bkgnd"
+					android:background="#00000000"/>
+					
+					<!--  android:src="@drawable/play" -->
+					
 					<LinearLayout style="@style/VerticalDividerForList"
 					android:layout_width="1px"
 					android:layout_marginTop="15px"
@@ -190,8 +191,7 @@ android:layout_height="fill_parent"
 					android:layout_width="0px" 
 					android:layout_height="fill_parent" 
 					android:layout_weight="1" 
-					android:text="다음문장"
-					android:src="@drawable/next"
+					android:src="@drawable/next_sentence_bkgnd"
 					android:background="#00000000"
 					
 					/>
@@ -214,8 +214,8 @@ android:layout_height="fill_parent"
 					android:layout_width="fill_parent" 
 					android:layout_height="fill_parent" 
 					android:layout_weight="1" 
-					android:text="Prev Area"
-					android:src="@android:drawable/ic_media_previous"
+					android:src="@drawable/prev_area_bkgnd"
+					android:background="#00000000"
 					/>
 					<LinearLayout style="@style/VerticalDividerForList"
 					android:layout_width="1px"
@@ -231,13 +231,15 @@ android:layout_height="fill_parent"
 						android:layout_width="wrap_content" 
 						android:layout_height="wrap_content"
 						android:layout_gravity="center" 
-						
-						android:text="ToggleButton" 
+						android:scaleType="fitCenter"
 						android:id="@+id/repeat"
 						android:textOff=""
 	    				android:textOn="" 
-	    				android:background="@android:drawable/ic_menu_revert"
-						></ToggleButton>
+	    				android:background="@drawable/repeat_bkgnd"
+	    				>
+	    				<!--  android:background="@drawable/repeat_bkgnd"-->
+	    				
+						</ToggleButton>
 					</FrameLayout>
 					
 					<LinearLayout style="@style/VerticalDividerForList"
@@ -272,7 +274,7 @@ android:layout_height="fill_parent"
 					android:layout_height="fill_parent" 
 					android:layout_marginLeft="105dip"
 					android:layout_marginRight="105dip"
-					android:text="북마크"
+					
 					android:src="@android:drawable/ic_menu_add"
 					android:background="#00000000"
 					/>
@@ -379,13 +381,23 @@ android:layout_height="fill_parent"
 
 
 </LinearLayout>
-<android.gesture.GestureOverlayView
-    
+
+<!--    
+	<android.gesture.GestureOverlayView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/gestures"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gestureStrokeType="multiple"
     android:eventsInterceptionEnabled="true"
+    android:orientation="vertical">
+	-->
+<android.gesture.GestureOverlayView
+    
+    android:id="@+id/gestures"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+   
     android:orientation="vertical"
     android:background="#55ffffff"
     android:visibility="invisible">
