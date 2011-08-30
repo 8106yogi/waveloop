@@ -2,7 +2,17 @@
 #include "mad/mad.h"
 #include <stdio.h>
 #include <string.h>
- 
+
+
+#include <math.h>
+//#include <vector>
+
+
+
+#ifdef SHRT_MAX
+#undef SHRT_MAX
+#endif//SHRT_MAX
+
 #define SHRT_MAX (32767)
 #define INPUT_BUFFER_SIZE	(5*8192)
 #define OUTPUT_BUFFER_SIZE	8192 /* Must be an integer multiple of 4. */
@@ -136,7 +146,10 @@ static inline int readNextFrame( MP3FileHandle* mp3 )
  
 	return -1;
 }
- 
+
+
+
+
 JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamples__ILjava_nio_FloatBuffer_2I(JNIEnv *env, jobject obj, jint handle, jobject buffer, jint size)
 {
 	MP3FileHandle* mp3 = handles[handle];
@@ -173,7 +186,87 @@ JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamples__ILj
  
 	return size;
 }
- 
+
+
+
+
+
+static int readSamples(jint handle, int & result, int size )
+{
+	MP3FileHandle* mp3 = handles[handle];
+	//float* target = (float*)env->GetDirectBufferAddress(buffer);
+	
+	float sum = 0;
+	int idx = 0;
+	while( idx != size )
+	{
+		if( mp3->leftSamples > 0 )
+		{
+			for( ; idx < size && mp3->offset < mp3->synth.pcm.length; mp3->leftSamples--, mp3->offset++ )
+			{
+				int value = fixedToShort(mp3->synth.pcm.samples[0][mp3->offset]);
+				/*
+				if( MAD_NCHANNELS(&mp3->frame.header) == 2 )
+				{
+					value += fixedToShort(mp3->synth.pcm.samples[1][mp3->offset]);
+					value /= 2;
+				}
+				*/
+				sum += fabs(value / (float)SHRT_MAX);
+				idx++;
+			}
+		}
+		else
+		{
+			int result = readNextFrame( mp3 );
+			if( result == 0 )
+				return 0;
+		}
+		
+	}
+	if( idx > size )
+		return 0;
+	
+	result = (int)((sum / (float)size) * 500.f);
+	
+	return size;
+}
+
+// 파일명.
+// java의 stream으로 저장 필요.
+// java측 함수 호출.
+
+JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamplesAll(JNIEnv *env, jobject obj, jint handle)
+{
+	/*
+	std::vector<int> samples;
+	while (true) {
+		int oneSamples = 0;
+		int resultSize = readSamples( handle, oneSamples, 882 );
+		
+		if (resultSize <= 0) {
+			break;
+			
+			samples.push_back(oneSamples);
+			// 프로그레스 업데이트.
+		}
+	}
+	
+	jintArray jia = env->NewIntArray( samples.size() );
+	env->SetIntArrayRegion( (jintArray)jia, (jsize)0, samples.size(), (jint *)samples.front() );
+	
+	return jia;
+	*/
+	
+	int oneSamples = 0;
+	int size = readSamples( handle, oneSamples, 882 );
+	if(size == 0)
+		return -1;
+	return oneSamples;
+
+} 
+
+
 JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamples__ILjava_nio_ShortBuffer_2I(JNIEnv *env, jobject obj, jint handle, jobject buffer, jint size)
 {
 	MP3FileHandle* mp3 = handles[handle];
