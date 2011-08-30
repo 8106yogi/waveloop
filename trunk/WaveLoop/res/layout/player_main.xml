@@ -283,6 +283,7 @@ android:layout_height="fill_parent"
 			
 			</LinearLayout>
 			
+			<!--  
 			<LinearLayout
 			android:id="@+id/page2"
 			android:orientation="vertical"
@@ -371,11 +372,11 @@ android:layout_height="fill_parent"
 			
 			
 			</LinearLayout>
-		
+			-->
 		
 	</team.ssm.RealViewSwitcher>
 	
-	<!-- </android.gesture.GestureOverlayView> -->
+	
 	
 	
 
