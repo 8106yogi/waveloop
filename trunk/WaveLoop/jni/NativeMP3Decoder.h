@@ -15,6 +15,13 @@ extern "C" {
 JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_openFile
   (JNIEnv *, jobject, jstring);
 
+JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_openFile
+  (JNIEnv *, jobject, jstring);
+
+	
+JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamplesAll
+  (JNIEnv *env, jobject obj, jint handle);
+	
 /*
  * Class:     com_badlogic_audio_io_NativeMP3Decoder
  * Method:    readSamples
