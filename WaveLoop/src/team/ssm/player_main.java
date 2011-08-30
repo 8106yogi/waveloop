@@ -918,7 +918,7 @@ public class player_main extends Activity {
     private void updateRepeatArea( boolean isLoop )
     {
 		for(int i = mLoopStartIndex; i < mLoopFinishIndex+1; ++i )
-			mWaveformSemgnets[i].setBackgroundColor( (isLoop)?Color.MAGENTA:0x00000000 );
+			mWaveformSemgnets[i].setBackgroundColor( (isLoop)?0xFFffff00:0x00000000 );
     	
     }
     
