@@ -84,6 +84,7 @@ public class WaveformScrollView extends HorizontalScrollView {
         	 if( mPlayer != null )
         	 {
         		 mPlayer.pause();
+        		 player_main.mPlayBtn.setImageResource(R.drawable.play);
         	 }
          }
 
