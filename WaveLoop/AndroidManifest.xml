@@ -7,7 +7,7 @@
 
 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
-		<activity android:name=".WaveLoopActivity"
+		<activity android:name=".nowLoading"
                   android:label="@string/app_name">
 		
 		<intent-filter>
@@ -16,6 +16,10 @@
         </intent-filter>
        
 	
+		</activity>       
+		<activity android:name=".WaveLoopActivity"
+                  android:label="@string/app_name">
+		
 		</activity>        
         
         <activity android:name=".player_main"
