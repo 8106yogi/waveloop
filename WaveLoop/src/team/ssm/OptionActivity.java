@@ -9,4 +9,9 @@ public class OptionActivity extends Activity {
 	    	super.onCreate(savedInstanceState);
 	    	setContentView(R.layout.option_activity);
 	}
+	
+	 public void onDestroy(){
+	    	super.onDestroy();
+	    	
+	    }
 }
