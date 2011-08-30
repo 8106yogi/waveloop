@@ -87,7 +87,7 @@ android:layout_height="fill_parent"
 	<ListView android:id="@+id/listView1" android:layout_height="wrap_content" android:layout_width="match_parent"></ListView>
 	
 	<FrameLayout 
-	android:layout_height="265px" 
+	android:layout_height="240px" 
 	android:layout_width="fill_parent" 
 	>
 	
