@@ -54,11 +54,11 @@ public class SentenceNoteEditActivity extends Activity {
 				public boolean onTouch(View arg0, MotionEvent arg1) {
 					
 					switch( index ) {
-					case 0: mNoteColor = Color.YELLOW;	break;
-					case 1: mNoteColor = Color.MAGENTA;		break;
-					case 2: mNoteColor = Color.GREEN;		break;
-					case 3: mNoteColor = Color.BLUE;	break;
-					case 4: mNoteColor = Color.LTGRAY;	break;
+					case 0: mNoteColor = 0xffffff63;  	break;
+					case 1: mNoteColor = 0xffff9c63;		break;
+					case 2: mNoteColor = 0xff99ff99;		break;
+					case 3: mNoteColor = 0xff9ce6ff;		break;
+					case 4: mNoteColor = 0xffe6ffff;	 	break;
 					}
 					
 					mNoteView.setBackgroundColor(mNoteColor);
@@ -111,6 +111,7 @@ public class SentenceNoteEditActivity extends Activity {
         	mTitleView.setText(title);
         	mTimeView.setText( "[" + strStartTime + " - " + strFinishTime + "]" );
         	mNoteView.setText(strNote);
+        	
         	mNoteView.setBackgroundColor(mNoteColor);
         	
         	
