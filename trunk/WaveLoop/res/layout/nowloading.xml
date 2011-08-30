@@ -4,7 +4,13 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@drawable/icon"
+  android:background="#ff000000"
+  android:gravity="center"
   >
-    
+  <ImageView
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:src="@drawable/title_waveloop"
+  />
+  
 </LinearLayout>
