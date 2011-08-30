@@ -260,7 +260,7 @@ public class player_main extends Activity {
             	         		int width = ((innerOffset+1000)<segment.size)?1000:segment.size-innerOffset;
             	         		WaveformView waveformView = new WaveformView(player_main.this);
             		         	waveformView.setData(frameGains, segment.startOffset+innerOffset, 
-            		         			segment.startOffset+innerOffset + width, 225 );
+            		         			segment.startOffset+innerOffset + width, 250 );
             		         	//widthSum += width;
             		         	ll.addView( waveformView );
             		         	count++;
