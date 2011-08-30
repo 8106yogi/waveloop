@@ -393,14 +393,33 @@ android:layout_height="fill_parent"
     android:eventsInterceptionEnabled="true"
     android:orientation="vertical">
 	-->
-<android.gesture.GestureOverlayView
+	<android.gesture.GestureOverlayView
     
     android:id="@+id/gestures"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
    
     android:orientation="vertical"
-    android:background="#55ffffff"
+   	android:background="#aa000000"
     android:visibility="invisible">
-</android.gesture.GestureOverlayView>
+    
+    	<LinearLayout
+		android:id="@+id/help_gesture"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:gravity="bottom"
+		>
+    	
+		<ImageView android:layout_height="200dip"
+		android:layout_width="fill_parent"
+		android:src="@drawable/gesture_help3"
+		android:adjustViewBounds="true"
+		/>
+    
+    
+    	</LinearLayout>
+    
+    
+    
+	</android.gesture.GestureOverlayView>
 </FrameLayout>
