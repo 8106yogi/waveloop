@@ -32,8 +32,9 @@ public class WaveLoopActivity extends TabActivity {
     	
     	
     	tabHost.addTab(tabHost.newTabSpec("tab_test3")
-        	   	.setIndicator("도움말", getResources().getDrawable(android.R.drawable.ic_menu_info_details))
+        	   	.setIndicator("도움말", getResources().getDrawable(R.drawable.ic_tab_info))
         	  	.setContent( new Intent(this, OptionActivity.class) )
+        	  	
         );
     	
     	
