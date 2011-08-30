@@ -361,7 +361,7 @@ public class PlaylistActivity extends Activity {
     
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        MenuItem item=menu.add(0,1,0,"도움말");
+        MenuItem item=menu.add(0,1,0,"개발자소개");
         item.setIcon(android.R.drawable.ic_menu_help);
         menu.add(0,2,0,"추가").setIcon(android.R.drawable.ic_menu_add);
         menu.add(0,3,0,"전체삭제").setIcon(android.R.drawable.ic_menu_delete);
@@ -372,11 +372,21 @@ public class PlaylistActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case 1:
-              Toast.makeText(this,"도움말입니다^^;",Toast.LENGTH_SHORT).show();
-              return true;
+        	new AlertDialog.Builder(PlaylistActivity.this)
+        	.setTitle("개발자소개")
+        	.setIcon(android.R.drawable.ic_menu_help)
+            .setMessage("이주응: lovelytien@gmail.com\n김동진: kaieljin@gmail.com")
+        	 .setNegativeButton("확인", new DialogInterface.OnClickListener(){
+				public void onClick(DialogInterface dialog, int whichButton) {
+			// TODO Auto-generated method stub
+				}
+			}).show();
+            
+        	return true;
         case 2:
-              Toast.makeText(this,"추가합니다^^;",Toast.LENGTH_SHORT).show();
-              return true;
+        	Intent i = new Intent(PlaylistActivity.this, addActivity.class); 
+        	startActivity(i);	
+             return true;
         case 3:
         	{
 	        
@@ -386,8 +396,7 @@ public class PlaylistActivity extends Activity {
 	        	.setCancelable(false)
 	        	.setPositiveButton("삭제", new DialogInterface.OnClickListener(){
 	        		public void onClick(DialogInterface dialog, int which){
-	        			// 조낸 삭제 코드 작성.
-	        			// 모든 파일을 삭제하고
+	        			
 	        			File[] fileList = getFilesDir().listFiles();
 	        			for ( int i = 0; i < fileList.length; ++i )
 	        			{
