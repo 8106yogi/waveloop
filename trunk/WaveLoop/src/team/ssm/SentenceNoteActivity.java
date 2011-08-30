@@ -20,14 +20,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.RatingBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class SentenceNoteActivity extends Activity {
@@ -180,6 +173,7 @@ public class SentenceNoteActivity extends Activity {
 			int rate = cur2.getInt(cur2.getColumnIndex(DbAdapter.KEY_STAR_RATE));
 			int startIndex = cur2.getInt(cur2.getColumnIndex(DbAdapter.KEY_START_ID));
 			int finishIndex = cur2.getInt(cur2.getColumnIndex(DbAdapter.KEY_END_ID));
+			int noteColor= cur2.getInt(cur2.getColumnIndex(DbAdapter.KEY_COLOR));
 			
 			String title = "";
 			
@@ -204,7 +198,7 @@ public class SentenceNoteActivity extends Activity {
 			String time ="[" + strStartTime + " - " + strFinishTime + "]";
 			
 			sentence s = new sentence(rowIndex, strMemo, title,
-					startIndex, finishIndex, time, rate, 0);
+					startIndex, finishIndex, time, rate, noteColor);
 			mArrSentences.add(s);
 			
 			
@@ -296,11 +290,19 @@ public class SentenceNoteActivity extends Activity {
                     TextView time = (TextView) v.findViewById(R.id.sentence_row_audio_time);
                     ImageButton editButton = (ImageButton) v.findViewById(R.id.edit_sentence_note_button);
                     RatingBar rate = (RatingBar) v.findViewById(R.id.sn_ratingBar);
+                    LinearLayout ll = (LinearLayout) v.findViewById(R.id.leftside_color);  
                     
                     memo.setText(s.getNote());
                     title.setText(s.getTitle());
                     time.setText(s.getTime());
                     rate.setRating(s.starRate/2.f);
+                    int color = s.getColor(); //0x ff ff ff 00 
+                    int a = color & 0x00ffffff; 
+                    int b = a | 0x44000000;
+                    ll.setBackgroundColor(color);
+                    v.setBackgroundColor(b);
+                    
+                    
                     
                     editButton.setFocusable(false);
                     editButton.setOnClickListener( new View.OnClickListener() {
