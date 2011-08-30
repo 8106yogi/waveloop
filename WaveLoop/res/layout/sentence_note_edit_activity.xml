@@ -8,8 +8,9 @@
 	<TextView android:layout_width="wrap_content" android:id="@+id/sne_title" android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_marginLeft="8dip" android:singleLine="true" android:text="Title - 제목이 나오는 부분이다.rmfjsrjtdl" android:layout_marginRight="8dip" android:layout_gravity="center"></TextView>
 	<TextView android:layout_width="wrap_content" android:id="@+id/sne_time" android:layout_height="wrap_content" android:layout_marginRight="8dip" android:layout_marginLeft="8dip" android:text="[00:00 - 00:00]" android:layout_gravity="center"></TextView>
     
+    <LinearLayout style="@style/HorizontalDividerTop"/>
     <EditText android:layout_width="match_parent" 
-    android:lines="5"
+    android:lines="10"
     android:id="@+id/sne_note" 
     android:layout_height="wrap_content" 
     android:inputType="textMultiLine" 
@@ -24,39 +25,90 @@
         
         <requestFocus></requestFocus>
     </EditText>
-    <RatingBar android:layout_width="wrap_content" android:id="@+id/sne_ratingBar" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:layout_weight="0"></RatingBar>
+    
+    <LinearLayout style="@style/HorizontalDividerTop"/>
+    
+   	 <LinearLayout android:id="@+id/linearLayout1" 
+    android:layout_height="wrap_content" 
+    android:layout_weight="1"
+    android:layout_width="fill_parent"
+    android:gravity="center"
+    android:paddingLeft="5dip"
+	android:paddingRight="5dip">
+	    <RatingBar android:layout_width="wrap_content" 
+	    android:id="@+id/sne_ratingBar" 
+	    android:layout_height="wrap_content" 
+	    android:layout_gravity="center_horizontal"
+	    android:layout_weight="0"></RatingBar>
+	</LinearLayout>
+    
+    <LinearLayout style="@style/HorizontalDividerTop"/>
     
     <LinearLayout android:id="@+id/linearLayout1" 
-    android:layout_height="wrap_content" 
+    android:layout_height="70dp" 
     android:layout_gravity="center_horizontal" 
-    android:layout_width="wrap_content">
+    android:layout_weight="1"
+    android:layout_width="fill_parent"
+    android:padding="10dip"
+	>
         
         <ImageButton android:layout_width="wrap_content" 
         android:src="@android:drawable/sym_action_chat" 
-        android:background="#ffffff00"
+        android:layout_weight="1"
+        android:background="#ffff63"
         android:id="@+id/NoteColor1" 
-        android:layout_height="wrap_content">
+        android:layout_height="fill_parent"
+       	>
+        
         </ImageButton>
+        
+        <LinearLayout style="@style/VerticalDividerForList"
+					android:layout_width="1px"
+					android:layout_marginTop="15px"
+					android:layout_marginBottom="15px" />
+        
         <ImageButton android:layout_width="wrap_content" 
+        android:layout_weight="1"
         android:src="@android:drawable/sym_action_chat" 
-        android:background="#ffff00ff"
+        android:background="#ff9c63"
         android:id="@+id/NoteColor2" 
-        android:layout_height="wrap_content"></ImageButton>
+        android:layout_height="fill_parent"></ImageButton>
+        
+        <LinearLayout style="@style/VerticalDividerForList"
+					android:layout_width="1px"
+					android:layout_marginTop="15px"
+					android:layout_marginBottom="15px" />
+        
         <ImageButton android:layout_width="wrap_content" 
+        android:layout_weight="1"
         android:src="@android:drawable/sym_action_chat" 
         android:id="@+id/NoteColor3" 
-        android:background="#ff00ff00" 
-        android:layout_height="wrap_content"></ImageButton>
+        android:background="#99ff99" 
+        android:layout_height="fill_parent"></ImageButton>
+        
+        <LinearLayout style="@style/VerticalDividerForList"
+					android:layout_width="1px"
+					android:layout_marginTop="15px"
+					android:layout_marginBottom="15px" />
+        
         <ImageButton android:layout_width="wrap_content" 
+        android:layout_weight="1"
         android:src="@android:drawable/sym_action_chat" 
         android:id="@+id/NoteColor4" 
-        android:background="#ff0000ff"
-        android:layout_height="wrap_content"></ImageButton>
+        android:background="#9ce6ff"
+        android:layout_height="fill_parent"></ImageButton>
+        
+        <LinearLayout style="@style/VerticalDividerForList"
+					android:layout_width="1px"
+					android:layout_marginTop="15px"
+					android:layout_marginBottom="15px" />
+        
         <ImageButton android:layout_width="wrap_content" 
+        android:layout_weight="1"
         android:src="@android:drawable/sym_action_chat" 
         android:id="@+id/NoteColor5" 
-        android:background="#ffcccccc"
-        android:layout_height="wrap_content"></ImageButton>
+        android:background="#e6ffff"
+        android:layout_height="fill_parent"></ImageButton>
     
     
     </LinearLayout>

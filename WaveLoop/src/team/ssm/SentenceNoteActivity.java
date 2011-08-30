@@ -292,16 +292,20 @@ public class SentenceNoteActivity extends Activity {
                     RatingBar rate = (RatingBar) v.findViewById(R.id.sn_ratingBar);
                     LinearLayout ll = (LinearLayout) v.findViewById(R.id.leftside_color);  
                     
-                    memo.setText(s.getNote());
+                    if(s.getNote().equals("")){
+                    	memo.setText("문장노트메모");
+                    }
+                    else{
+                    	memo.setText(s.getNote());
+                    }
                     title.setText(s.getTitle());
                     time.setText(s.getTime());
                     rate.setRating(s.starRate/2.f);
-                    int color = s.getColor(); //0x ff ff ff 00 
+                    int color = s.getColor(); //0xffffff63
                     int a = color & 0x00ffffff; 
-                    int b = a | 0x44000000;
+                    int b = a | 0x77000000;
                     ll.setBackgroundColor(color);
                     v.setBackgroundColor(b);
-                    
                     
                     
                     editButton.setFocusable(false);

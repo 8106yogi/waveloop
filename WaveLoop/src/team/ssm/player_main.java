@@ -718,9 +718,9 @@ public class player_main extends Activity {
         			segIndex,									// end segment id
         			getTimeString(seg.startOffset/50), 			// start time
         			getTimeString((seg.startOffset+seg.size)/50),	// end time
-        			"메모 없음", 										// memo
+        			"", 										// memo
         			0,											// star rate 
-        			Color.GRAY);								// color
+        			0xffff63);								// color
         	
         	dba.close();
         	
@@ -848,9 +848,9 @@ public class player_main extends Activity {
 	         			segIndex,									// end segment id
 	         			getTimeString(seg.startOffset/50), 			// start time
 	         			getTimeString((seg.startOffset+seg.size)/50),	// end time
-	         			"메모 없음", 										// memo
+	         			"", 										// memo
 	         			0,											// star rate 
-	         			Color.YELLOW);								// color
+	         			0xffffff63);								// color
          	
          	dba.close();
          	
