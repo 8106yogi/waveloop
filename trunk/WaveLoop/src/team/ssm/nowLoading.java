@@ -30,7 +30,7 @@ public class nowLoading extends Activity {
 		   	 				finish();
 	   	 	
 	   	 		} 
-	   	 	}, 500);
+	   	 	}, 1000);
 						
 		}
 	};
