@@ -488,7 +488,7 @@ public class player_main extends Activity {
         
         case 2:
             //Toast.makeText(this,"Google Speech API...!!",Toast.LENGTH_SHORT).show();
-        	showToastMessage("Google Speech API...!!");
+        	//showToastMessage("Google Speech API...!!");
             return true;
         	        
         }
@@ -563,7 +563,8 @@ public class player_main extends Activity {
     	if(gestures.getVisibility() == View.VISIBLE){
     		gestures.setVisibility(View.INVISIBLE);
     		gestures.removeOnGesturePerformedListener(mListener);
-    		predictions.clear();
+    		if( predictions != null )
+    			predictions.clear();
     		
     	}
     	else
@@ -962,8 +963,8 @@ public class player_main extends Activity {
         	
         	if(mLoopStartIndex == mLoopFinishIndex) {
         		mLoopFinishIndex+=2;
-        		//if(mLoopFinishIndex < 0)
-        		//	mLoopFinishIndex = 0;
+        		if(mLoopFinishIndex >= mWaveformSemgnets.length)
+        			mLoopFinishIndex = mWaveformSemgnets.length-1;
         	} else if(mLoopCenterIndex > mLoopStartIndex) {
         		mLoopStartIndex+=2;
         		if(mLoopStartIndex > mLoopCenterIndex)
@@ -971,8 +972,8 @@ public class player_main extends Activity {
         	} else if(mLoopCenterIndex < mLoopFinishIndex) {
         		
         		mLoopFinishIndex+=2;
-        		//if(mLoopFinishIndex < mLoopCenterIndex)
-        		//	mLoopFinishIndex = mLoopCenterIndex;
+        		if(mLoopFinishIndex >= mWaveformSemgnets.length)
+        			mLoopFinishIndex = mWaveformSemgnets.length-1;
         	}
         	
         	updateRepeatArea(true);
