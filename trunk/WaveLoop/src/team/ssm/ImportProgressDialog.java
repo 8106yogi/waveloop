@@ -114,13 +114,19 @@ public class ImportProgressDialog extends ProgressDialog {
 			final CheapSoundFile.ProgressListener listener =
 		        new CheapSoundFile.ProgressListener() {
 					private double mFractionComplete;
+					private int mProgressValue;
 		            public boolean reportProgress(double fractionComplete)
 		            {
 		            	mFractionComplete = fractionComplete;
 		                long now = System.currentTimeMillis();
 		                if (now - mLoadingLastUpdateTime > 100)
 		                {
-		                	setProgress( (int)(getMax() * mFractionComplete) );
+		                	int progressValue = (int)(getMax() * mFractionComplete);
+		                	if(mProgressValue != progressValue) {
+		                		mProgressValue = progressValue;
+		                		setProgress( (int)(getMax() * mFractionComplete) );
+		                	}
+		                	
 		                    mLoadingLastUpdateTime = now;
 		                }
 		                return mLoadingKeepGoing;
