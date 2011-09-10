@@ -16,6 +16,19 @@ public class nowLoading extends Activity {
 	
 	}
 	
+	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		
+		if(keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			return true;
+		}
+		
+	return true;
+
+	}
+	
+	
 	Handler mHandler = new Handler(){
 		public void handleMessage(Message msg){
 			
