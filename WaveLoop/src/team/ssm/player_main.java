@@ -558,14 +558,13 @@ public class player_main extends Activity {
     }
    };
     
-	
+	// 플레이어 액티비티에서 Back버튼을 눌렀을때의 동작처리 
     public void onBackPressed(){
     	if(gestures.getVisibility() == View.VISIBLE){
     		gestures.setVisibility(View.INVISIBLE);
     		gestures.removeOnGesturePerformedListener(mListener);
     		if( predictions != null )
     			predictions.clear();
-    		
     	}
     	else
     		finish();
@@ -721,7 +720,7 @@ public class player_main extends Activity {
         			getTimeString((seg.startOffset+seg.size)/50),	// end time
         			"", 										// memo
         			0,											// star rate 
-        			0xffff63);								// color
+        			0xffffff63);								// color
         	
         	dba.close();
         	

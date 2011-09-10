@@ -69,9 +69,10 @@ public class NativeMP3Decoder implements Decoder
         
         private native float getProgress( int handle );
         
-        //jintarray JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamplesAll(JNIEnv *env, jobject obj, jint handle)
         
-        public native int readSamplesAll( int handle );
+        
+        // 1/50초에 해당하는 파형값을 가져옴
+        public native int readSamplesAll( int handle );  
         
         /**
          * @return The handle retrieved from the native side.

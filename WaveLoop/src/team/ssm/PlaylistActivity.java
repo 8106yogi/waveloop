@@ -404,17 +404,19 @@ public class PlaylistActivity extends Activity {
 	        	                fileList[i].delete();
 	        	        }
 	        			
-	        			// DB를 초기화
+	        			
 	        			dba.open();
 	        			dba.dropTable();
+	        			dba.dropTable2();
 	        			dba.createTable();
+	        			dba.createTable2();
 	        			dba.close();
 	        			
 	        			refreshListFromDB();
 	        			
 	        			Toast.makeText(PlaylistActivity.this,"모두 삭제되었습니다.",Toast.LENGTH_SHORT).show();
 	        			
-	        		}
+	        			}
 	        	} )
 	        	.setNegativeButton("취소", null)
 	        	.show();
