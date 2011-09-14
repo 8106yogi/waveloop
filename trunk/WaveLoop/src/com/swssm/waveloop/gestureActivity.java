@@ -1,7 +1,8 @@
-package team.ssm;
+package com.swssm.waveloop;
 import java.util.*;
 
-import team.ssm.*;
+import com.swssm.waveloop.*;
+
 import android.app.*;
 import android.gesture.*;
 import android.gesture.GestureOverlayView.*;

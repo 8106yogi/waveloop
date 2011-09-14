@@ -1,9 +1,11 @@
-package team.ssm;
+package com.swssm.waveloop;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import team.ssm.DbAdapter.DatabaseHelper;
+import com.swssm.waveloop.R;
+import com.swssm.waveloop.DbAdapter.DatabaseHelper;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

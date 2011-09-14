@@ -1,4 +1,4 @@
-package team.ssm;
+package com.swssm.waveloop;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import team.ssm.soundfile.CheapSoundFile;
+import com.swssm.waveloop.soundfile.CheapSoundFile;
+
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;

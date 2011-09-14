@@ -91,7 +91,7 @@ android:layout_height="fill_parent"
 	android:layout_width="fill_parent" 
 	>
 	
-		<team.ssm.WaveformScrollView
+		<com.swssm.waveloop.WaveformScrollView
 		android:layout_width="match_parent" 
 		android:layout_height="wrap_content" 
 		android:id="@+id/WaveformScrollView" 
@@ -105,9 +105,9 @@ android:layout_height="fill_parent"
 		   		
 		    
 		   	</LinearLayout>
-		</team.ssm.WaveformScrollView>
+		</com.swssm.waveloop.WaveformScrollView>
 		
-		<team.ssm.WaveformCenterlineView
+		<com.swssm.waveloop.WaveformCenterlineView
 		android:layout_width="fill_parent" 
 		android:layout_height="fill_parent"/>
 		
@@ -132,7 +132,7 @@ android:layout_height="fill_parent"
 	    android:orientation="vertical">
 	-->	
 	
-	<team.ssm.RealViewSwitcher
+	<com.swssm.waveloop.RealViewSwitcher
 	android:id="@+id/ButtonScrollView"
 	android:layout_width="fill_parent"
 	android:layout_height="200dip"
@@ -374,7 +374,7 @@ android:layout_height="fill_parent"
 			</LinearLayout>
 			-->
 		
-	</team.ssm.RealViewSwitcher>
+	</com.swssm.waveloop.RealViewSwitcher>
 	
 	
 	

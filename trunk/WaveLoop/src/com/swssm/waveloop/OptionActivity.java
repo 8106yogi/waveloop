@@ -1,4 +1,6 @@
-package team.ssm;
+package com.swssm.waveloop;
+
+import com.swssm.waveloop.R;
 
 import android.app.Activity;
 import android.os.Bundle;

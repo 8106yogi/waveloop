@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package team.ssm.soundfile;
+package com.swssm.waveloop.soundfile;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;

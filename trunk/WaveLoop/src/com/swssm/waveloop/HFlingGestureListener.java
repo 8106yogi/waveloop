@@ -1,4 +1,4 @@
-package team.ssm;
+package com.swssm.waveloop;
 
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;

@@ -1,10 +1,12 @@
-package team.ssm;
+package com.swssm.waveloop;
 
 import java.util.*;
 
-import team.ssm.DbAdapter.DatabaseHelper;
-import team.ssm.ImportProgressDialog.FinishLoading;
-import team.ssm.WaveLoopActivity.*;
+import com.swssm.waveloop.R;
+import com.swssm.waveloop.DbAdapter.DatabaseHelper;
+import com.swssm.waveloop.ImportProgressDialog.FinishLoading;
+import com.swssm.waveloop.WaveLoopActivity.*;
+
 import android.app.*;
 import android.content.*;
 import android.database.*;

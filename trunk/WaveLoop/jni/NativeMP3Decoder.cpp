@@ -71,7 +71,7 @@ static inline signed short fixedToShort(mad_fixed_t Fixed)
 }
  
  
-JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_openFile(JNIEnv *env, jobject obj, jstring file)
+JNIEXPORT jint JNICALL Java_com_swssm_waveloop_soundfile_NativeMP3Decoder_openFile(JNIEnv *env, jobject obj, jstring file)
 {
 	int index = findFreeHandle( );
  
@@ -150,7 +150,7 @@ static inline int readNextFrame( MP3FileHandle* mp3 )
 
 
 
-JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamples__ILjava_nio_FloatBuffer_2I(JNIEnv *env, jobject obj, jint handle, jobject buffer, jint size)
+JNIEXPORT jint JNICALL Java_com_swssm_waveloop_soundfile_NativeMP3Decoder_readSamples__ILjava_nio_FloatBuffer_2I(JNIEnv *env, jobject obj, jint handle, jobject buffer, jint size)
 {
 	MP3FileHandle* mp3 = handles[handle];
 	float* target = (float*)env->GetDirectBufferAddress(buffer);
@@ -236,7 +236,7 @@ static int readSamples(jint handle, int & result, int size )
 // java의 stream으로 저장 필요.
 // java측 함수 호출.
 
-JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamplesAll(JNIEnv *env, jobject obj, jint handle)
+JNIEXPORT jint JNICALL Java_com_swssm_waveloop_soundfile_NativeMP3Decoder_readSamplesAll(JNIEnv *env, jobject obj, jint handle)
 {
 	/*
 	std::vector<int> samples;
@@ -267,7 +267,7 @@ JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamplesAll(J
 } 
 
 
-JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamples__ILjava_nio_ShortBuffer_2I(JNIEnv *env, jobject obj, jint handle, jobject buffer, jint size)
+JNIEXPORT jint JNICALL Java_com_swssm_waveloop_soundfile_NativeMP3Decoder_readSamples__ILjava_nio_ShortBuffer_2I(JNIEnv *env, jobject obj, jint handle, jobject buffer, jint size)
 {
 	MP3FileHandle* mp3 = handles[handle];
 	short* target = (short*)env->GetDirectBufferAddress(buffer);
@@ -304,7 +304,7 @@ JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamples__ILj
 	return size;
 }
  
-JNIEXPORT void JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_closeFile(JNIEnv *env, jobject obj, jint handle)
+JNIEXPORT void JNICALL Java_com_swssm_waveloop_soundfile_NativeMP3Decoder_closeFile(JNIEnv *env, jobject obj, jint handle)
 {
 	if( handles[handle] != 0 )
 	{
@@ -314,7 +314,7 @@ JNIEXPORT void JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_closeFile(JNIEnv
 }
 
 
-JNIEXPORT jfloat JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_getProgress(JNIEnv *env, jobject obj, jint handle)
+JNIEXPORT jfloat JNICALL Java_com_swssm_waveloop_soundfile_NativeMP3Decoder_getProgress(JNIEnv *env, jobject obj, jint handle)
 {
 	return (float)ftell( handles[handle]->file )/(float)handles[handle]->size;
 }

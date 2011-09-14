@@ -1,4 +1,4 @@
-package team.ssm;
+package com.swssm.waveloop;
 
 import android.content.Context;
 import android.graphics.Canvas;

@@ -1,7 +1,10 @@
-package team.ssm;
+package com.swssm.waveloop;
 
 import java.io.*;
 import java.util.*;
+
+import com.swssm.waveloop.R;
+
 
 import android.app.*;
 import android.content.*;
@@ -1097,11 +1100,12 @@ public class player_main extends Activity {
 						double position = (double)(startOffset*2)/(double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth())*(double)mPlayer.getDuration();
 						mPlayer.seekTo( (int)position );
 						Prepare();
+						
 					}
 				}
               
 			}
-			mScrollHandler.sendEmptyMessageDelayed(0,30);
+			mScrollHandler.sendEmptyMessageDelayed(0,16);
 		}
 
 		
