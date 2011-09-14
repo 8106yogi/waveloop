@@ -1,10 +1,12 @@
-package team.ssm;
+package com.swssm.waveloop;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import team.ssm.DbAdapter.DatabaseHelper;
-import team.ssm.PlaylistActivity.sound;
+import com.swssm.waveloop.R;
+import com.swssm.waveloop.DbAdapter.DatabaseHelper;
+import com.swssm.waveloop.PlaylistActivity.sound;
+
 
 import android.app.Activity;
 import android.app.AlertDialog;

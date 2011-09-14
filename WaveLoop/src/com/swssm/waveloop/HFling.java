@@ -1,4 +1,4 @@
-package team.ssm;
+package com.swssm.waveloop;
 
 import java.util.Observer;
 

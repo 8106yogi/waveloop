@@ -1,4 +1,4 @@
-package team.ssm.soundfile;
+package com.swssm.waveloop.soundfile;
 
 /**
  * Interface for audio decoders that return successive

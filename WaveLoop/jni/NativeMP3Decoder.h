@@ -12,14 +12,14 @@ extern "C" {
  * Method:    openFile
  * Signature: (Ljava/lang/String;)I
  */
-JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_openFile
+JNIEXPORT jint JNICALL Java_com_swssm_waveloop_soundfile_NativeMP3Decoder_openFile
   (JNIEnv *, jobject, jstring);
 
-JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_openFile
+JNIEXPORT jint JNICALL Java_team_ssm_waveloop_soundfile_NativeMP3Decoder_openFile
   (JNIEnv *, jobject, jstring);
 
 	
-JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamplesAll
+JNIEXPORT jint JNICALL Java_com_swssm_waveloop_soundfile_NativeMP3Decoder_readSamplesAll
   (JNIEnv *env, jobject obj, jint handle);
 	
 /*
@@ -27,7 +27,7 @@ JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamplesAll
  * Method:    readSamples
  * Signature: (ILjava/nio/FloatBuffer;I)I
  */
-JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamples__ILjava_nio_FloatBuffer_2I
+JNIEXPORT jint JNICALL Java_com_swssm_waveloop_soundfile_NativeMP3Decoder_readSamples__ILjava_nio_FloatBuffer_2I
   (JNIEnv *, jobject, jint, jobject, jint);
 
 /*
@@ -35,7 +35,7 @@ JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamples__ILj
  * Method:    readSamples
  * Signature: (ILjava/nio/ShortBuffer;I)I
  */
-JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamples__ILjava_nio_ShortBuffer_2I
+JNIEXPORT jint JNICALL Java_com_swssm_waveloop_soundfile_NativeMP3Decoder_readSamples__ILjava_nio_ShortBuffer_2I
   (JNIEnv *, jobject, jint, jobject, jint);
 
 /*
@@ -43,10 +43,10 @@ JNIEXPORT jint JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_readSamples__ILj
  * Method:    closeFile
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_closeFile
+JNIEXPORT void JNICALL Java_com_swssm_waveloop_soundfile_NativeMP3Decoder_closeFile
   (JNIEnv *, jobject, jint);
 
-JNIEXPORT jfloat JNICALL Java_team_ssm_soundfile_NativeMP3Decoder_getProgress
+JNIEXPORT jfloat JNICALL Java_com_swssm_waveloop_soundfile_NativeMP3Decoder_getProgress
   (JNIEnv *, jobject, jint);
 
 #ifdef __cplusplus
