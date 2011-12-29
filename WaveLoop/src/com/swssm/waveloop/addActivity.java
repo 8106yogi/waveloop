@@ -107,8 +107,15 @@ public class addActivity extends Activity {
 				String title = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.TITLE));
 				int tTime = mCursor.getInt(mCursor.getColumnIndex(Audio.AudioColumns.DURATION))/1000;
 				
-				sound s = new sound(artist, album, title, tTime);
-				m_orders2.add(s);
+				int isMusic = mCursor.getInt(mCursor.getColumnIndex(Audio.AudioColumns.IS_MUSIC));
+				int isPodcast = mCursor.getInt(mCursor.getColumnIndex(Audio.AudioColumns.IS_PODCAST));
+				
+				// 음악과 팟캐스트만 로드 가능.
+				if( isMusic != 0 || isPodcast != 0 )
+				{
+					sound s = new sound(artist, album, title, tTime);
+					m_orders2.add(s);
+				}
 	    		
 	    	}
 	    	startManagingCursor(mCursor);
