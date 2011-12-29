@@ -72,6 +72,11 @@ public class player_main extends Activity {
     private int mLoopStartIndex;
     private int mLoopCenterIndex;
     private int mLoopFinishIndex;
+    
+    private int mLoopStartPos;
+    private int mLoopFinishPos;
+    
+    
     private GestureLibrary mLibrary;
     
     private int mStartSegmentIndex;
@@ -909,21 +914,50 @@ public class player_main extends Activity {
             mLoopStartIndex = mLoopCenterIndex;
             
             //mWaveformSemgnets[mLoopCenterIndex]
-            updateRepeatArea(true);
+            redrawRepeatArea(true);
+            
+            updateRepeatPosition();
         }
         else
         {
-        	updateRepeatArea(false);
+        	redrawRepeatArea(false);
         }
         
     }
     
-    private void updateRepeatArea( boolean isLoop )
+    private void redrawRepeatArea( boolean isLoop )
     {
 		for(int i = mLoopStartIndex; i < mLoopFinishIndex+1; ++i )
 			mWaveformSemgnets[i].setBackgroundColor( (isLoop)?0xFFffff00:0x00000000 );
+    }
+    
+    
+    private int getSentencesTotalLength()
+    {
+    	// UI상의 실제 길이. 나중엔 sentenceSegmentList에서 미리 계산해두고 얻어와야 할듯.
+    	return (mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth());
+    }
+    
+    private int calcPositionByOffset(int offset)
+    {
+    	// 픽셀 단위 오프셋으로부터 플레이어 seek position을 계산.
+    	return (int)((double)(offset)/(double)(getSentencesTotalLength())*(double)mPlayer.getDuration());
+    }
+    
+    private void updateRepeatPosition()
+    {
+    	final int RepeatMargin = 150;// 0.15초.
+ 
+    	int startOffset = sentenceSegmentList.getCurrentSentenceByIndex(mLoopStartIndex).startOffset;
+    	int finishOffset = sentenceSegmentList.getCurrentSentenceByIndex(mLoopFinishIndex).startOffset + 
+    						sentenceSegmentList.getCurrentSentenceByIndex(mLoopFinishIndex).size;
+    	
+    	mLoopStartPos = calcPositionByOffset(startOffset*2) - RepeatMargin;
+    	mLoopFinishPos = calcPositionByOffset(finishOffset*2) + RepeatMargin;
     	
     }
+    
+    
     
 	// 구간반복.
 	Button.OnClickListener mClickRepeat = new View.OnClickListener() {
@@ -936,7 +970,7 @@ public class player_main extends Activity {
 	Button.OnClickListener mClickRepeatPrev = new View.OnClickListener() {
         public void onClick(View v) {
         	
-        	updateRepeatArea(false);
+        	redrawRepeatArea(false);
         	
         	if(mLoopStartIndex == mLoopFinishIndex) {
         		mLoopStartIndex-=2;
@@ -953,7 +987,9 @@ public class player_main extends Activity {
         			mLoopFinishIndex = mLoopCenterIndex;
         	}
         	
-        	updateRepeatArea(true);
+        	redrawRepeatArea(true);
+        	
+        	updateRepeatPosition();
         }
 	};
 	
@@ -961,7 +997,7 @@ public class player_main extends Activity {
 	Button.OnClickListener mClickRepeatNext = new View.OnClickListener() {
         public void onClick(View v) {
         	
-        	updateRepeatArea(false);
+        	redrawRepeatArea(false);
         	
         	if(mLoopStartIndex == mLoopFinishIndex) {
         		mLoopFinishIndex+=2;
@@ -978,7 +1014,9 @@ public class player_main extends Activity {
         			mLoopFinishIndex = mWaveformSemgnets.length-1;
         	}
         	
-        	updateRepeatArea(true);
+        	redrawRepeatArea(true);
+        	
+        	updateRepeatPosition();
         }
 	};
 	
@@ -1088,6 +1126,7 @@ public class player_main extends Activity {
 				//updateCurrentSegmentColor();
 				if( mIsLoop == true )
 				{
+					/*
 					int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
 					if( segIndex < mLoopStartIndex-1 || segIndex > mLoopFinishIndex )
 					{
@@ -1102,6 +1141,16 @@ public class player_main extends Activity {
 						Prepare();
 						
 					}
+					*/
+					
+					int currentPosition = mPlayer.getCurrentPosition();
+					if(currentPosition < mLoopStartPos || currentPosition > mLoopFinishPos )
+					{
+						mPlayer.seekTo(mLoopStartPos);
+						Prepare();
+					}
+					
+					
 				}
               
 			}
