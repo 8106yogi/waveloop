@@ -5,10 +5,33 @@
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
     
+    <LinearLayout 
+	android:layout_height="wrap_content"
+	android:layout_width="fill_parent"
+	android:orientation="horizontal">
+    
+	    <EditText android:id="@+id/search_box" 
+	        android:layout_width="0dip"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:hint="검색어를 입력하세요."
+	        android:inputType="text"
+	        android:maxLines="1"
+	    />
+	  
+    
+		    <Button android:id="@+id/search_cancel"
+			android:layout_height="fill_parent"
+			android:layout_width="wrap_content"
+			android:drawableLeft="@android:drawable/ic_input_delete"
+			android:onClick="OnClick_FilterDelete"
+			/>
+	    
+	</LinearLayout>
     
 	<ListView
 	android:id="@+id/list2"
-	android:layout_height="fill_parent"
+	android:layout_height="0dip"
 	android:layout_width="fill_parent"
 	android:layout_weight="1"
 	/>
