@@ -51,7 +51,7 @@ public class addActivity extends Activity {
 	    private boolean isImported[];	//파일의 중복유무를 저장하는 boolean 배열.(중복되면 true)
 	    private boolean isDismiss=false;
 	    ArrayList<String> mFiles;
-	    public static final String WAVEPATH = "/data/data/com.androidhuman.app/files/";   
+	    //public static final String WAVEPATH = "/data/data/com.androidhuman.app/files/";   
 	    //private FinishLoading mFinishLoading;
 	    //public static Activity add_activity;
 	    
@@ -105,27 +105,32 @@ public class addActivity extends Activity {
     	
     	//mCursor = new MergeCursor( new Cursor[] { cursorInt, cursorExt} );
     	//mCursor = cursorExt;
-    	int nCurCount = (mCursor == null)?0:mCursor.getCount();
-    	if(nCurCount > 0){
-    		isChecked = new boolean[nCurCount];
-    		isImported = new boolean[nCurCount];
-    		
-    		for (int i = 0; i < nCurCount; i++) {
-	    	
-	    		mCursor.moveToPosition(i);
-		    	String artist = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.ARTIST));
-				String album = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.ALBUM));
-				String title = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.TITLE));
-				int time = mCursor.getInt(mCursor.getColumnIndex(Audio.AudioColumns.DURATION))/1000;
-				
-				Sound s = new Sound(artist, album, title, time, mAllItems.size() );
-				mAllItems.add(s);
-	    		
-	    	}
-	    	startManagingCursor(mCursor);
+    	
+    	if(mCursor != null)
+    	{
+    		int nCurCount = mCursor.getCount();
+        	if(nCurCount > 0){
+        		isChecked = new boolean[nCurCount];
+        		isImported = new boolean[nCurCount];
+        		
+        		for (int i = 0; i < nCurCount; i++) {
+    	    	
+    	    		mCursor.moveToPosition(i);
+    		    	String artist = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.ARTIST));
+    				String album = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.ALBUM));
+    				String title = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns.TITLE));
+    				int time = mCursor.getInt(mCursor.getColumnIndex(Audio.AudioColumns.DURATION))/1000;
+    				
+    				Sound s = new Sound(artist, album, title, time, mAllItems.size() );
+    				mAllItems.add(s);
+    	    		
+    	    	}
+    	    	startManagingCursor(mCursor);
+        	}
+        	
+        	compare();
     	}
     	
-    	compare();
 	}
 	    
 	    private TextWatcher filterTextWatcher = new TextWatcher() {
@@ -175,12 +180,17 @@ public class addActivity extends Activity {
 		    	
 		    	//Cursor curMedia = getContentResolver().query(uriExternal, null, selection, selectionArgs, sortOrder);
 			}
-			for (int j = 0; j < mCursor.getCount(); j++){
+			dba.close();
+			
+			
+			for (int j = 0; j < mCursor.getCount(); j++)
+			{
 				mCursor.moveToPosition(j);	
 	            String id = mCursor.getString(mCursor.getColumnIndex(Audio.AudioColumns._ID)); //모든 오디오목록의 Audio.AudioColumns._ID를 저장하는 string 변수.
-				if(MediaDBIndex.contains(id)){
+				if(MediaDBIndex.contains(id))
+				{
 					repetMDBIdx.add(id);
-					isImported[j]=true;
+					isImported[j] = true;
 				}
 			}
 	  }
