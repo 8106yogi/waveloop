@@ -55,20 +55,17 @@ public class WaveformScrollView extends HorizontalScrollView {
 	// 재생 위치 이동
     SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        	
+        	if(mPlayer == null)
+        		return;
+        	
         	if (fromUser) {
             	WaveformScrollView.this.scrollTo(progress, 0);
             	 
             	double position = (double)progress/(double)mSeekBar.getMax()*(double)mPlayer.getDuration();
  				mPlayer.seekTo( (int)position );
- 				 	/*
- 				    int cur =  mPlayer.getCurrentPosition()/1000;
-	           	 	int cMin = cur/60;
-	                int cSec = cur%60;
-	                String strTime = String.format("%02d:%02d" , cMin, cSec);
-	                TextView mCur = player_main.mCurtime;
-	                mCur.setText(strTime);
-	                */
         	}
+        	
         	int cur =  mPlayer.getCurrentPosition()/1000;
        	 	int cMin = cur/60;
             int cSec = cur%60;
