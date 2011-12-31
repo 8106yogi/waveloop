@@ -346,7 +346,8 @@ public class addActivity extends Activity {
         }
         */
         public boolean isEnabled(int position) {
-        	if (isImported[position])	//	position에 따른 조건을 주어 활성화/비활성화가 되게끔 코딩해야함. 
+        	Sound s = mFilteredItems.get(position);
+        	if ( s != null && isImported[s.getIndex()] )	//	position에 따른 조건을 주어 활성화/비활성화가 되게끔 코딩해야함. 
         		return false;	// isRepet가 true이면, 즉 중복되었으면 비활성.
         	else
         		return true;	// 그렇지않으면, 즉 중복되지 않았으면 활성.
