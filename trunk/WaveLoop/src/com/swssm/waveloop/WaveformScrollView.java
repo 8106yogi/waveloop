@@ -1,6 +1,7 @@
 package com.swssm.waveloop;
 
 import com.swssm.waveloop.R;
+import com.swssm.waveloop.audio.OSLESMediaPlayer;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,7 +17,8 @@ import android.widget.*;
 public class WaveformScrollView extends HorizontalScrollView {
 	SeekBar mSeekBar;
 	boolean mIsSeekbarTouched;
-	MediaPlayer mPlayer;
+	OSLESMediaPlayer mOSLESPlayer;
+	//MediaPlayer mPlayer;
 	Scroller mScroller;// = new Scroller(this);
 	//int mMaxScrollX;
 	//int mMaxScrollY;
@@ -44,9 +46,13 @@ public class WaveformScrollView extends HorizontalScrollView {
 		
 	}
 	
+	public void setOSLESPlayer(OSLESMediaPlayer OSLESPlayer)
+	{
+		mOSLESPlayer = OSLESPlayer;
+	}
 	public void setMediaPlayer( MediaPlayer player )
 	{
-		mPlayer = player;
+		//mPlayer = player;
 		
 		
 	}
@@ -56,17 +62,23 @@ public class WaveformScrollView extends HorizontalScrollView {
     SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         	
-        	if(mPlayer == null)
+        	//if(mPlayer == null)
+        	//	return;
+        	
+        	if(mOSLESPlayer == null)
         		return;
         	
         	if (fromUser) {
             	WaveformScrollView.this.scrollTo(progress, 0);
             	 
-            	double position = (double)progress/(double)mSeekBar.getMax()*(double)mPlayer.getDuration();
- 				mPlayer.seekTo( (int)position );
+            	//double position = (double)progress/(double)mSeekBar.getMax()*(double)mPlayer.getDuration();
+ 				//mPlayer.seekTo( (int)position );
+            	double position = (double)progress/(double)mSeekBar.getMax()*(double)mOSLESPlayer.getDuration();
+            	mOSLESPlayer.seekTo((int)position);
         	}
         	
-        	int cur =  mPlayer.getCurrentPosition()/1000;
+        	//int cur =  mPlayer.getCurrentPosition()/1000;
+        	int cur = mOSLESPlayer.getPosition()/1000;
        	 	int cMin = cur/60;
             int cSec = cur%60;
             String strTime = String.format("%02d:%02d" , cMin, cSec);
@@ -80,9 +92,11 @@ public class WaveformScrollView extends HorizontalScrollView {
         	 
         	 forceStop();
         	 
-        	 if( mPlayer != null )
+        	 //if( mPlayer != null )
+        	 if(mOSLESPlayer != null)
         	 {
-        		 mPlayer.pause();
+        		 //mPlayer.pause();
+        		 mOSLESPlayer.pause();
         		 player_main.mPlayBtn.setImageResource(R.drawable.play);
         	 }
          }
@@ -155,10 +169,14 @@ public class WaveformScrollView extends HorizontalScrollView {
 			//mSeekBar.setMax( mWaveformLinearLayout.getMeasuredWidth()-getMeasuredWidth() );//TODO 이거 초기화때 호출되도록 수정 예정
 			mSeekBar.setProgress( this.getScrollX() );
 			
-			if( mPlayer != null && mPlayer.isPlaying() == false )
+			//if( mPlayer != null && mPlayer.isPlaying() == false )
+			if( mOSLESPlayer != null && mOSLESPlayer.isPlaying() == false )
 			{
-				double position = (double)this.getScrollX()/(double)(mWaveformLinearLayout.getMeasuredWidth()-getMeasuredWidth())*(double)mPlayer.getDuration();
-				mPlayer.seekTo( (int)position );
+				//double position = (double)this.getScrollX()/(double)(mWaveformLinearLayout.getMeasuredWidth()-getMeasuredWidth())*(double)mPlayer.getDuration();
+				//mPlayer.seekTo( (int)position );
+				
+				double position = (double)this.getScrollX()/(double)(mWaveformLinearLayout.getMeasuredWidth()-getMeasuredWidth())*(double)mOSLESPlayer.getDuration();
+				mOSLESPlayer.seekTo((int)position);
 			}
 				
 		}
