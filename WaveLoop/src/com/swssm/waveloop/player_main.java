@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import com.swssm.waveloop.R;
+import com.swssm.waveloop.audio.OSLESMediaPlayer;
 
 
 import android.app.*;
@@ -22,6 +23,7 @@ import android.widget.*;
 
 public class player_main extends Activity {
     
+	static OSLESMediaPlayer mOSLESPlayer;
     static MediaPlayer mPlayer;
     static ImageButton mPlayBtn; 
     //Button mPlay2Btn;
@@ -96,6 +98,9 @@ public class player_main extends Activity {
 
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
         
+        mOSLESPlayer = new OSLESMediaPlayer();
+        mOSLESPlayer.createEngine();
+        
         mPlayer = new MediaPlayer();
         
         mStartSegmentIndex = 0;
@@ -107,7 +112,8 @@ public class player_main extends Activity {
          mWaveformView = (WaveformScrollView)findViewById(R.id.WaveformScrollView);
          mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
          
-         mWaveformView.setMediaPlayer(mPlayer);
+         mWaveformView.setOSLESPlayer(mOSLESPlayer);
+         //mWaveformView.setMediaPlayer(mPlayer);
          mWaveformView.setInnerLayout(mWaveformLayout);
          mWaveformView.setHorizontalScrollBarEnabled(false);
          mWaveformView.setSeekBar( (SeekBar)findViewById(R.id.progress) );
@@ -150,8 +156,8 @@ public class player_main extends Activity {
          
          // 완료 리스너, 시크바 변경 리스너 등록
          //mPlayer.setOnCompletionListener(mOnComplete);
-         mPlayer.setOnSeekCompleteListener(mOnSeekComplete);
-         mPlayer.setOnCompletionListener(mOnCompletionListener);
+         //mPlayer.setOnSeekCompleteListener(mOnSeekComplete);
+         //mPlayer.setOnCompletionListener(mOnCompletionListener);
          mProgress = (SeekBar)findViewById(R.id.progress);
          //mProgress.setOnSeekBarChangeListener(mOnSeek);
          //mProgressHandler.sendEmptyMessageDelayed(0,200);
@@ -346,8 +352,12 @@ public class player_main extends Activity {
                 				    	final int startOffset = sentenceSegmentList.getCurrentStartOffsetByIndex(mStartSegmentIndex);
                 				    	mWaveformView.scrollTo(startOffset*2, 0);
                 				    	
-                				    	double position = (double)(startOffset*2)/(double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth())*(double)mPlayer.getDuration();
-                				    	mPlayer.seekTo((int)position);
+                				    	//double position = (double)(startOffset*2)/(double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth())*(double)mPlayer.getDuration();
+                				    	//mPlayer.seekTo((int)position);
+                				    	
+                				    	double position = (double)(startOffset*2)/(double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth())*(double)mOSLESPlayer.getDuration();
+                				    	mOSLESPlayer.seekTo((int)position);
+                				    	
                 				    } 
                 				});
                 				
@@ -586,6 +596,11 @@ public class player_main extends Activity {
          mPlayer = null;
        }
        
+       if(mOSLESPlayer != null) {
+    	   //mOSLESPlayer.destory();
+    	   mOSLESPlayer = null;
+       }
+       
        if(mLoadingDialog != null){
     	   mLoadingDialog.dismiss();
     	   mLoadingDialog = null;
@@ -595,8 +610,10 @@ public class player_main extends Activity {
 
    // 항상 준비 상태여야 한다.
     boolean LoadMedia() {
+    	/*
          try {
              //DB인덱스를 통해 파일경로를 인자로 넣어야함
+        	 
         	 mPlayer.setDataSource(mFilepath);
          } catch (IllegalArgumentException e) {
              return false;
@@ -604,20 +621,28 @@ public class player_main extends Activity {
              return false;
          } catch (IOException e) {
              return false;
-         }
+         }*/
+         
+         boolean result = mOSLESPlayer.createAudioPlayer(mFilepath);
+         
          
          if (Prepare() == false) {
              return false;
          }
-         mPlayer.start();
+         //mPlayer.start();
          //mPlayer.seekTo( mPlayer.getDuration() );
-         mPlayer.seekTo(0);
-         mPlayer.pause();
+         //mPlayer.seekTo(0);
+         //mPlayer.pause();
+         
+         //mOSLESPlayer.play();
+         mOSLESPlayer.seekTo(0);
+         mOSLESPlayer.pause();
 
          return true;
    }
   
    boolean Prepare() {
+	     /*
          try {
              mPlayer.prepare();
          } catch (IllegalStateException e) {
@@ -625,6 +650,7 @@ public class player_main extends Activity {
          } catch (IOException e) {
              return false;
          }
+         */
          return true;
    }
 
@@ -640,10 +666,12 @@ public class player_main extends Activity {
     
    public void gesturePlay(){
 	   
-	  	 if (mPlayer.isPlaying() == false) {
+	  	 //if (mPlayer.isPlaying() == false) {
+	   		if(mOSLESPlayer.isPlaying() == false ) {
 		   	 mWaveformView.forceStop();
 		   	 //mWaveformView.smoothScrollTo(mWaveformView.getScrollX(), mWaveformView.getScrollY());
-		   	mPlayer.start();
+		   	//mPlayer.start();
+		   	mOSLESPlayer.play();
 		   	mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
 		   	 //Toast.makeText(this, "play", Toast.LENGTH_SHORT).show();
 		   	showToastMessage("play");
@@ -651,7 +679,8 @@ public class player_main extends Activity {
 		      
 		        
 	    } else {
-	    	mPlayer.pause();
+	    	mOSLESPlayer.pause();
+	    	//mPlayer.pause();
 	    	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
 	        //Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();
 	        showToastMessage("pause");
@@ -661,7 +690,8 @@ public class player_main extends Activity {
    }
    
    public void gesturePrev(){
-	   	mPlayer.pause();
+	   mOSLESPlayer.pause();	
+	   //mPlayer.pause();
 	   	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
 	   	int offset = sentenceSegmentList.getPrevSentenceOffset(mWaveformView.getScrollX()/2);
 	   	mWaveformView.scrollSmoothTo(offset*2, 0);
@@ -670,7 +700,8 @@ public class player_main extends Activity {
    }
    
    public void gestureNext(){
-	   	mPlayer.pause();
+	   mOSLESPlayer.pause();	
+	   //mPlayer.pause();
 	   	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
 	   	int offset = sentenceSegmentList.getNextSentenceOffset(mWaveformView.getScrollX()/2);
 	   	mWaveformView.scrollSmoothTo(offset*2, 0);
@@ -743,16 +774,19 @@ public class player_main extends Activity {
    // 재생 및 일시 정지
    Button.OnClickListener mClickPlay = new View.OnClickListener() {
          public void onClick(View v) {
-             if (mPlayer.isPlaying() == false) {
+             //if (mPlayer.isPlaying() == false) {
+        	 if(mOSLESPlayer.isPlaying() == false ) {
             	 mWaveformView.forceStop();
             	 //mWaveformView.smoothScrollTo(mWaveformView.getScrollX(), mWaveformView.getScrollY());
-            	 mPlayer.start();
+            	 //mPlayer.start();
+            	 mOSLESPlayer.play();
             	 mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
             	 //mPlayBtn.setText("Pause");
                  // 여기서 스크롤뷰를 세팅하고.
                  
              } else {
-                 mPlayer.pause();
+            	 mOSLESPlayer.pause();
+                 //mPlayer.pause();
                  mPlayBtn.setImageResource(R.drawable.play_bkgnd);
                  //mPlayBtn.setText("Play");
              }
@@ -780,7 +814,8 @@ public class player_main extends Activity {
         			return;
         	}
         	
-        	mPlayer.pause();
+        	mOSLESPlayer.pause();
+        	//mPlayer.pause();
         	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
         	int offset = sentenceSegmentList.getCurrentStartOffsetByIndex(nextIndex);
         	mWaveformView.scrollSmoothTo(offset*2, 0);
@@ -797,8 +832,8 @@ public class player_main extends Activity {
         		if( false == isWithinRepeatArea(nextIndex) )
         			return;
         	}
-        	
-        	mPlayer.pause();
+        	mOSLESPlayer.pause();
+        	//mPlayer.pause();
         	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
         	int offset = sentenceSegmentList.getCurrentStartOffsetByIndex(nextIndex);
         	mWaveformView.scrollSmoothTo(offset*2, 0);
@@ -920,6 +955,8 @@ public class player_main extends Activity {
         else
         {
         	redrawRepeatArea(false);
+        	
+        	mOSLESPlayer.setNoLoop();
         }
         
     }
@@ -940,7 +977,9 @@ public class player_main extends Activity {
     private int calcPositionByOffset(int offset)
     {
     	// 픽셀 단위 오프셋으로부터 플레이어 seek position을 계산.
-    	return (int)((double)(offset)/(double)(getSentencesTotalLength())*(double)mPlayer.getDuration());
+    	//return (int)((double)(offset)/(double)(getSentencesTotalLength())*(double)mPlayer.getDuration());
+    	return (int)((double)(offset)/(double)(getSentencesTotalLength())*(double)mOSLESPlayer.getDuration());
+    	
     }
     
     private void updateRepeatPosition()
@@ -953,6 +992,8 @@ public class player_main extends Activity {
     	
     	mLoopStartPos = calcPositionByOffset(startOffset*2) - RepeatMargin;
     	mLoopFinishPos = calcPositionByOffset(finishOffset*2) + RepeatMargin;
+    	
+    	mOSLESPlayer.setLoop(mLoopStartPos, mLoopFinishPos);
     	
     }
     
@@ -1024,7 +1065,8 @@ public class player_main extends Activity {
 	// 재생 정지. 재시작을 위해 미리 준비해 놓는다.
 	Button.OnClickListener mClickStop = new View.OnClickListener() {
         public void onClick(View v) {
-             mPlayer.stop();
+             //mPlayer.stop();
+        	mOSLESPlayer.stop();
              //mPlayBtn.setText("Play");
              //mProgress.setProgress(0);
              Prepare();
@@ -1033,8 +1075,10 @@ public class player_main extends Activity {
    
    View.OnTouchListener mOnScrollViewTouchListener = new View.OnTouchListener() {
 	   	public boolean onTouch(View v, MotionEvent event) {
-	   		if (mPlayer.isPlaying() == true) {
-				mPlayer.pause();
+	   		//if (mPlayer.isPlaying() == true) {
+	   		if(mOSLESPlayer.isPlaying() == true) {
+	   			mOSLESPlayer.pause();
+	   			//mPlayer.pause();
             	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
 			}
 			return false;
@@ -1061,7 +1105,8 @@ public class player_main extends Activity {
    MediaPlayer.OnSeekCompleteListener mOnSeekComplete = new MediaPlayer.OnSeekCompleteListener() {
          public void onSeekComplete(MediaPlayer mp) {
              if (wasPlaying) {
-                  mPlayer.start();
+                  //mPlayer.start();
+            	 mOSLESPlayer.play();
              }
          }
    };
@@ -1093,10 +1138,12 @@ public class player_main extends Activity {
    
    Handler mPlaytimeHandler = new Handler() {
         public void handleMessage(Message msg) {
-            
-        	if (mPlayer == null) return;
-            if (mPlayer.isPlaying()) {
-            	int cur =  mPlayer.getCurrentPosition()/1000;
+            if(mOSLESPlayer == null) return;
+            if(mOSLESPlayer.isPlaying()) {
+        	//if (mPlayer == null) return;
+            //if (mPlayer.isPlaying()) {
+            	//int cur =  mPlayer.getCurrentPosition()/1000;
+            	int cur =  mOSLESPlayer.getPosition()/1000;
            	 	int cMin = cur/60;
                 int cSec = cur%60;
                 String strTime = String.format("%02d:%02d" , cMin, cSec);
@@ -1109,14 +1156,17 @@ public class player_main extends Activity {
     
     public double getPlayerCurrentRate()
     {
-    	return ((double)mPlayer.getCurrentPosition() / (double)mPlayer.getDuration());
+    	//return ((double)mPlayer.getCurrentPosition() / (double)mPlayer.getDuration());
+    	return ((double)mOSLESPlayer.getPosition() / (double)mOSLESPlayer.getDuration());
     }
     
     // 0.016초에 한번꼴로 재생 위치 갱신
     Handler mScrollHandler = new Handler() {
     	public void handleMessage(Message msg) {
-    		if (mPlayer == null) return;
-			if (mPlayer.isPlaying()) {
+    		//if (mPlayer == null) return;
+			//if (mPlayer.isPlaying()) {
+    		if(mOSLESPlayer == null) return;
+    		if(mOSLESPlayer.isPlaying()) {
 				//int duration = mPlayer.getDuration();
 				//int width = mWaveformLayout.getMeasuredWidth();
 				int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth()) * getPlayerCurrentRate() );
@@ -1142,10 +1192,13 @@ public class player_main extends Activity {
 					}
 					*/
 					
-					int currentPosition = mPlayer.getCurrentPosition();
+					
+					//int currentPosition = mPlayer.getCurrentPosition();
+					int currentPosition = mOSLESPlayer.getPosition();
 					if(currentPosition < mLoopStartPos || currentPosition > mLoopFinishPos )
 					{
-						mPlayer.seekTo(mLoopStartPos);
+						//mPlayer.seekTo(mLoopStartPos);
+						mOSLESPlayer.seekTo(mLoopStartPos+1);
 						Prepare();
 					}
 					
@@ -1177,9 +1230,11 @@ public class player_main extends Activity {
          }
 
          public void onStartTrackingTouch(SeekBar seekBar) {
-             wasPlaying = mPlayer.isPlaying();
+             //wasPlaying = mPlayer.isPlaying();
+        	 wasPlaying = mOSLESPlayer.isPlaying();
              if (wasPlaying) {
-                  mPlayer.pause();
+                  //mPlayer.pause();
+            	 mOSLESPlayer.pause();
                   mPlayBtn.setImageResource(R.drawable.play_bkgnd);
              }
          }
