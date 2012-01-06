@@ -20,12 +20,34 @@ android:layout_height="wrap_content"
 <FrameLayout
 android:id="@android:id/tabcontent"
 android:layout_width="fill_parent"
-android:layout_height="fill_parent">
- 
-
-
+android:layout_height="fill_parent"
+android:layout_weight="1"
+>
 
 </FrameLayout>
+
+	<LinearLayout 
+	    
+		android:layout_height="0dip"
+		android:layout_width="fill_parent"
+		android:background="@android:drawable/bottom_bar">
+	
+		    
+		<TextView 
+		    android:id="@+id/now_playing"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:layout_marginLeft="6dip"
+			android:layout_marginRight="6dip"
+			android:layout_marginTop="6dip"
+			android:layout_marginBottom="2dip"
+			android:text="now playing..."
+			android:textSize="16sp">
+		
+		</TextView>
+	
+</LinearLayout>
+
 </LinearLayout>
 
 </TabHost>

@@ -26,7 +26,7 @@ android:layout_height="fill_parent"
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content" 
 		android:layout_gravity="center"
-		android:textSize="14sp"
+		android:textSize="12sp"
 		android:text="Artist"
 		/>
 		<TextView
@@ -37,7 +37,7 @@ android:layout_height="fill_parent"
 		android:layout_gravity="center" 
 		android:textSize="14sp"
 		android:textStyle="bold"
-		android:text="Title"
+		android:text="Title title Title title"
 		/>
 		<TextView
 		android:id="@+id/album"
@@ -45,7 +45,7 @@ android:layout_height="fill_parent"
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 		android:layout_gravity="center" 
-		android:textSize="14sp"
+		android:textSize="12sp"
 		android:text="Album"
 		/>
 			<RelativeLayout 
