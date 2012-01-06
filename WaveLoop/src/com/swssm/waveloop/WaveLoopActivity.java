@@ -53,11 +53,19 @@ public class WaveLoopActivity extends TabActivity {
    //액티비티 종료시 재생 강제 종료
    public void onDestroy() {
 		super.onDestroy();
+		/*
 		if (player_main.mPlayer != null) {
 			player_main.mPlayer.release();
 			player_main.mPlayer = null;
-	       }
-	
+	    }
+	    */
+		if( player_main.mOSLESPlayer != null )
+		{
+			player_main.mOSLESPlayer.releaseAudioPlayer();
+			player_main.mOSLESPlayer.releaseEngine();
+			player_main.mOSLESPlayer = null;
+		}
+		
 	}
 
     
