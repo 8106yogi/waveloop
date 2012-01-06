@@ -10,7 +10,6 @@ LOCAL_SRC_FILES := OSLESMediaPlayer.c NativeMP3Decoder.cpp mad/bit.c mad/decoder
 
 LOCAL_CFLAGS := -DHAVE_CONFIG_H -DFPM_ARM -ffast-math -O3
 
-LOCAL_LDLIBS    += -lOpenSLES
-
+LOCAL_LDLIBS    += -lOpenSLES -llog
 
 include $(BUILD_SHARED_LIBRARY)
