@@ -89,17 +89,78 @@ public class player_main extends Activity {
     MenuItem item;
     Toast mToast;
     
+    
+    public static final String SERVICECMD = "com.android.music.musicservicecommand";
+    public static final String CMDNAME = "command";
+    public static final String CMDTOGGLEPAUSE = "togglepause";
+    public static final String CMDSTOP = "stop";
+    public static final String CMDPAUSE = "pause";
+    public static final String CMDPREVIOUS = "previous";
+    public static final String CMDNEXT = "next";
+
+    public static final String TOGGLEPAUSE_ACTION = "com.android.music.musicservicecommand.togglepause";
+    public static final String PAUSE_ACTION = "com.android.music.musicservicecommand.pause";
+    public static final String PREVIOUS_ACTION = "com.android.music.musicservicecommand.previous";
+    public static final String NEXT_ACTION = "com.android.music.musicservicecommand.next";
+    
+	public void PauseAnotherMusic( Context context ) {
+	    Intent i = new Intent(SERVICECMD);
+	    i.putExtra(CMDNAME, CMDPAUSE);
+	    context.sendBroadcast(i);
+	}
+	
+	private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            String cmd = intent.getStringExtra(CMDNAME);
+
+            if (CMDTOGGLEPAUSE.equals(cmd) || TOGGLEPAUSE_ACTION.equals(action)) {
+            	
+            	if( mOSLESPlayer.isPlaying() )
+            		mOSLESPlayer.pause();
+            	else
+            		mOSLESPlayer.play();
+            	
+            } else if (CMDPAUSE.equals(cmd) || PAUSE_ACTION.equals(action)) {
+            	mOSLESPlayer.pause();
+            } else if (CMDSTOP.equals(cmd)) {
+            	mOSLESPlayer.pause();
+            	mOSLESPlayer.seekTo(0);
+            }
+            
+        }
+    };
+	
+	
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_main);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         
+        // 다른 뮤직 앱을 일시정지시키고 
+        PauseAnotherMusic(this);
+        
+        /*
+        IntentFilter commandFilter = new IntentFilter();
+        commandFilter.addAction(SERVICECMD);
+        commandFilter.addAction(TOGGLEPAUSE_ACTION);
+        commandFilter.addAction(PAUSE_ACTION);
+        //commandFilter.addAction(NEXT_ACTION);
+        //commandFilter.addAction(PREVIOUS_ACTION);
+        registerReceiver(mIntentReceiver, commandFilter);
+        */
+        
+        
         //this.setWallpaper(new Bitmap());
 
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
         
-        mOSLESPlayer = new OSLESMediaPlayer();
-        mOSLESPlayer.createEngine();
+        if( mOSLESPlayer == null )
+        {
+        	mOSLESPlayer = new OSLESMediaPlayer();
+            mOSLESPlayer.createEngine();
+        }
         
         mPlayer = new MediaPlayer();
         
@@ -389,6 +450,12 @@ public class player_main extends Activity {
             			{
             				mLoadingDialog.dismiss();
             				mLoadingDialog = null;
+            				
+            				if(mOSLESPlayer != null)
+            				{
+            					mOSLESPlayer.play();
+            					mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
+            				}
             			}
             		});
         			
@@ -404,6 +471,16 @@ public class player_main extends Activity {
         
         
         
+    }
+    
+    private boolean isActivityBackground = false;  
+    public void OnPause()
+    {
+    	isActivityBackground = true;
+    }
+    public void OnResume()
+    {
+    	isActivityBackground = false;
     }
     
     public void showToastMessage( String strMessage )
@@ -591,15 +668,21 @@ public class player_main extends Activity {
     public void onDestroy() {
        super.onDestroy();
        
+       //unregisterReceiver(mIntentReceiver);
+       
+       /*
        if (mPlayer != null) {
          mPlayer.release();
          mPlayer = null;
        }
+       */
        
+       /*
        if(mOSLESPlayer != null) {
     	   //mOSLESPlayer.destory();
     	   mOSLESPlayer = null;
        }
+       */
        
        if(mLoadingDialog != null){
     	   mLoadingDialog.dismiss();
@@ -623,12 +706,9 @@ public class player_main extends Activity {
              return false;
          }*/
          
+    	 mOSLESPlayer.releaseAudioPlayer();
          boolean result = mOSLESPlayer.createAudioPlayer(mFilepath);
          
-         
-         if (Prepare() == false) {
-             return false;
-         }
          //mPlayer.start();
          //mPlayer.seekTo( mPlayer.getDuration() );
          //mPlayer.seekTo(0);
@@ -638,19 +718,6 @@ public class player_main extends Activity {
          mOSLESPlayer.seekTo(0);
          mOSLESPlayer.pause();
 
-         return true;
-   }
-  
-   boolean Prepare() {
-	     /*
-         try {
-             mPlayer.prepare();
-         } catch (IllegalStateException e) {
-             return false;
-         } catch (IOException e) {
-             return false;
-         }
-         */
          return true;
    }
 
@@ -1069,7 +1136,7 @@ public class player_main extends Activity {
         	mOSLESPlayer.stop();
              //mPlayBtn.setText("Play");
              //mProgress.setProgress(0);
-             Prepare();
+             
         }
    };
    
@@ -1169,9 +1236,14 @@ public class player_main extends Activity {
     		if(mOSLESPlayer.isPlaying()) {
 				//int duration = mPlayer.getDuration();
 				//int width = mWaveformLayout.getMeasuredWidth();
-				int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth()) * getPlayerCurrentRate() );
-				mWaveformView.scrollTo(pos, 0);
-              
+				
+    			// 액티비티가 활성화되어있을 때만 스크롤해주기.
+    			if(isActivityBackground == false)
+    			{
+    				int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth()) * getPlayerCurrentRate() );
+    				mWaveformView.scrollTo(pos, 0);
+    			}
+    			
 				//updateCurrentSegmentColor();
 				if( mIsLoop == true )
 				{
@@ -1199,7 +1271,7 @@ public class player_main extends Activity {
 					{
 						//mPlayer.seekTo(mLoopStartPos);
 						mOSLESPlayer.seekTo(mLoopStartPos+1);
-						Prepare();
+						
 					}
 					
 					
