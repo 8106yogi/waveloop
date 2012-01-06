@@ -4,6 +4,15 @@
 
 #include <jni.h>
 
+#include<android/log.h>
+// LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -llog 넣어주세요
+#define LOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, "OSLESMediaPlayer", __VA_ARGS__) 
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG  , "OSLESMediaPlayer", __VA_ARGS__) 
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO   , "OSLESMediaPlayer", __VA_ARGS__) 
+#define LOGW(...) __android_log_print(ANDROID_LOG_WARN   , "OSLESMediaPlayer", __VA_ARGS__) 
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR  , "OSLESMediaPlayer", __VA_ARGS__) 
+
+
 
 // for native audio
 #include <SLES/OpenSLES.h>
@@ -28,7 +37,10 @@ static SLPlaybackRateItf uriPlaybackRate;
 // output mix interfaces
 static SLObjectItf outputMixObject = NULL;
 
-
+// playback rate (default 1x:1000)
+static SLpermille playbackMinRate = 500;
+static SLpermille playbackMaxRate = 2000;
+static SLpermille playbackRateStepSize;
 
 
 // create the engine and output mix objects
@@ -60,6 +72,50 @@ JNIEXPORT void Java_com_swssm_waveloop_audio_OSLESMediaPlayer_createEngine(JNIEn
 	
 }
 
+JNIEXPORT void Java_com_swssm_waveloop_audio_OSLESMediaPlayer_releaseEngine(JNIEnv* env, jclass clazz)
+{
+	// destroy URI audio player object, and invalidate all associated interfaces
+    if (uriPlayerObject != NULL) {
+        (*uriPlayerObject)->Destroy(uriPlayerObject);
+        uriPlayerObject = NULL;
+        uriPlayerPlay = NULL;
+        uriPlayerSeek = NULL;
+    }
+    
+    // destroy output mix object, and invalidate all associated interfaces
+    if (outputMixObject != NULL) {
+        (*outputMixObject)->Destroy(outputMixObject);
+        outputMixObject = NULL;
+    }
+
+    // destroy engine object, and invalidate all associated interfaces
+    if (engineObject != NULL) {
+        (*engineObject)->Destroy(engineObject);
+        engineObject = NULL;
+        engineEngine = NULL;
+    }
+    
+}
+
+/*
+void OnCompletion(JNIEnv* env, jclass clazz)
+{
+	jclass cls = env->GetObjectClass(thiz);
+	if (cls != NULL)
+	{
+		jmethodID mid = env->GetMethodID(cls, "OnCompletion", "()V");
+		if (mid != NULL)
+		{
+			env->CallVoidMethod(thiz, mid, 1234); 
+		}
+	}
+}*/
+
+
+void playStatusCallback(SLPlayItf play, void* context, SLuint32 event) 
+{ 
+    //LOGD("playStatusCallback"); 
+} 
 
 
 // create URI audio player
@@ -115,6 +171,26 @@ JNIEXPORT jboolean Java_com_swssm_waveloop_audio_OSLESMediaPlayer_createAudioPla
 	result = (*uriPlayerObject)->GetInterface(uriPlayerObject, SL_IID_PLAYBACKRATE, &uriPlaybackRate);
 	assert(SL_RESULT_SUCCESS == result);
     
+    
+    
+	// register callback function
+	result = (*uriPlayerPlay)->RegisterCallback(uriPlayerPlay, playStatusCallback, 0);
+	assert(SL_RESULT_SUCCESS == result);
+	result = (*uriPlayerPlay)->SetCallbackEventsMask(uriPlayerPlay, SL_PLAYEVENT_HEADATEND); // head at end
+	assert(SL_RESULT_SUCCESS == result);
+	
+	
+	// no loop
+    result = (*uriPlayerSeek)->SetLoop(uriPlayerSeek, SL_BOOLEAN_FALSE, 0, SL_TIME_UNKNOWN );
+    assert(SL_RESULT_SUCCESS == result);
+	
+	
+	SLuint32 capa;
+	result = (*uriPlaybackRate)->GetRateRange(uriPlaybackRate, 0, 
+					&playbackMinRate, &playbackMaxRate, &playbackRateStepSize, &capa);
+	assert(SL_RESULT_SUCCESS == result);
+	
+	
     /*
     SLpermille minRate, maxRate, stepSize, rate = 1000;
     SLuint32 capa;
@@ -124,6 +200,24 @@ JNIEXPORT jboolean Java_com_swssm_waveloop_audio_OSLESMediaPlayer_createAudioPla
     */
     return JNI_TRUE;
 }
+
+JNIEXPORT void Java_com_swssm_waveloop_audio_OSLESMediaPlayer_releaseAudioPlayer(JNIEnv* env, jclass clazz)
+{
+	// destroy URI audio player object, and invalidate all associated interfaces
+    if (uriPlayerObject != NULL) {
+        (*uriPlayerObject)->Destroy(uriPlayerObject);
+        uriPlayerObject = NULL;
+        uriPlayerPlay = NULL;
+        uriPlayerSeek = NULL;
+        uriPlaybackRate = NULL;
+    }
+        
+}
+
+
+
+
+
 
 void setPlayState( SLuint32 state )
 {
@@ -183,14 +277,14 @@ JNIEXPORT jboolean Java_com_swssm_waveloop_audio_OSLESMediaPlayer_isPlaying(JNIE
 }
 
 
-// get duration
+// set position
 JNIEXPORT void Java_com_swssm_waveloop_audio_OSLESMediaPlayer_seekTo(JNIEnv* env, jclass clazz, jint position )
 {
      if (NULL != uriPlayerPlay) {
 
 		SLresult result;
 
-        result = (*uriPlayerSeek)->SetPosition(uriPlayerSeek, position, SL_SEEKMODE_FAST);
+        result = (*uriPlayerSeek)->SetPosition(uriPlayerSeek, position, SL_SEEKMODE_ACCURATE);
         assert(SL_RESULT_SUCCESS == result);
     }
 
