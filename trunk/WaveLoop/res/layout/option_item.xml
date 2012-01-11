@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="6dip" 
+    android:id="@+id/option_item">
+
+    <TextView
+        android:id="@+option/subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dip"
+        android:text="설정 아이템"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         >
+
+        <Button
+            android:id="@+option/reset_button"
+            android:layout_width="70dip"
+            android:layout_height="wrap_content"
+            
+        	android:layout_marginRight="2dip"
+        
+            android:text="무제한" />
+
+        <LinearLayout
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	android:orientation="vertical"
+        	>
+	         
+	        <LinearLayout
+	        	android:layout_width="match_parent"
+	        	android:layout_height="wrap_content"
+	        	android:orientation="horizontal"
+	        	>
+	        	<TextView
+			        android:id="@+option/seek_min"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="min"
+			        android:textSize="12sp" />
+
+	        	<View
+	        	    android:layout_width="wrap_content"
+	        	    android:layout_height="1dip" 
+	        	    android:layout_weight="1" />
+
+	        	<TextView
+			        android:id="@+option/seek_max"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="max"
+			        android:textSize="12sp" />
+				            
+	        	
+	        </LinearLayout>  
+	    	<SeekBar
+	            android:id="@+option/seekBar"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content" />
+		
+		
+			
+	        
+		</LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

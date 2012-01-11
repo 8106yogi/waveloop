@@ -190,7 +190,8 @@ public class player_main extends Activity {
          
          mPlayBtn = (ImageButton)findViewById(R.id.play);
          mPlayBtn.setOnClickListener(mClickPlay);
-         
+         mPlayBtn.setOnLongClickListener(mLongClickPlay);
+        	
          //mPlayBtn.setEnabled(false);
          
          mNextBtn = (ImageButton)findViewById(R.id.next_sentence);
@@ -859,6 +860,84 @@ public class player_main extends Activity {
              }
          }
     };
+    
+    
+ // 재생 및 일시 정지
+    Button.OnLongClickListener mLongClickPlay = new View.OnLongClickListener() {
+        public boolean onLongClick(View v) {
+        	 
+        	AlertDialog.Builder builder;
+        	AlertDialog alertDialog;
+        	
+        	Context mContext = player_main.this;
+        	LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+        	View layout = inflater.inflate(R.layout.option_item, null);
+        	 
+        	TextView subTitle = (TextView)layout.findViewById(R.option.subtitle);
+        	subTitle.setText("재생 속도");
+        	 
+        	TextView seekMin = (TextView)layout.findViewById(R.option.seek_min);
+        	TextView seekMax = (TextView)layout.findViewById(R.option.seek_max);
+        	 
+        	seekMin.setText("0.50x");
+        	seekMax.setText("2.00x");
+        	 
+        	final SeekBar seekBar = (SeekBar)layout.findViewById(R.option.seekBar);
+        	final Button resetButton = (Button)layout.findViewById(R.option.reset_button);
+        	
+        	 // 이건 0.01x 단위. 0부터 시작하므로 항상 50(최소속도 0.5x)를 빼준다.
+        	seekBar.setMax(150);
+        	seekBar.setProgress(50);
+        	 
+        	seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        		@Override
+        		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    // 재생속도 변경!
+        			float fSpeed = (float)(seekBar.getProgress() + 50)/100.0f;
+        			resetButton.setText(String.format("%.2fx", fSpeed ));
+        			
+        			if(mOSLESPlayer != null)
+        				mOSLESPlayer.setRate((int)(fSpeed*1000.0f));
+        			 
+        		}
+
+				@Override
+				public void onStartTrackingTouch(SeekBar seekBar) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void onStopTrackingTouch(SeekBar seekBar) {
+					// TODO Auto-generated method stub
+					
+				}
+        	});
+        	
+        	
+        	resetButton.setText("1.00x");
+        	resetButton.setOnClickListener(new Button.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					seekBar.setProgress(50);
+				}
+        	});
+        	
+        	
+        	
+        	builder = new AlertDialog.Builder(mContext);
+        	builder.setTitle("재생 옵션");
+        	builder.setView(layout);
+        	builder.setPositiveButton("확인", null);
+        	alertDialog = builder.create();
+        	
+        	alertDialog.show();
+        	 
+        	 
+             return true;
+         }
+     
+     };
     
     private boolean isWithinRepeatArea( int index )
     {
