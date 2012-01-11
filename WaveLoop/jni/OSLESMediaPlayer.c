@@ -325,6 +325,31 @@ JNIEXPORT jint Java_com_swssm_waveloop_audio_OSLESMediaPlayer_getPosition(JNIEnv
 	return 0.0f;
 }
 
+JNIEXPORT void Java_com_swssm_waveloop_audio_OSLESMediaPlayer_setRate(JNIEnv* env, jclass clazz, jint rate )
+{
+     if (NULL != uriPlaybackRate) {
+		SLresult result;
+		
+        result = (*uriPlaybackRate)->SetRate(uriPlaybackRate, rate);
+        assert(SL_RESULT_SUCCESS == result);
+    }
+}
+
+JNIEXPORT jint Java_com_swssm_waveloop_audio_OSLESMediaPlayer_getRate(JNIEnv* env, jclass clazz)
+{
+     if (NULL != uriPlaybackRate) {
+		SLresult result;
+		
+		SLpermille rate;
+        result = (*uriPlaybackRate)->GetRate(uriPlaybackRate, &rate);
+        assert(SL_RESULT_SUCCESS == result);
+        
+        return rate;
+    }
+    
+    return 0;
+}
+
 
 
 // create URI audio player

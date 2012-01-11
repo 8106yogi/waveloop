@@ -14,6 +14,9 @@ public class OSLESMediaPlayer {
 	public native int getDuration();
 	public native int getPosition();
 	
+	public native void setRate(int rate);
+	public native int getRate();
+	
 	public native void setLoop( int startPos, int endPos );
 	public native void setNoLoop();
 	
