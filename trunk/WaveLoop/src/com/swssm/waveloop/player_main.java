@@ -706,18 +706,26 @@ public class player_main extends Activity {
          } catch (IOException e) {
              return false;
          }*/
-         
-    	 mOSLESPlayer.releaseAudioPlayer();
-         boolean result = mOSLESPlayer.createAudioPlayer(mFilepath);
-         
-         //mPlayer.start();
-         //mPlayer.seekTo( mPlayer.getDuration() );
-         //mPlayer.seekTo(0);
-         //mPlayer.pause();
-         
-         //mOSLESPlayer.play();
-         mOSLESPlayer.seekTo(0);
-         mOSLESPlayer.pause();
+    	if(mOSLESPlayer != null)
+    	{
+    		mOSLESPlayer.releaseAudioPlayer();
+            boolean result = mOSLESPlayer.createAudioPlayer(mFilepath);
+             
+            //mPlayer.start();
+            //mPlayer.seekTo( mPlayer.getDuration() );
+            //mPlayer.seekTo(0);
+            //mPlayer.pause();
+             
+            //mOSLESPlayer.play();
+            
+            mOSLESPlayer.setRate( GlobalOptions.playbackSpeed );
+            mOSLESPlayer.seekTo(0);
+            mOSLESPlayer.pause();
+             
+    		
+    		
+    	}
+    		
 
          return true;
    }
@@ -887,39 +895,36 @@ public class player_main extends Activity {
         	
         	 // 이건 0.01x 단위. 0부터 시작하므로 항상 50(최소속도 0.5x)를 빼준다.
         	seekBar.setMax(150);
-        	seekBar.setProgress(50);
-        	 
+        	seekBar.setProgress( (GlobalOptions.playbackSpeed-500)/10 );
+        	
         	seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
         		@Override
         		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    // 재생속도 변경!
-        			float fSpeed = (float)(seekBar.getProgress() + 50)/100.0f;
-        			resetButton.setText(String.format("%.2fx", fSpeed ));
-        			
-        			if(mOSLESPlayer != null)
-        				mOSLESPlayer.setRate((int)(fSpeed*1000.0f));
-        			 
+
+        			// 재생속도 변경!
+        			GlobalOptions.playbackSpeed = (seekBar.getProgress() + 50)*10;
+        			UpdateButtonText(resetButton);
+        			UpdatePlayerSpeed(); 
         		}
 
 				@Override
-				public void onStartTrackingTouch(SeekBar seekBar) {
-					// TODO Auto-generated method stub
-					
-				}
+				public void onStartTrackingTouch(SeekBar seekBar) {}
 
 				@Override
-				public void onStopTrackingTouch(SeekBar seekBar) {
-					// TODO Auto-generated method stub
-					
-				}
+				public void onStopTrackingTouch(SeekBar seekBar) {}
         	});
         	
+        	UpdateButtonText(resetButton);
         	
-        	resetButton.setText("1.00x");
-        	resetButton.setOnClickListener(new Button.OnClickListener() {
+			resetButton.setOnClickListener(new Button.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					seekBar.setProgress(50);
+					
+					//GlobalOptions.playbackSpeed = 1000;
+					//UpdateButtonText(resetButton);
+					//UpdatePlayerSpeed();
+        			
 				}
         	});
         	
@@ -928,16 +933,36 @@ public class player_main extends Activity {
         	builder = new AlertDialog.Builder(mContext);
         	builder.setTitle("재생 옵션");
         	builder.setView(layout);
-        	builder.setPositiveButton("확인", null);
+        	builder.setPositiveButton("확인", new DialogInterface.OnClickListener(){
+        		public void onClick(DialogInterface dialog, int which){
+        			GlobalOptions.save(player_main.this);
+        		}
+        	} );
+        	builder.setCancelable(false);
         	alertDialog = builder.create();
         	
         	alertDialog.show();
         	 
         	 
-             return true;
-         }
+            return true;
+        }
+        
+        void UpdateButtonText(Button button)
+        {
+        	float fSpeedSec = (float)GlobalOptions.playbackSpeed/1000.0f;
+        	button.setText(String.format("%.2fx", fSpeedSec ));
+        }
+        
+        void UpdatePlayerSpeed()
+        {
+        	if(mOSLESPlayer != null)
+				mOSLESPlayer.setRate( GlobalOptions.playbackSpeed );
+			
+        }
+        
+        
      
-     };
+    };
     
     private boolean isWithinRepeatArea( int index )
     {
