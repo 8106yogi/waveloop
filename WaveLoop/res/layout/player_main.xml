@@ -76,7 +76,7 @@ android:layout_height="fill_parent"
 	</LinearLayout>
 	
 	<SeekBar 
-	android:layout_marginTop="2dip" 
+	 
 	android:layout_width="fill_parent" 
 	android:id="@+id/progress" 
 	android:max="100" 
@@ -383,43 +383,34 @@ android:layout_height="fill_parent"
 
 </LinearLayout>
 
-<!--    
+	
+		
 	<android.gesture.GestureOverlayView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/gestures"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gestureStrokeType="multiple"
-    android:eventsInterceptionEnabled="true"
-    android:orientation="vertical">
-	-->
-	<android.gesture.GestureOverlayView
-    
-    android:id="@+id/gestures"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-   
-    android:orientation="vertical"
-   	android:background="#aa000000"
-    android:visibility="invisible">
-    
-    	<LinearLayout
-		android:id="@+id/help_gesture"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:gravity="bottom"
-		>
-    	
-		<ImageView android:layout_height="200dip"
-		android:layout_width="fill_parent"
-		android:src="@drawable/gesture_help3"
-		android:adjustViewBounds="true"
-		/>
-    
-    
-    	</LinearLayout>
-    
+	    android:id="@+id/gestures"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical"
+	   	android:background="#aa000000"
+	    android:visibility="invisible">
+	     
+	    	<LinearLayout
+				android:id="@+id/help_gesture"
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent"
+				android:gravity="bottom"
+				>
+		    	
+				<ImageView android:layout_height="200dip"
+					android:layout_width="fill_parent"
+					android:src="@drawable/gesture_help3"
+					android:adjustViewBounds="true"
+					/>
+	
+			</LinearLayout>
+     
     
     
 	</android.gesture.GestureOverlayView>
+	
+	
 </FrameLayout>
