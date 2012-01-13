@@ -206,6 +206,7 @@ public class player_main extends Activity {
          mRepeatBtn = (ToggleButton)findViewById(R.id.repeat);
          //mRepeatBtn.setBackgroundDrawable(getResources().getDrawable(android.R.drawable.ic_menu_revert)); 
          mRepeatBtn.setOnClickListener(mClickRepeat);
+         mRepeatBtn.setOnLongClickListener(mLongClickRepeat);
          
          mRepeatPrevBtn = (ImageButton)findViewById(R.id.prev_area);
          mRepeatPrevBtn.setOnClickListener(mClickRepeatPrev);
@@ -873,95 +874,19 @@ public class player_main extends Activity {
  // 재생 및 일시 정지
     Button.OnLongClickListener mLongClickPlay = new View.OnLongClickListener() {
         public boolean onLongClick(View v) {
-        	 
-        	AlertDialog.Builder builder;
-        	AlertDialog alertDialog;
-        	
-        	Context mContext = player_main.this;
-        	LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-        	View layout = inflater.inflate(R.layout.option_item, null);
-        	 
-        	TextView subTitle = (TextView)layout.findViewById(R.option.subtitle);
-        	subTitle.setText("재생 속도");
-        	 
-        	TextView seekMin = (TextView)layout.findViewById(R.option.seek_min);
-        	TextView seekMax = (TextView)layout.findViewById(R.option.seek_max);
-        	 
-        	seekMin.setText("0.50x");
-        	seekMax.setText("2.00x");
-        	 
-        	final SeekBar seekBar = (SeekBar)layout.findViewById(R.option.seekBar);
-        	final Button resetButton = (Button)layout.findViewById(R.option.reset_button);
-        	
-        	 // 이건 0.01x 단위. 0부터 시작하므로 항상 50(최소속도 0.5x)를 빼준다.
-        	seekBar.setMax(150);
-        	seekBar.setProgress( (GlobalOptions.playbackSpeed-500)/10 );
-        	
-        	seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-        		@Override
-        		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-        			// 재생속도 변경!
-        			GlobalOptions.playbackSpeed = (seekBar.getProgress() + 50)*10;
-        			UpdateButtonText(resetButton);
-        			UpdatePlayerSpeed(); 
-        		}
-
-				@Override
-				public void onStartTrackingTouch(SeekBar seekBar) {}
-
-				@Override
-				public void onStopTrackingTouch(SeekBar seekBar) {}
-        	});
-        	
-        	UpdateButtonText(resetButton);
-        	
-			resetButton.setOnClickListener(new Button.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					seekBar.setProgress(50);
-					
-					//GlobalOptions.playbackSpeed = 1000;
-					//UpdateButtonText(resetButton);
-					//UpdatePlayerSpeed();
-        			
-				}
-        	});
-        	
-        	
-        	
-        	builder = new AlertDialog.Builder(mContext);
-        	builder.setTitle("재생 옵션");
-        	builder.setView(layout);
-        	builder.setPositiveButton("확인", new DialogInterface.OnClickListener(){
-        		public void onClick(DialogInterface dialog, int which){
-        			GlobalOptions.save(player_main.this);
-        		}
-        	} );
-        	builder.setCancelable(false);
-        	alertDialog = builder.create();
-        	
-        	alertDialog.show();
-        	 
-        	 
+        	PlayerOptionDialog.ShowPlaybackOption(player_main.this); 
             return true;
-        }
-        
-        void UpdateButtonText(Button button)
-        {
-        	float fSpeedSec = (float)GlobalOptions.playbackSpeed/1000.0f;
-        	button.setText(String.format("%.2fx", fSpeedSec ));
-        }
-        
-        void UpdatePlayerSpeed()
-        {
-        	if(mOSLESPlayer != null)
-				mOSLESPlayer.setRate( GlobalOptions.playbackSpeed );
-			
         }
         
         
      
+    };
+    
+    Button.OnLongClickListener mLongClickRepeat = new View.OnLongClickListener() {
+        public boolean onLongClick(View v) {
+        	PlayerOptionDialog.ShowRepeatOption(player_main.this);
+        	return true;
+        }
     };
     
     private boolean isWithinRepeatArea( int index )
