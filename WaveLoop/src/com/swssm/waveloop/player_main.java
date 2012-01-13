@@ -24,7 +24,7 @@ import android.widget.*;
 public class player_main extends Activity {
     
 	static OSLESMediaPlayer mOSLESPlayer;
-    static MediaPlayer mPlayer;
+    //static MediaPlayer mPlayer;
     static ImageButton mPlayBtn; 
     //Button mPlay2Btn;
     ImageButton mNextBtn;
@@ -162,7 +162,7 @@ public class player_main extends Activity {
             mOSLESPlayer.createEngine();
         }
         
-        mPlayer = new MediaPlayer();
+        //mPlayer = new MediaPlayer();
         
         mStartSegmentIndex = 0;
         

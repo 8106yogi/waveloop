@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 
@@ -49,6 +50,10 @@ public class WaveformScrollView extends HorizontalScrollView {
 	public void setOSLESPlayer(OSLESMediaPlayer OSLESPlayer)
 	{
 		mOSLESPlayer = OSLESPlayer;
+		
+		
+		
+
 	}
 	public void setMediaPlayer( MediaPlayer player )
 	{
@@ -119,6 +124,8 @@ public class WaveformScrollView extends HorizontalScrollView {
 
 	    @Override
 	    public boolean onFling(MotionEvent e1, MotionEvent e2, float vX, float vY) {
+	    	Log.d("gd", "onFling");
+	    	
 	        mScroller.fling(getScrollX(), getScrollY(),
 	                -(int)vX, -(int)vY, 0, 
 	                (int)mWaveformLinearLayout.getMeasuredWidth(), 0, (int)mWaveformLinearLayout.getMeasuredHeight());
@@ -143,46 +150,37 @@ public class WaveformScrollView extends HorizontalScrollView {
 		super(context);
 		
 		mScroller = new Scroller(context);
-		//mWaveformLinearLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
 		
 	}
 	public WaveformScrollView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
 		mScroller = new Scroller(context);
-		//mWaveformLinearLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
 	}
 	public WaveformScrollView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		
 		mScroller = new Scroller(context);
-		//mWaveformLinearLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
 	}
 	
 	
 	@Override
 	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
 		// 시크바를 직접 컨트롤중이 아니라면, 스크롤바 변화에 따라 시크바를 따라가게 한다.
-		if( mSeekBar != null && mIsSeekbarTouched == false )
+		if( mIsSeekbarTouched == false )
 		{
-			//LinearLayout waveformLinearLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
-			//mSeekBar.setMax( mWaveformLinearLayout.getMeasuredWidth()-getMeasuredWidth() );//TODO 이거 초기화때 호출되도록 수정 예정
-			mSeekBar.setProgress( this.getScrollX() );
+			if( mSeekBar != null)
+				mSeekBar.setProgress( this.getScrollX() );
 			
-			//if( mPlayer != null && mPlayer.isPlaying() == false )
+			// 플레이어가 플레이중이 아니면, 플레이어도 스크롤바의 변화에 따라가게 한다.
 			if( mOSLESPlayer != null && mOSLESPlayer.isPlaying() == false )
 			{
-				//double position = (double)this.getScrollX()/(double)(mWaveformLinearLayout.getMeasuredWidth()-getMeasuredWidth())*(double)mPlayer.getDuration();
-				//mPlayer.seekTo( (int)position );
-				
 				double position = (double)this.getScrollX()/(double)(mWaveformLinearLayout.getMeasuredWidth()-getMeasuredWidth())*(double)mOSLESPlayer.getDuration();
 				mOSLESPlayer.seekTo((int)position);
 			}
 				
 		}
 		
-		//updateCurrentSegmentColor();
-
 		super.onScrollChanged(l, t, oldl, oldt);
 	}
 	
@@ -210,11 +208,13 @@ public class WaveformScrollView extends HorizontalScrollView {
 	protected void onAnimationEnd() {
 		
 		super.onAnimationEnd();
+		//Log.d("animation", "onAnimationEnd()");
 	}
 	@Override
 	protected void onAnimationStart() {
 		
 		super.onAnimationStart();
+		//Log.d("animation", "onAnimationStart()");
 	}
 	
 	@Override
@@ -238,7 +238,6 @@ public class WaveformScrollView extends HorizontalScrollView {
 		if(mScroller.computeScrollOffset()) {
 	        scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
 		}
-	
 	}
 	
 	
