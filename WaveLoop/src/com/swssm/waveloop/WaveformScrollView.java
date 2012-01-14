@@ -124,7 +124,7 @@ public class WaveformScrollView extends HorizontalScrollView {
 
 	    @Override
 	    public boolean onFling(MotionEvent e1, MotionEvent e2, float vX, float vY) {
-	    	Log.d("gd", "onFling");
+	    	//Log.d("gd", "onFling");
 	    	
 	        mScroller.fling(getScrollX(), getScrollY(),
 	                -(int)vX, -(int)vY, 0, 
@@ -150,7 +150,6 @@ public class WaveformScrollView extends HorizontalScrollView {
 		super(context);
 		
 		mScroller = new Scroller(context);
-		
 	}
 	public WaveformScrollView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -204,40 +203,29 @@ public class WaveformScrollView extends HorizontalScrollView {
 		
 	}
 	
-	@Override
-	protected void onAnimationEnd() {
-		
-		super.onAnimationEnd();
-		//Log.d("animation", "onAnimationEnd()");
-	}
-	@Override
-	protected void onAnimationStart() {
-		
-		super.onAnimationStart();
-		//Log.d("animation", "onAnimationStart()");
-	}
-	
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-	    return mGestureDetector.onTouchEvent(event);
+		boolean onTouchEvent = mGestureDetector.onTouchEvent(event);
+        if(event.getAction() == MotionEvent.ACTION_UP) {
+            //mListener.onFinished(ev);
+        }
+        return onTouchEvent;
+	    
 	}
 	
-	/*
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		if(mGestureDetector.onTouchEvent(ev)){
-    		//onFling에서 return true가 들어오면 touch 이벤트 흡수
-    		return true;
-    	}
-    	return super.dispatchTouchEvent(ev);
-	}
-	*/
 	
+	
+	public void updateScroll()
+	{
+		if(mScroller.computeScrollOffset()) {
+			scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+	        //Log.i("", "computeScrollOffset true");
+		}
+	}
 	@Override
 	public void computeScroll() {
-		if(mScroller.computeScrollOffset()) {
-	        scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
-		}
+		//Log.i("", "computeScroll");
 	}
 	
 	
@@ -247,18 +235,17 @@ public class WaveformScrollView extends HorizontalScrollView {
 		long duration = AnimationUtils.currentAnimationTimeMillis() - mLastScroll;
 		
 		if (duration > 200) {
-			Log.i("", "getScroll : " + getScrollX() + ", " + getScrollY() );
-			Log.i("", "target : " + x + ", " + y );
+			//Log.i("", "getScroll : " + getScrollX() + ", " + getScrollY() );
+			//Log.i("", "target : " + x + ", " + y );
 			if(!mScroller.isFinished() ) { // is flinging
                 mScroller.abortAnimation(); // to stop flinging on touch
+                //Log.i("", "scrollSmoothTo() called. but before animation is not yet finished.");
         	}
 			
-			mScroller.startScroll(
-					getScrollX()+1, 
-					getScrollY(), 
-					x-getScrollX(), 
-					y-getScrollY(),
-					200 );
+			mScroller.startScroll( getScrollX(), getScrollY(), 
+					x-getScrollX(), y-getScrollY(), 200 );
+			
+			
 			
 			invalidate();
         } else {
