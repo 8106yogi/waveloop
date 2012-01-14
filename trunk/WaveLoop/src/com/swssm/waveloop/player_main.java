@@ -17,6 +17,7 @@ import android.media.*;
 import android.net.*;
 import android.os.*;
 import android.provider.MediaStore.Audio;
+import android.util.Log;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
@@ -1269,8 +1270,14 @@ public class player_main extends Activity {
     			// 액티비티가 활성화되어있을 때만 스크롤해주기.
     			if(isActivityBackground == false)
     			{
-    				int pos = (int)((double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth()) * getPlayerCurrentRate() );
-    				mWaveformView.scrollTo(pos, 0);
+    				
+    				int newPos = (int)((double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth()) * getPlayerCurrentRate() );
+    				int currentPos = mWaveformView.getScrollX();
+    				int nextPos = currentPos;
+    				nextPos+=(newPos-currentPos)/2;
+    				
+    				mWaveformView.scrollTo(nextPos, 0);
+    				//Log.d("handler", "scroll pos : " + pos );
     			}
     			
 				//updateCurrentSegmentColor();
