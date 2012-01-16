@@ -70,7 +70,7 @@ public class player_main extends Activity {
     private HorizontalScrollView scrollView;
     private ViewGroup contentView;
 
-    
+    private int mLoopCount;
     private boolean mIsLoop;
     private int mLoopStartIndex;
     private int mLoopCenterIndex;
@@ -951,7 +951,6 @@ public class player_main extends Activity {
     {
     	boolean isLoop = mRepeatBtn.isChecked();
     	if(isLoop) {
-    		//mRepeatBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.repeat_pressed)); 
     		// 문장인지 확인하고 
     		SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
     		if(seg.isSilence) {
@@ -971,6 +970,11 @@ public class player_main extends Activity {
  
         // 현재 위치 지정.
         if(mIsLoop) {
+        	if(GlobalOptions.repeatCount == 0)
+        		mLoopCount = Integer.MAX_VALUE;
+        	else
+        		mLoopCount = GlobalOptions.repeatCount;
+        	
         	mLoopCenterIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2, 0);
             mLoopFinishIndex = mLoopCenterIndex;
             mLoopStartIndex = mLoopCenterIndex;
@@ -1021,7 +1025,7 @@ public class player_main extends Activity {
     	mLoopStartPos = calcPositionByOffset(startOffset*2) - RepeatMargin;
     	mLoopFinishPos = calcPositionByOffset(finishOffset*2) + RepeatMargin;
     	
-    	mOSLESPlayer.setLoop(mLoopStartPos, mLoopFinishPos);
+    	//mOSLESPlayer.setLoop(mLoopStartPos, mLoopFinishPos);
     	
     }
     
@@ -1219,6 +1223,15 @@ public class player_main extends Activity {
 					if(currentPosition < mLoopStartPos || currentPosition > mLoopFinishPos )
 					{
 						mOSLESPlayer.seekTo(mLoopStartPos+1);
+						
+						if(mLoopCount != Integer.MAX_VALUE)
+							mLoopCount--;
+						if(mLoopCount < 0)
+						{
+							// 구간반복 종료.
+							mRepeatBtn.toggle();
+							processRepeat();
+						}
 					}
 				}
               
