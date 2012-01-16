@@ -136,7 +136,7 @@ public class SentenceSegmentList {
 	
 	public SentenceSegment getCurrentSentenceByOffset( int currentOffset )
 	{
-		return getCurrentSentenceByIndex( getCurrentSentenceIndex( currentOffset ) );
+		return getCurrentSentenceByIndex( getCurrentSentenceIndex( currentOffset, 0 ) );
 	}
 	
 	public SentenceSegment getCurrentSentenceByIndex( int index )
@@ -152,12 +152,12 @@ public class SentenceSegmentList {
 		return mSegmentList[index].startOffset;
 	}
 	
-	public int getCurrentSentenceIndex( int currentOffset )
+	public int getCurrentSentenceIndex( int currentOffset, int diverging )
 	{
 		for(int i = 0;i < mSegmentList.length; ++i )
 		{
-			if( mSegmentList[i].startOffset <= currentOffset &&
-				mSegmentList[i].startOffset + mSegmentList[i].size > currentOffset )
+			if( currentOffset >= mSegmentList[i].startOffset + diverging &&
+				currentOffset < mSegmentList[i].startOffset + mSegmentList[i].size + diverging )
 				return i;
 		}
 
@@ -167,7 +167,7 @@ public class SentenceSegmentList {
 	public int getNextSentenceIndex( int currentOffset )
 	{
 		
-		int currentIndex = getCurrentSentenceIndex(currentOffset);
+		int currentIndex = getCurrentSentenceIndex( currentOffset, -10 );
 		int nextIndex = currentIndex;
 		
 		if( mSegmentList[currentIndex].isSilence )
@@ -192,14 +192,14 @@ public class SentenceSegmentList {
 	
 	public int getPrevSentenceIndex( int currentOffset )
 	{
-		int currentIndex = getCurrentSentenceIndex(currentOffset);
+		int currentIndex = getCurrentSentenceIndex( currentOffset, 10 );
 		int prevIndex = currentIndex;
 		// startOffset으로부터 일정사이즈 이상이면 현재 문장 처음으로 이동하고.
 		// startOffset에 가까우면 앞문장의 startOffset으로 이동한다.
 		if( mSegmentList[currentIndex].isSilence )
 			prevIndex = currentIndex-1;
-		else if( currentOffset - mSegmentList[currentIndex].startOffset < 15 )//0.3초 이하이면 앞문장으로.
-			prevIndex = currentIndex-2;
+		else
+			prevIndex = currentIndex;
 
 		if( prevIndex <= 0 )
 			prevIndex = 0;

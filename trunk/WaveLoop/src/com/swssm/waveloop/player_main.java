@@ -606,45 +606,23 @@ public class player_main extends Activity {
   				if (prediction.score > 1.0) {
   				// Show the spell
 	  				if(name.equals("play / pause")){
-	  					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
-		  				/*  
-	  					if (mPlayer.isPlaying() == false) {
-		  					Toast.makeText(this, "play", Toast.LENGTH_SHORT).show();
-		  				  }
-		  				  else{
-		  					Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();  
-		  				  }
-		  				  */
 		  				  gesturePlay();
 	  					
 	  				}
 	  				else if(name.equals("prev")){
-	  					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
 	  					showToastMessage(prediction.name);
-	  					//mp.pause();
 	  		        	gesturePrev();
 	  				}
 	  				else if(name.equals("next")){
-	  					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
 	  					showToastMessage(prediction.name);
-	  					//mp.pause();
 	  					gestureNext();
 	  				}
 	  				else if(name.equals("bookmark")){
-	  					//Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT).show();
 	  					showToastMessage(prediction.name);
 	  					gestureBookmark();
 	  					
 	  				}
 	  				else if(name.equals("repeat")){
-	  					/*
-	  					if(!mIsLoop){
-	  						Toast.makeText(this, "repeat on", Toast.LENGTH_SHORT).show();
-	  					}
-	  					else{
-	  						Toast.makeText(this, "repeat off", Toast.LENGTH_SHORT).show();
-	  					}
-	  					*/
 	  					gestureRepeat();
 	  				}
 	  				return;
@@ -670,44 +648,17 @@ public class player_main extends Activity {
     // 액티비티 종료시 재생 강제 종료
     public void onDestroy() {
        super.onDestroy();
-
-       //unregisterReceiver(mIntentReceiver);
-       
-       /*
-       if (mPlayer != null) {
-         mPlayer.release();
-         mPlayer = null;
-       }
-       */
-       
-       /*
-       if(mOSLESPlayer != null) {
-    	   //mOSLESPlayer.destory();
-    	   mOSLESPlayer = null;
-       }
-       */
        
        if(mLoadingDialog != null){
     	   mLoadingDialog.dismiss();
     	   mLoadingDialog = null;
        }
-    	   
+
    }
 
    // 항상 준비 상태여야 한다.
     boolean LoadMedia() {
-    	/*
-         try {
-             //DB인덱스를 통해 파일경로를 인자로 넣어야함
-        	 
-        	 mPlayer.setDataSource(mFilepath);
-         } catch (IllegalArgumentException e) {
-             return false;
-         } catch (IllegalStateException e) {
-             return false;
-         } catch (IOException e) {
-             return false;
-         }*/
+
     	if(mOSLESPlayer != null)
     	{
     		mOSLESPlayer.releaseAudioPlayer();
@@ -767,25 +718,13 @@ public class player_main extends Activity {
 	    
    }
    
-   public void gesturePrev(){
-	   mOSLESPlayer.pause();	
-	   //mPlayer.pause();
-	   	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
-	   	int offset = sentenceSegmentList.getPrevSentenceOffset(mWaveformView.getScrollX()/2);
-	   	mWaveformView.scrollSmoothTo(offset*2, 0);
-	   	//mWaveformView.forceStop();
-	   	//mPlayer.start();
-   }
+	public void gesturePrev(){
+	   processPrevSentence();
+	}
    
-   public void gestureNext(){
-	   mOSLESPlayer.pause();	
-	   //mPlayer.pause();
-	   	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
-	   	int offset = sentenceSegmentList.getNextSentenceOffset(mWaveformView.getScrollX()/2);
-	   	mWaveformView.scrollSmoothTo(offset*2, 0);
-	   	//mWaveformView.forceStop();
-	   	//mPlayer.start();
-   }
+	public void gestureNext(){
+		processNextSentence();
+	}
    
    public void gestureRepeat(){
 	   
@@ -801,7 +740,7 @@ public class player_main extends Activity {
        	
        	// 현재 문장을 가져온다.
        	SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
-       	int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+       	int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2, 0);
        	
        	if( seg.isSilence )
        	{
@@ -900,41 +839,44 @@ public class player_main extends Activity {
     	return true;
     }
     
+    private void processNextSentence()
+    {
+    	int nextIndex = sentenceSegmentList.getNextSentenceIndex(mWaveformView.getScrollX()/2);
+    	if(mIsLoop) {
+    		if( false == isWithinRepeatArea(nextIndex) )
+    			return;
+    	}
+    	
+    	int offset = sentenceSegmentList.getCurrentStartOffsetByIndex(nextIndex);
+    	int position = calcPositionByOffset(offset*2);
+    	mOSLESPlayer.seekTo(position);
+    }
+    
+    private void processPrevSentence()
+    {
+    	int nextIndex = sentenceSegmentList.getPrevSentenceIndex(mWaveformView.getScrollX()/2);
+    	if(mIsLoop) {
+    		if( false == isWithinRepeatArea(nextIndex) )
+    			return;
+    	}
+
+    	int offset = sentenceSegmentList.getCurrentStartOffsetByIndex(nextIndex);
+    	int position = calcPositionByOffset(offset*2);
+    	mOSLESPlayer.seekTo(position);
+    	
+    }
     
     // 다음문장으로 이동.
     Button.OnClickListener mClickNext = new View.OnClickListener() {
         public void onClick(View v) {
-
-        	int nextIndex = sentenceSegmentList.getNextSentenceIndex(mWaveformView.getScrollX()/2);
-        	if(mIsLoop) {
-        		if( false == isWithinRepeatArea(nextIndex) )
-        			return;
-        	}
-        	
-        	mOSLESPlayer.pause();
-        	//mPlayer.pause();
-        	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
-        	int offset = sentenceSegmentList.getCurrentStartOffsetByIndex(nextIndex);
-        	mWaveformView.scrollSmoothTo(offset*2, 0);
-        	
+        	processNextSentence();
         }
     };
     
     // 이전문장으로 이동.
     Button.OnClickListener mClickPrev = new View.OnClickListener() {
         public void onClick(View v) {
-        	
-        	int nextIndex = sentenceSegmentList.getPrevSentenceIndex(mWaveformView.getScrollX()/2);
-        	if(mIsLoop) {
-        		if( false == isWithinRepeatArea(nextIndex) )
-        			return;
-        	}
-        	mOSLESPlayer.pause();
-        	//mPlayer.pause();
-        	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
-        	int offset = sentenceSegmentList.getCurrentStartOffsetByIndex(nextIndex);
-        	mWaveformView.scrollSmoothTo(offset*2, 0);
-        	
+        	processPrevSentence();
         }
     };
     
@@ -954,7 +896,7 @@ public class player_main extends Activity {
         	
         	// 현재 문장을 가져온다.
         	SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
-        	int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+        	int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2, 0);
         	int sametime=0;
         	
         	if( seg.isSilence )
@@ -1026,21 +968,10 @@ public class player_main extends Activity {
         mIsLoop = isLoop;
         mRepeatPrevBtn.setEnabled(mIsLoop);
         mRepeatNextBtn.setEnabled(mIsLoop);
-        
-        
-        //showToastMessage( "repeat " + ((mIsLoop)?"on":"off") );
-        
-        /*if(mIsLoop){
- 		   Toast.makeText(this, "repeat on", Toast.LENGTH_SHORT).show();
- 	   	}
- 	   else{
- 		   Toast.makeText(this, "repeat off", Toast.LENGTH_SHORT).show();
- 	   }*/
- 		
-        
+ 
         // 현재 위치 지정.
         if(mIsLoop) {
-        	mLoopCenterIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
+        	mLoopCenterIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2, 0);
             mLoopFinishIndex = mLoopCenterIndex;
             mLoopStartIndex = mLoopCenterIndex;
             
@@ -1263,18 +1194,19 @@ public class player_main extends Activity {
     		//if (mPlayer == null) return;
 			//if (mPlayer.isPlaying()) {
     		if(mOSLESPlayer == null) return;
-    		if(mOSLESPlayer.isPlaying()) {
+    		//if(mOSLESPlayer.isPlaying()) 
+    		{
 				//int duration = mPlayer.getDuration();
 				//int width = mWaveformLayout.getMeasuredWidth();
 				
     			// 액티비티가 활성화되어있을 때만 스크롤해주기.
-    			if(isActivityBackground == false)
+    			//if(isActivityBackground == false)
     			{
     				
     				int newPos = (int)((double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth()) * getPlayerCurrentRate() );
     				int currentPos = mWaveformView.getScrollX();
     				int nextPos = currentPos;
-    				nextPos+=(newPos-currentPos)/2;
+    				nextPos += (newPos-currentPos)/2;
     				
     				mWaveformView.scrollTo(nextPos, 0);
     				//Log.d("handler", "scroll pos : " + pos );
@@ -1283,34 +1215,11 @@ public class player_main extends Activity {
 				//updateCurrentSegmentColor();
 				if( mIsLoop == true )
 				{
-					/*
-					int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2);
-					if( segIndex < mLoopStartIndex-1 || segIndex > mLoopFinishIndex )
-					{
-						int startOffset = sentenceSegmentList.getCurrentSentenceByIndex(mLoopStartIndex).startOffset;
-            		  
-						//mWaveformView.scrollTo(startOffset*2, 0);
-						//mPlayer.seekTo((int) ((int) startOffset*20));
-						//Prepare();
-						
-						double position = (double)(startOffset*2)/(double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth())*(double)mPlayer.getDuration();
-						mPlayer.seekTo( (int)position );
-						Prepare();
-						
-					}
-					*/
-					
-					
-					//int currentPosition = mPlayer.getCurrentPosition();
 					int currentPosition = mOSLESPlayer.getPosition();
 					if(currentPosition < mLoopStartPos || currentPosition > mLoopFinishPos )
 					{
-						//mPlayer.seekTo(mLoopStartPos);
 						mOSLESPlayer.seekTo(mLoopStartPos+1);
-						
 					}
-					
-					
 				}
               
 			}
@@ -1318,7 +1227,6 @@ public class player_main extends Activity {
     		mWaveformView.updateScroll();
 			mScrollHandler.sendEmptyMessageDelayed(0,16);
 		}
-
 		
     };
 
@@ -1326,26 +1234,14 @@ public class player_main extends Activity {
     SeekBar.OnSeekBarChangeListener mOnSeek = new SeekBar.OnSeekBarChangeListener() {
          public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
              if (fromUser) {
-                  //mPlayer.seekTo(progress);
-            	 //int cur = mPlayer.getCurrentPosition()/1000;
-            	 	/*
-            	 	int cur =  mPlayer.getCurrentPosition()/1000;
-	           	 	int cMin = cur/60;
-	                int cSec = cur%60;
-	                String strTime = String.format("%02d:%02d" , cMin, cSec);
-	                mCurtime.setText(strTime);
-            		*/
-                 
              }
          }
 
          public void onStartTrackingTouch(SeekBar seekBar) {
-             //wasPlaying = mPlayer.isPlaying();
         	 wasPlaying = mOSLESPlayer.isPlaying();
              if (wasPlaying) {
-                  //mPlayer.pause();
             	 mOSLESPlayer.pause();
-                  mPlayBtn.setImageResource(R.drawable.play_bkgnd);
+                 mPlayBtn.setImageResource(R.drawable.play_bkgnd);
              }
          }
 
