@@ -17,7 +17,8 @@ import android.widget.*;
 
 public class WaveformScrollView extends HorizontalScrollView {
 	SeekBar mSeekBar;
-	boolean mIsSeekbarTouched;
+	boolean mIsSeekbarTouched = false;
+	boolean mIsWaveformTouched = false;
 	OSLESMediaPlayer mOSLESPlayer;
 	//MediaPlayer mPlayer;
 	Scroller mScroller;// = new Scroller(this);
@@ -91,23 +92,27 @@ public class WaveformScrollView extends HorizontalScrollView {
             mCur.setText(strTime);
         	
         }
+        
+        private boolean isPlaying = false;
+        
+        public void onStartTrackingTouch(SeekBar seekBar) {
+        	mIsSeekbarTouched = true;
+        	if(mOSLESPlayer != null)
+        	{
+        		isPlaying = mOSLESPlayer.isPlaying();
+        		if(isPlaying)
+        			mOSLESPlayer.pause();
+        	}
+        }
 
-         public void onStartTrackingTouch(SeekBar seekBar) {
-        	 mIsSeekbarTouched = true;
+        public void onStopTrackingTouch(SeekBar seekBar) {
+        	mIsSeekbarTouched = false;
         	 
-        	 forceStop();
-        	 
-        	 //if( mPlayer != null )
-        	 if(mOSLESPlayer != null)
-        	 {
-        		 //mPlayer.pause();
-        		 mOSLESPlayer.pause();
-        		 player_main.mPlayBtn.setImageResource(R.drawable.play);
-        	 }
-         }
-
-         public void onStopTrackingTouch(SeekBar seekBar) {
-        	 mIsSeekbarTouched = false;
+        	if(mOSLESPlayer != null)
+        	{
+        		if(isPlaying)
+        			mOSLESPlayer.play();
+        	}
          }
     };
 	
@@ -138,6 +143,7 @@ public class WaveformScrollView extends HorizontalScrollView {
 	        if(!mScroller.isFinished() ) { // is flinging
 	            mScroller.forceFinished(true); // to stop flinging on touch
 	        }
+	        mIsWaveformTouched = true;
 	        return true; // else won't work
 	    }
 	    
@@ -172,10 +178,12 @@ public class WaveformScrollView extends HorizontalScrollView {
 				mSeekBar.setProgress( this.getScrollX() );
 			
 			// 플레이어가 플레이중이 아니면, 플레이어도 스크롤바의 변화에 따라가게 한다.
-			if( mOSLESPlayer != null && mOSLESPlayer.isPlaying() == false )
+			if( mIsWaveformTouched == true ||
+				mIsWaveformTouched == false && mScroller.isFinished() == false )
 			{
 				double position = (double)this.getScrollX()/(double)(mWaveformLinearLayout.getMeasuredWidth()-getMeasuredWidth())*(double)mOSLESPlayer.getDuration();
-				mOSLESPlayer.seekTo((int)position);
+				if( mOSLESPlayer != null )
+					mOSLESPlayer.seekTo((int)position);
 			}
 				
 		}
@@ -187,7 +195,7 @@ public class WaveformScrollView extends HorizontalScrollView {
 	private View[]	mWaveformSemgnets;
 	
 	private void updateCurrentSegmentColor() {
-		int segIndex = mSentenceSegmentList.getCurrentSentenceIndex(getScrollX()/2);
+		int segIndex = mSentenceSegmentList.getCurrentSentenceIndex(getScrollX()/2, 0);
 		
 		
 			if(mCurrentSegmentIndex != segIndex)
@@ -207,8 +215,12 @@ public class WaveformScrollView extends HorizontalScrollView {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		boolean onTouchEvent = mGestureDetector.onTouchEvent(event);
-        if(event.getAction() == MotionEvent.ACTION_UP) {
+		if(event.getAction() == MotionEvent.ACTION_DOWN) {
+			
+		}
+		else if(event.getAction() == MotionEvent.ACTION_UP) {
             //mListener.onFinished(ev);
+			mIsWaveformTouched = false;
         }
         return onTouchEvent;
 	    
