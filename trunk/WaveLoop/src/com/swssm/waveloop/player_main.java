@@ -13,6 +13,7 @@ import android.database.*;
 import android.gesture.*;
 import android.gesture.GestureOverlayView.OnGesturePerformedListener;
 import android.graphics.*;
+import android.graphics.drawable.Drawable;
 import android.media.*;
 import android.net.*;
 import android.os.*;
@@ -87,7 +88,7 @@ public class player_main extends Activity {
     GestureOverlayView gestures;
     FrameLayout frame;
     ArrayList<Prediction> predictions;
-    MenuItem item;
+    //MenuItem item;
     Toast mToast;
     
     
@@ -541,14 +542,15 @@ public class player_main extends Activity {
     
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        item=menu.add(0,1,0,"제스쳐");
-        item.setIcon(R.drawable.ic_gesturebuilder);
-        menu.add(0,2,0,"번역").setIcon(android.R.drawable.ic_menu_preferences);
-        
-        
+
+        menu.add(0,1,0,"재생 옵션");
+        menu.add(0,2,0,"구간반복 옵션");
+        menu.add(0,3,0,"제스쳐").setIcon(R.drawable.ic_gesturebuilder);
+        //menu.add(0,2,0,"번역").setIcon(android.R.drawable.ic_menu_preferences);
+
         return true;
     }
-    
+    /*
     public boolean onPrepareOptionsMenu(Menu menu){
     	
     	switch (item.getItemId()) {
@@ -568,24 +570,27 @@ public class player_main extends Activity {
 	    	 return true;
     	 }
     	 return false;
+    	
+    	
+    	
  
-    }
+    }*/
     
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        switch (item.getItemId())
+        {
         case 1:
-            //Toast.makeText(this,"제스쳐모드",Toast.LENGTH_SHORT).show();
+        	PlayerOptionDialog.ShowPlaybackOption(this);
+        	return true;
+        case 2:
+        	PlayerOptionDialog.ShowRepeatOption(this);
+        	return true;
+        case 3:
         	showToastMessage("제스쳐모드");
         	
             gestures.setVisibility(View.VISIBLE);
             gestures.addOnGesturePerformedListener(mListener);
-            
-            
-            return true;
-        
-        case 2:
-            //Toast.makeText(this,"Google Speech API...!!",Toast.LENGTH_SHORT).show();
-        	//showToastMessage("Google Speech API...!!");
+ 
             return true;
         	        
         }
