@@ -940,16 +940,19 @@ public class player_main extends Activity {
             mLoopFinishIndex = mLoopCenterIndex;
             mLoopStartIndex = mLoopCenterIndex;
             
-            //mWaveformSemgnets[mLoopCenterIndex]
             redrawRepeatArea(true);
-            
             updateRepeatPosition();
+            
+            mProgress.setEnabled(false);
+        	//mWaveformView.setEnabled(false);
         }
         else
         {
         	redrawRepeatArea(false);
+
+        	mProgress.setEnabled(true);
+        	//mWaveformView.setEnabled(true);
         	
-        	mOSLESPlayer.setNoLoop();
         }
         
     }
