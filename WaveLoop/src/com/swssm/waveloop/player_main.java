@@ -536,9 +536,6 @@ public class player_main extends Activity {
 	}
     
 
-  
-    
-    
     
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -550,31 +547,8 @@ public class player_main extends Activity {
 
         return true;
     }
-    /*
-    public boolean onPrepareOptionsMenu(Menu menu){
-    	
-    	switch (item.getItemId()) {
-	     case 1: 
-	    	
-		    	if(gestures.getVisibility() == View.VISIBLE){
-		       	 	item.setEnabled(false);
-		         }
-		         else{
-		        	 item.setEnabled(true);
-		         }
-	  	   	
-	    	return true;
-	    
-	    	
-	     case 2:
-	    	 return true;
-    	 }
-    	 return false;
-    	
-    	
-    	
  
-    }*/
+    
     
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())
@@ -652,45 +626,35 @@ public class player_main extends Activity {
 
     // 액티비티 종료시 재생 강제 종료
     public void onDestroy() {
-       super.onDestroy();
+        super.onDestroy();
        
-       if(mLoadingDialog != null){
-    	   mLoadingDialog.dismiss();
-    	   mLoadingDialog = null;
-       }
+        if(mLoadingDialog != null){
+    	    mLoadingDialog.dismiss();
+    	    mLoadingDialog = null;
+        }
 
-   }
+    }
 
-   // 항상 준비 상태여야 한다.
+    // 항상 준비 상태여야 한다.
     boolean LoadMedia() {
 
     	if(mOSLESPlayer != null)
     	{
     		mOSLESPlayer.releaseAudioPlayer();
-            boolean result = mOSLESPlayer.createAudioPlayer(mFilepath);
-             
-            //mPlayer.start();
-            //mPlayer.seekTo( mPlayer.getDuration() );
-            //mPlayer.seekTo(0);
-            //mPlayer.pause();
-             
-            //mOSLESPlayer.play();
+            mOSLESPlayer.createAudioPlayer(mFilepath);
             
             mOSLESPlayer.setRate( GlobalOptions.playbackSpeed );
             mOSLESPlayer.seekTo(0);
             mOSLESPlayer.pause();
-             
-    		
     		
     	}
-    		
-
+ 
          return true;
-   }
+    }
 
    
-   // 해당 제스쳐(재생/일지정지, 이전문장, 다음문장, 북마크, 반복재생)가 입력될때 호출되는 메소드
-   public String getTimeString( int sec )
+    // 해당 제스쳐(재생/일지정지, 이전문장, 다음문장, 북마크, 반복재생)가 입력될때 호출되는 메소드
+    public String getTimeString( int sec )
 	{
 		//String.
 		int minute = sec/60;
@@ -700,25 +664,18 @@ public class player_main extends Activity {
     
    public void gesturePlay(){
 	   
-	  	 //if (mPlayer.isPlaying() == false) {
-	   		if(mOSLESPlayer.isPlaying() == false ) {
+	  	if(mOSLESPlayer.isPlaying() == false ) {
 		   	 mWaveformView.forceStop();
-		   	 //mWaveformView.smoothScrollTo(mWaveformView.getScrollX(), mWaveformView.getScrollY());
-		   	//mPlayer.start();
+
 		   	mOSLESPlayer.play();
 		   	mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
-		   	 //Toast.makeText(this, "play", Toast.LENGTH_SHORT).show();
 		   	showToastMessage("play");
-		      //mPlayBtn.setText("Pause");
 		      
 		        
 	    } else {
 	    	mOSLESPlayer.pause();
-	    	//mPlayer.pause();
 	    	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
-	        //Toast.makeText(this, "pause", Toast.LENGTH_SHORT).show();
 	        showToastMessage("pause");
-	        //mPlayBtn.setText("Play");
 	    }
 	    
    }
@@ -773,16 +730,16 @@ public class player_main extends Activity {
        	
        	
        	dba.open();
-        	dba.createBook2( strMediaDBIndex, 						// data row id
-        			segIndex,									// start segment id
-        			segIndex,									// end segment id
-        			getTimeString(seg.startOffset/50), 			// start time
-        			getTimeString((seg.startOffset+seg.size)/50),	// end time
-        			"", 										// memo
-        			0,											// star rate 
-        			0xffffff63);								// color
-        	
-        	dba.close();
+    	dba.createBook2( strMediaDBIndex, 					// data row id
+    			segIndex,									// start segment id
+    			segIndex,									// end segment id
+    			getTimeString(seg.startOffset/50), 			// start time
+    			getTimeString((seg.startOffset+seg.size)/50),	// end time
+    			"", 										// memo
+    			0,											// star rate 
+    			0xffffff63);								// color
+    	
+    	dba.close();
         	
         	
        	// 뷰를 업데이트.
@@ -799,18 +756,13 @@ public class player_main extends Activity {
              //if (mPlayer.isPlaying() == false) {
         	 if(mOSLESPlayer.isPlaying() == false ) {
             	 mWaveformView.forceStop();
-            	 //mWaveformView.smoothScrollTo(mWaveformView.getScrollX(), mWaveformView.getScrollY());
-            	 //mPlayer.start();
+
             	 mOSLESPlayer.play();
             	 mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
-            	 //mPlayBtn.setText("Pause");
-                 // 여기서 스크롤뷰를 세팅하고.
-                 
+            	 
              } else {
             	 mOSLESPlayer.pause();
-                 //mPlayer.pause();
                  mPlayBtn.setImageResource(R.drawable.play_bkgnd);
-                 //mPlayBtn.setText("Play");
              }
          }
     };
@@ -929,14 +881,14 @@ public class player_main extends Activity {
     		}
          	
          	
-	        	dba.createBook2( strMediaDBIndex, 						// data row id
-	         			segIndex,									// start segment id
-	         			segIndex,									// end segment id
-	         			getTimeString(seg.startOffset/50), 			// start time
-	         			getTimeString((seg.startOffset+seg.size)/50),	// end time
-	         			"", 										// memo
-	         			0,											// star rate 
-	         			0xffffff63);								// color
+        	dba.createBook2( strMediaDBIndex, 					// data row id
+         			segIndex,									// start segment id
+         			segIndex,									// end segment id
+         			getTimeString(seg.startOffset/50), 			// start time
+         			getTimeString((seg.startOffset+seg.size)/50),	// end time
+         			"", 										// memo
+         			0,											// star rate 
+         			0xffffff63);								// color
          	
          	dba.close();
          	
@@ -1121,12 +1073,8 @@ public class player_main extends Activity {
 			return false;
 		}
    };
+
    
-
-
-
-  
-
 
    // 에러 발생시 메시지 출력
    MediaPlayer.OnErrorListener mOnError = new MediaPlayer.OnErrorListener() {
@@ -1157,22 +1105,8 @@ public class player_main extends Activity {
    };
 
    
-   /*
-   // 0.2초에 한번꼴로 재생 위치 갱신
-    Handler mProgressHandler = new Handler() {
-         public void handleMessage(Message msg) {
-             if (mPlayer == null) return;
-             if (mPlayer.isPlaying()) {
-                  //mProgress.setProgress(mPlayer.getCurrentPosition());
-            	
-             }
-             mProgressHandler.sendEmptyMessageDelayed(0,200);
-         }
-    };
-   */
-    
-    //1초에 한 번씩 재생시간 갱신
-   
+
+    //1초에 한 번씩 재생시간 갱신   
    Handler mPlaytimeHandler = new Handler() {
         public void handleMessage(Message msg) {
             if(mOSLESPlayer == null) return;
