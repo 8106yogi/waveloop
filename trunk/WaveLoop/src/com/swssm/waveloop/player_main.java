@@ -12,13 +12,10 @@ import android.content.*;
 import android.database.*;
 import android.gesture.*;
 import android.gesture.GestureOverlayView.OnGesturePerformedListener;
-import android.graphics.*;
-import android.graphics.drawable.Drawable;
 import android.media.*;
 import android.net.*;
 import android.os.*;
 import android.provider.MediaStore.Audio;
-import android.util.Log;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
@@ -66,19 +63,14 @@ public class player_main extends Activity {
     
     private Handler mLoadingHandler = new Handler();
     
-    private int index = 0;
-    private RealViewSwitcher hf = null;
-    private HorizontalScrollView scrollView;
-    private ViewGroup contentView;
-
-    private int mLoopCount;
-    private boolean mIsLoop;
-    private int mLoopStartIndex;
-    private int mLoopCenterIndex;
-    private int mLoopFinishIndex;
+    private int mLoopCount = 0;
+    private boolean mIsLoop = false;
+    private int mLoopStartIndex = 0;
+    private int mLoopCenterIndex = 0;
+    private int mLoopFinishIndex = 0;
     
-    private int mLoopStartPos;
-    private int mLoopFinishPos;
+    private int mLoopStartPos = 0;
+    private int mLoopFinishPos = 0;
     
     
     private GestureLibrary mLibrary;
@@ -167,7 +159,15 @@ public class player_main extends Activity {
         //mPlayer = new MediaPlayer();
         
         mStartSegmentIndex = 0;
+        mIsLoop = false;
+        mLoopCount = 0;
+        mIsLoop = false;
+        mLoopStartIndex = 0;
+        mLoopCenterIndex = 0;
+        mLoopFinishIndex = 0;
         
+        mLoopStartPos = 0;
+        mLoopFinishPos = 0;
         
         
         
@@ -627,7 +627,11 @@ public class player_main extends Activity {
     // 액티비티 종료시 재생 강제 종료
     public void onDestroy() {
         super.onDestroy();
-       
+        
+        mScrollHandler.removeMessages(0);
+        mRepeatDelayHandler.removeMessages(0);
+        mPlaytimeHandler.removeMessages(0);
+        
         if(mLoadingDialog != null){
     	    mLoadingDialog.dismiss();
     	    mLoadingDialog = null;
@@ -1171,6 +1175,11 @@ public class player_main extends Activity {
 							mRepeatBtn.toggle();
 							processRepeat();
 						}
+						
+						mOSLESPlayer.pause();
+						mRepeatDelayHandler.sendEmptyMessageDelayed(0, GlobalOptions.repeatDelayTime);
+						
+						
 					}
 				}
               
@@ -1182,6 +1191,13 @@ public class player_main extends Activity {
 		
     };
 
+    Handler mRepeatDelayHandler = new Handler() {
+    	public void handleMessage(Message msg) {
+    		if( mOSLESPlayer != null )
+    			mOSLESPlayer.play();
+    	}
+    };
+    
     // 재생 위치 이동
     SeekBar.OnSeekBarChangeListener mOnSeek = new SeekBar.OnSeekBarChangeListener() {
          public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
