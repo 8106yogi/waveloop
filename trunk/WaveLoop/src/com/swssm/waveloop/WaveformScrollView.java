@@ -19,11 +19,9 @@ public class WaveformScrollView extends HorizontalScrollView {
 	SeekBar mSeekBar;
 	boolean mIsSeekbarTouched = false;
 	boolean mIsWaveformTouched = false;
-	OSLESMediaPlayer mOSLESPlayer;
-	//MediaPlayer mPlayer;
+	
+	
 	Scroller mScroller;// = new Scroller(this);
-	//int mMaxScrollX;
-	//int mMaxScrollY;
 	LinearLayout mWaveformLinearLayout;
 	
 	SentenceSegmentList mSentenceSegmentList;
@@ -48,14 +46,7 @@ public class WaveformScrollView extends HorizontalScrollView {
 		
 	}
 	
-	public void setOSLESPlayer(OSLESMediaPlayer OSLESPlayer)
-	{
-		mOSLESPlayer = OSLESPlayer;
-		
-		
-		
 
-	}
 	public void setMediaPlayer( MediaPlayer player )
 	{
 		//mPlayer = player;
@@ -71,20 +62,20 @@ public class WaveformScrollView extends HorizontalScrollView {
         	//if(mPlayer == null)
         	//	return;
         	
-        	if(mOSLESPlayer == null)
-        		return;
+        	//if(mOSLESPlayer == null)
+        	//	return;
         	
         	if (fromUser) {
             	WaveformScrollView.this.scrollTo(progress, 0);
             	 
             	//double position = (double)progress/(double)mSeekBar.getMax()*(double)mPlayer.getDuration();
  				//mPlayer.seekTo( (int)position );
-            	double position = (double)progress/(double)mSeekBar.getMax()*(double)mOSLESPlayer.getDuration();
-            	mOSLESPlayer.seekTo((int)position);
+            	double position = (double)progress/(double)mSeekBar.getMax()*(double)PlayerProxy.getDuration();
+            	PlayerProxy.seekTo((int)position);
         	}
         	
         	//int cur =  mPlayer.getCurrentPosition()/1000;
-        	int cur = mOSLESPlayer.getPosition()/1000;
+        	int cur = PlayerProxy.getPosition()/1000;
        	 	int cMin = cur/60;
             int cSec = cur%60;
             String strTime = String.format("%02d:%02d" , cMin, cSec);
@@ -97,21 +88,21 @@ public class WaveformScrollView extends HorizontalScrollView {
         
         public void onStartTrackingTouch(SeekBar seekBar) {
         	mIsSeekbarTouched = true;
-        	if(mOSLESPlayer != null)
+        	//if(mOSLESPlayer != null)
         	{
-        		isPlaying = mOSLESPlayer.isPlaying();
+        		isPlaying = PlayerProxy.isPlaying();
         		if(isPlaying)
-        			mOSLESPlayer.pause();
+        			PlayerProxy.pause();
         	}
         }
 
         public void onStopTrackingTouch(SeekBar seekBar) {
         	mIsSeekbarTouched = false;
         	 
-        	if(mOSLESPlayer != null)
+        	//if(mOSLESPlayer != null)
         	{
         		if(isPlaying)
-        			mOSLESPlayer.play();
+        			PlayerProxy.play();
         	}
          }
     };
@@ -181,9 +172,12 @@ public class WaveformScrollView extends HorizontalScrollView {
 			if( mIsWaveformTouched == true ||
 				mIsWaveformTouched == false && mScroller.isFinished() == false )
 			{
-				double position = (double)this.getScrollX()/(double)(mWaveformLinearLayout.getMeasuredWidth()-getMeasuredWidth())*(double)mOSLESPlayer.getDuration();
-				if( mOSLESPlayer != null )
-					mOSLESPlayer.seekTo((int)position);
+				double position = (double)this.getScrollX()/(double)(mWaveformLinearLayout.getMeasuredWidth()-getMeasuredWidth())*(double)PlayerProxy.getDuration();
+				//if( mOSLESPlayer != null )
+				{
+					Log.i("player", "onScrollChanged : seekTo");
+					PlayerProxy.seekTo((int)position);
+				}
 			}
 				
 		}

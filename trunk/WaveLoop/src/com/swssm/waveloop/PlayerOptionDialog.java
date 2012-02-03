@@ -89,8 +89,8 @@ public class PlayerOptionDialog {
     
 	private static void UpdatePlayerSpeed()
     {
-    	if(player_main.mOSLESPlayer != null)
-    		player_main.mOSLESPlayer.setRate( GlobalOptions.playbackSpeed );
+    	//if(player_main.mOSLESPlayer != null)
+    		PlayerProxy.setRate( GlobalOptions.playbackSpeed );
     }
 	
 	

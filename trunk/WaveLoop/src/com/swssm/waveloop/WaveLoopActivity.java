@@ -59,11 +59,11 @@ public class WaveLoopActivity extends TabActivity {
 			player_main.mPlayer = null;
 	    }
 	    */
-		if( player_main.mOSLESPlayer != null )
+		//if( player_main.mOSLESPlayer != null )
 		{
-			player_main.mOSLESPlayer.releaseAudioPlayer();
-			player_main.mOSLESPlayer.releaseEngine();
-			player_main.mOSLESPlayer = null;
+//			player_main.mOSLESPlayer.releaseAudioPlayer();
+//			player_main.mOSLESPlayer.releaseEngine();
+//			player_main.mOSLESPlayer = null;
 		}
 		
 	}

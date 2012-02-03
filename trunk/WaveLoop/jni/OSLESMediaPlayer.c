@@ -49,24 +49,29 @@ JNIEXPORT void Java_com_swssm_waveloop_audio_OSLESMediaPlayer_createEngine(JNIEn
     SLresult result;
 	
     // create engine
+    LOGD("create engine");
     result = slCreateEngine(&engineObject, 0, NULL, 0, NULL, NULL);
     assert(SL_RESULT_SUCCESS == result);
 	
     // realize the engine
+    LOGD("realize the engine");
     result = (*engineObject)->Realize(engineObject, SL_BOOLEAN_FALSE);
     assert(SL_RESULT_SUCCESS == result);
 	
     // get the engine interface, which is needed in order to create other objects
+    LOGD("get the engine interface");
     result = (*engineObject)->GetInterface(engineObject, SL_IID_ENGINE, &engineEngine);
     assert(SL_RESULT_SUCCESS == result);
 	
     // create output mix, with environmental reverb specified as a non-required interface
+    LOGD("create output mix");
     const SLInterfaceID ids[1] = {SL_IID_ENVIRONMENTALREVERB};
     const SLboolean req[1] = {SL_BOOLEAN_FALSE};
     result = (*engineEngine)->CreateOutputMix(engineEngine, &outputMixObject, 1, ids, req);
     assert(SL_RESULT_SUCCESS == result);
 	
     // realize the output mix
+    LOGD("realize the output mix");
     result = (*outputMixObject)->Realize(outputMixObject, SL_BOOLEAN_FALSE);
     assert(SL_RESULT_SUCCESS == result);
 	
@@ -180,8 +185,13 @@ JNIEXPORT jboolean Java_com_swssm_waveloop_audio_OSLESMediaPlayer_createAudioPla
 	assert(SL_RESULT_SUCCESS == result);
 	
 	
+	SLmillisecond msec;
+    result = (*uriPlayerPlay)->GetDuration(uriPlayerPlay, &msec);
+    assert(SL_RESULT_SUCCESS == result);
+        
+        
 	// no loop
-    result = (*uriPlayerSeek)->SetLoop(uriPlayerSeek, SL_BOOLEAN_FALSE, 0, SL_TIME_UNKNOWN );
+    result = (*uriPlayerSeek)->SetLoop(uriPlayerSeek, SL_BOOLEAN_TRUE, 0, msec );
     assert(SL_RESULT_SUCCESS == result);
 	
 	
@@ -282,10 +292,15 @@ JNIEXPORT void Java_com_swssm_waveloop_audio_OSLESMediaPlayer_seekTo(JNIEnv* env
 {
      if (NULL != uriPlayerPlay) {
 
+		//SLuint32 state = getPlayState();
+		//setPlayState(SL_PLAYSTATE_PAUSED);
+		
 		SLresult result;
 
-        result = (*uriPlayerSeek)->SetPosition(uriPlayerSeek, position, SL_SEEKMODE_ACCURATE);
+        result = (*uriPlayerSeek)->SetPosition(uriPlayerSeek, position, SL_SEEKMODE_FAST);
         assert(SL_RESULT_SUCCESS == result);
+        
+        //setPlayState(state);
     }
 
 }
