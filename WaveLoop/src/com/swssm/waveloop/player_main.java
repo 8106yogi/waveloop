@@ -16,13 +16,14 @@ import android.media.*;
 import android.net.*;
 import android.os.*;
 import android.provider.MediaStore.Audio;
+import android.util.Log;
 import android.view.*;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.*;
 
 public class player_main extends Activity {
     
-	static OSLESMediaPlayer mOSLESPlayer;
+	//static OSLESMediaPlayer mOSLESPlayer;
     //static MediaPlayer mPlayer;
     static ImageButton mPlayBtn; 
     //Button mPlay2Btn;
@@ -111,16 +112,16 @@ public class player_main extends Activity {
 
             if (CMDTOGGLEPAUSE.equals(cmd) || TOGGLEPAUSE_ACTION.equals(action)) {
             	
-            	if( mOSLESPlayer.isPlaying() )
-            		mOSLESPlayer.pause();
+            	if( PlayerProxy.isPlaying() )
+            		PlayerProxy.pause();
             	else
-            		mOSLESPlayer.play();
+            		PlayerProxy.play();
             	
             } else if (CMDPAUSE.equals(cmd) || PAUSE_ACTION.equals(action)) {
-            	mOSLESPlayer.pause();
+            	PlayerProxy.pause();
             } else if (CMDSTOP.equals(cmd)) {
-            	mOSLESPlayer.pause();
-            	mOSLESPlayer.seekTo(0);
+            	PlayerProxy.pause();
+            	PlayerProxy.seekTo(0);
             }
             
         }
@@ -145,16 +146,16 @@ public class player_main extends Activity {
         registerReceiver(mIntentReceiver, commandFilter);
         */
         
-        
         //this.setWallpaper(new Bitmap());
 
         mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-        
-        if( mOSLESPlayer == null )
+        /*
+        if( PlayerProxy == null )
         {
-        	mOSLESPlayer = new OSLESMediaPlayer();
-            mOSLESPlayer.createEngine();
+        	PlayerProxy = new OSLESMediaPlayer();
+            PlayerProxy.createEngine();
         }
+        */
         
         //mPlayer = new MediaPlayer();
         
@@ -175,7 +176,7 @@ public class player_main extends Activity {
          mWaveformView = (WaveformScrollView)findViewById(R.id.WaveformScrollView);
          mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
          
-         mWaveformView.setOSLESPlayer(mOSLESPlayer);
+         //mWaveformView.setOSLESPlayer(mOSLESPlayer);
          //mWaveformView.setMediaPlayer(mPlayer);
          mWaveformView.setInnerLayout(mWaveformLayout);
          mWaveformView.setHorizontalScrollBarEnabled(false);
@@ -420,8 +421,9 @@ public class player_main extends Activity {
                 				    	//double position = (double)(startOffset*2)/(double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth())*(double)mPlayer.getDuration();
                 				    	//mPlayer.seekTo((int)position);
                 				    	
-                				    	double position = (double)(startOffset*2)/(double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth())*(double)mOSLESPlayer.getDuration();
-                				    	mOSLESPlayer.seekTo((int)position);
+                				    	double position = (double)(startOffset*2)/(double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth())*(double)PlayerProxy.getDuration();
+                				    	Log.i("player", "onScrollChanged : waveform load");
+                				    	PlayerProxy.seekTo((int)position);
                 				    	
                 				    } 
                 				});
@@ -455,9 +457,9 @@ public class player_main extends Activity {
             				mLoadingDialog.dismiss();
             				mLoadingDialog = null;
             				
-            				if(mOSLESPlayer != null)
+            				//if(mOSLESPlayer != null)
             				{
-            					mOSLESPlayer.play();
+            					PlayerProxy.play();
             					mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
             				}
             			}
@@ -642,14 +644,14 @@ public class player_main extends Activity {
     // 항상 준비 상태여야 한다.
     boolean LoadMedia() {
 
-    	if(mOSLESPlayer != null)
+    	//if(mOSLESPlayer != null)
     	{
-    		mOSLESPlayer.releaseAudioPlayer();
-            mOSLESPlayer.createAudioPlayer(mFilepath);
+    		PlayerProxy.releasePlayer();
+            PlayerProxy.createPlayer(mFilepath);
             
-            mOSLESPlayer.setRate( GlobalOptions.playbackSpeed );
-            mOSLESPlayer.seekTo(0);
-            mOSLESPlayer.pause();
+            PlayerProxy.setRate( GlobalOptions.playbackSpeed );
+            PlayerProxy.seekTo(0);
+            PlayerProxy.pause();
     		
     	}
  
@@ -668,16 +670,16 @@ public class player_main extends Activity {
     
    public void gesturePlay(){
 	   
-	  	if(mOSLESPlayer.isPlaying() == false ) {
+	  	if(PlayerProxy.isPlaying() == false ) {
 		   	 mWaveformView.forceStop();
 
-		   	mOSLESPlayer.play();
+		   	PlayerProxy.play();
 		   	mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
 		   	showToastMessage("play");
 		      
 		        
 	    } else {
-	    	mOSLESPlayer.pause();
+	    	PlayerProxy.pause();
 	    	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
 	        showToastMessage("pause");
 	    }
@@ -701,55 +703,8 @@ public class player_main extends Activity {
    }
    
    public void gestureBookmark(){
-   	
        	// 이곳에서 문장노트에 추가를 한다.
-       	
-       	// 현재 문장을 가져온다.
-       	SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
-       	int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2, 0);
-       	
-       	if( seg.isSilence )
-       	{
-       		//Toast.makeText(player_main.this, "문장만 추가 가능합니다.", Toast.LENGTH_SHORT).show();
-       		showToastMessage("문장만 추가 가능합니다.");
-       		return;
-       	}
-       	
-       	// 이미 있는 문장이면 추가하지 않는다.
-       	DbAdapter dba = new DbAdapter(getBaseContext());
-       	dba.open();
-    	Cursor cur2 = dba.fetchBookFromMediaID2(strMediaDBIndex);
-    	for(int i = 0; i < cur2.getCount(); ++i )
-		{
-			cur2.moveToPosition(i);
-			//long sentence_mdb_id = cur2.getLong(cur2.getColumnIndex(DbAdapter.KEY_SENTENCE_MDB_ID));
-			int start_id = cur2.getInt(cur2.getColumnIndex(DbAdapter.KEY_START_ID));
-			//long end_id = cur2.getLong(cur2.getColumnIndex(DbAdapter.KEY_END_ID));
-			
-			if(segIndex == start_id){
-				showToastMessage("이미 존재하는 문장입니다.");
-				return;
-			}
-		}
-       	
-       	
-       	dba.open();
-    	dba.createBook2( strMediaDBIndex, 					// data row id
-    			segIndex,									// start segment id
-    			segIndex,									// end segment id
-    			getTimeString(seg.startOffset/50), 			// start time
-    			getTimeString((seg.startOffset+seg.size)/50),	// end time
-    			"", 										// memo
-    			0,											// star rate 
-    			0xffffff63);								// color
-    	
-    	dba.close();
-        	
-        	
-       	// 뷰를 업데이트.
-              	
-        	//Toast.makeText(player_main.this, "문장노트에 추가되었습니다.", Toast.LENGTH_SHORT).show();
-        	showToastMessage("문장노트에 추가되었습니다.");
+       	processBookmark();
    }
    
    
@@ -758,14 +713,14 @@ public class player_main extends Activity {
    Button.OnClickListener mClickPlay = new View.OnClickListener() {
          public void onClick(View v) {
              //if (mPlayer.isPlaying() == false) {
-        	 if(mOSLESPlayer.isPlaying() == false ) {
+        	 if(PlayerProxy.isPlaying() == false ) {
             	 mWaveformView.forceStop();
 
-            	 mOSLESPlayer.play();
+            	 PlayerProxy.play();
             	 mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
             	 
              } else {
-            	 mOSLESPlayer.pause();
+            	 PlayerProxy.pause();
                  mPlayBtn.setImageResource(R.drawable.play_bkgnd);
              }
          }
@@ -810,7 +765,8 @@ public class player_main extends Activity {
     	
     	int offset = sentenceSegmentList.getCurrentStartOffsetByIndex(nextIndex);
     	int position = calcPositionByOffset(offset*2);
-    	mOSLESPlayer.seekTo(position);
+    	Log.i("player", "processNext");
+    	PlayerProxy.seekTo(position);
     }
     
     private void processPrevSentence()
@@ -823,7 +779,10 @@ public class player_main extends Activity {
 
     	int offset = sentenceSegmentList.getCurrentStartOffsetByIndex(nextIndex);
     	int position = calcPositionByOffset(offset*2);
-    	mOSLESPlayer.seekTo(position);
+    	Log.i("player", "processPrev");
+    	PlayerProxy.seekTo(position);
+    	//PlayerProxy.pause();
+    	//PlayerProxy.play();
     	
     }
     
@@ -843,69 +802,66 @@ public class player_main extends Activity {
     
     // 문장노트 추가.
     Button.OnClickListener mClickBookmark = new View.OnClickListener() {
-    	
-    	public String getTimeString( int sec )
-    	{
-    		//String.
-    		int minute = sec/60;
-    		int second = sec - minute*60;
-    		return minute + ":" + second;
-    	}
-    	
         public void onClick(View v) {
         	// 이곳에서 문장노트에 추가를 한다.
-        	
-        	// 현재 문장을 가져온다.
-        	SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
-        	int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2, 0);
-        	int sametime=0;
-        	
-        	if( seg.isSilence )
-        	{
-        		//Toast.makeText(player_main.this, "문장만 추가 가능합니다.", Toast.LENGTH_SHORT).show();
-        		showToastMessage("문장만 추가 가능합니다.");
-        		return;
-        	}
-        	
-        	// 이미 있는 문장이면 추가하지 않는다.
-        	DbAdapter dba = new DbAdapter(getBaseContext());
-         	dba.open();
-        	Cursor cur2 = dba.fetchBookFromMediaID2(strMediaDBIndex);
-        	for(int i = 0; i < cur2.getCount(); ++i )
-    		{
-    			cur2.moveToPosition(i);
-    			//long sentence_mdb_id = cur2.getLong(cur2.getColumnIndex(DbAdapter.KEY_SENTENCE_MDB_ID));
-    			int start_id = cur2.getInt(cur2.getColumnIndex(DbAdapter.KEY_START_ID));
-    			//long end_id = cur2.getLong(cur2.getColumnIndex(DbAdapter.KEY_END_ID));
-    			
-    			if(segIndex == start_id){
-    				showToastMessage("이미 존재하는 문장입니다.");
-    				return;
-    			}
-    		}
-         	
-         	
-        	dba.createBook2( strMediaDBIndex, 					// data row id
-         			segIndex,									// start segment id
-         			segIndex,									// end segment id
-         			getTimeString(seg.startOffset/50), 			// start time
-         			getTimeString((seg.startOffset+seg.size)/50),	// end time
-         			"", 										// memo
-         			0,											// star rate 
-         			0xffffff63);								// color
-         	
-         	dba.close();
-         	
-         	
-        	// 뷰를 업데이트.
-         	
-         	
-         	//Toast.makeText(player_main.this, "문장노트에 추가되었습니다.", Toast.LENGTH_SHORT).show();
-         	showToastMessage("문장노트에 추가되었습니다.");
-         	
-         	
+        	processBookmark();
         }
     };
+    
+    
+    void processBookmark()
+    {
+
+    	// 현재 문장을 가져온다.
+    	SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
+    	int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2, 0);
+    	int sametime=0;
+    	
+    	if( seg.isSilence )
+    	{
+    		//Toast.makeText(player_main.this, "문장만 추가 가능합니다.", Toast.LENGTH_SHORT).show();
+    		showToastMessage("문장만 추가 가능합니다.");
+    		return;
+    	}
+    	
+    	// 이미 있는 문장이면 추가하지 않는다.
+    	DbAdapter dba = new DbAdapter(getBaseContext());
+     	dba.open();
+    	Cursor cur2 = dba.fetchBookFromMediaID2(strMediaDBIndex);
+    	for(int i = 0; i < cur2.getCount(); ++i )
+		{
+			cur2.moveToPosition(i);
+			//long sentence_mdb_id = cur2.getLong(cur2.getColumnIndex(DbAdapter.KEY_SENTENCE_MDB_ID));
+			int start_id = cur2.getInt(cur2.getColumnIndex(DbAdapter.KEY_START_ID));
+			//long end_id = cur2.getLong(cur2.getColumnIndex(DbAdapter.KEY_END_ID));
+			
+			if(segIndex == start_id){
+				showToastMessage("이미 존재하는 문장입니다.");
+				return;
+			}
+		}
+     	
+     	
+    	dba.createBook2( strMediaDBIndex, 					// data row id
+     			segIndex,									// start segment id
+     			segIndex,									// end segment id
+     			getTimeString(seg.startOffset/50), 			// start time
+     			getTimeString((seg.startOffset+seg.size)/50),	// end time
+     			"", 										// memo
+     			0,											// star rate 
+     			0xffffff63);								// color
+     	
+     	dba.close();
+     	
+     	
+    	// 뷰를 업데이트.
+     	
+     	
+     	//Toast.makeText(player_main.this, "문장노트에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+     	showToastMessage("문장노트에 추가되었습니다.");
+     	
+     	
+    }
     
 
     void processRepeat()
@@ -974,7 +930,7 @@ public class player_main extends Activity {
     {
     	// 픽셀 단위 오프셋으로부터 플레이어 seek position을 계산.
     	//return (int)((double)(offset)/(double)(getSentencesTotalLength())*(double)mPlayer.getDuration());
-    	return (int)((double)(offset)/(double)(getSentencesTotalLength())*(double)mOSLESPlayer.getDuration());
+    	return (int)((double)(offset)/(double)(getSentencesTotalLength())*(double)PlayerProxy.getDuration());
     	
     }
     
@@ -989,7 +945,7 @@ public class player_main extends Activity {
     	mLoopStartPos = calcPositionByOffset(startOffset*2) - RepeatMargin;
     	mLoopFinishPos = calcPositionByOffset(finishOffset*2) + RepeatMargin;
     	
-    	//mOSLESPlayer.setLoop(mLoopStartPos, mLoopFinishPos);
+    	//PlayerProxy.setLoop(mLoopStartPos, mLoopFinishPos);
     	
     }
     
@@ -1062,7 +1018,7 @@ public class player_main extends Activity {
 	Button.OnClickListener mClickStop = new View.OnClickListener() {
         public void onClick(View v) {
              //mPlayer.stop();
-        	mOSLESPlayer.stop();
+        	PlayerProxy.stop();
              //mPlayBtn.setText("Play");
              //mProgress.setProgress(0);
              
@@ -1072,8 +1028,8 @@ public class player_main extends Activity {
    View.OnTouchListener mOnScrollViewTouchListener = new View.OnTouchListener() {
 	   	public boolean onTouch(View v, MotionEvent event) {
 	   		//if (mPlayer.isPlaying() == true) {
-	   		if(mOSLESPlayer.isPlaying() == true) {
-	   			mOSLESPlayer.pause();
+	   		if(PlayerProxy.isPlaying() == true) {
+	   			PlayerProxy.pause();
 	   			//mPlayer.pause();
             	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
 			}
@@ -1098,7 +1054,7 @@ public class player_main extends Activity {
          public void onSeekComplete(MediaPlayer mp) {
              if (wasPlaying) {
                   //mPlayer.start();
-            	 mOSLESPlayer.play();
+            	 PlayerProxy.play();
              }
          }
    };
@@ -1116,12 +1072,12 @@ public class player_main extends Activity {
     //1초에 한 번씩 재생시간 갱신   
    Handler mPlaytimeHandler = new Handler() {
         public void handleMessage(Message msg) {
-            if(mOSLESPlayer == null) return;
-            if(mOSLESPlayer.isPlaying()) {
+            //if(PlayerProxy == null) return;
+            if(PlayerProxy.isPlaying()) {
         	//if (mPlayer == null) return;
             //if (mPlayer.isPlaying()) {
             	//int cur =  mPlayer.getCurrentPosition()/1000;
-            	int cur =  mOSLESPlayer.getPosition()/1000;
+            	int cur =  PlayerProxy.getPosition()/1000;
            	 	int cMin = cur/60;
                 int cSec = cur%60;
                 String strTime = String.format("%02d:%02d" , cMin, cSec);
@@ -1134,8 +1090,9 @@ public class player_main extends Activity {
     
     public double getPlayerCurrentRate()
     {
+    	//Log.i("curRate", "" + PlayerProxy.getPosition()+"/"+PlayerProxy.getDuration() );
     	//return ((double)mPlayer.getCurrentPosition() / (double)mPlayer.getDuration());
-    	return ((double)mOSLESPlayer.getPosition() / (double)mOSLESPlayer.getDuration());
+    	return ((double)PlayerProxy.getPosition() / (double)PlayerProxy.getDuration());
     }
     
     // 0.016초에 한번꼴로 재생 위치 갱신
@@ -1143,14 +1100,15 @@ public class player_main extends Activity {
     	public void handleMessage(Message msg) {
     		//if (mPlayer == null) return;
 			//if (mPlayer.isPlaying()) {
-    		if(mOSLESPlayer == null) return;
-    		//if(mOSLESPlayer.isPlaying()) 
+    		//Log.i("curRate", "test" );
+    		//if(PlayerProxy == null) return;
+    		//if(PlayerProxy.isPlaying()) 
     		{
 				//int duration = mPlayer.getDuration();
 				//int width = mWaveformLayout.getMeasuredWidth();
 				
     			// 액티비티가 활성화되어있을 때만 스크롤해주기.
-    			//if(isActivityBackground == false)
+    			if(isActivityBackground == false)
     			{
     				
     				int newPos = (int)((double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth()) * getPlayerCurrentRate() );
@@ -1165,10 +1123,11 @@ public class player_main extends Activity {
 				//updateCurrentSegmentColor();
 				if( mIsLoop == true )
 				{
-					int currentPosition = mOSLESPlayer.getPosition();
+					int currentPosition = PlayerProxy.getPosition();
 					if(currentPosition < mLoopStartPos || currentPosition > mLoopFinishPos )
 					{
-						mOSLESPlayer.seekTo(mLoopStartPos+1);
+						Log.i("player", "Loop");
+						PlayerProxy.seekTo(mLoopStartPos+1);
 						
 						if(mLoopCount != Integer.MAX_VALUE)
 							mLoopCount--;
@@ -1179,7 +1138,7 @@ public class player_main extends Activity {
 							processRepeat();
 						}
 						
-						mOSLESPlayer.pause();
+						PlayerProxy.pause();
 						mRepeatDelayHandler.sendEmptyMessageDelayed(0, GlobalOptions.repeatDelayTime);
 						
 						
@@ -1196,8 +1155,8 @@ public class player_main extends Activity {
 
     Handler mRepeatDelayHandler = new Handler() {
     	public void handleMessage(Message msg) {
-    		if( mOSLESPlayer != null )
-    			mOSLESPlayer.play();
+    		//if( PlayerProxy != null )
+    		PlayerProxy.play();
     	}
     };
     
@@ -1209,9 +1168,9 @@ public class player_main extends Activity {
          }
 
          public void onStartTrackingTouch(SeekBar seekBar) {
-        	 wasPlaying = mOSLESPlayer.isPlaying();
+        	 wasPlaying = PlayerProxy.isPlaying();
              if (wasPlaying) {
-            	 mOSLESPlayer.pause();
+            	 PlayerProxy.pause();
                  mPlayBtn.setImageResource(R.drawable.play_bkgnd);
              }
          }

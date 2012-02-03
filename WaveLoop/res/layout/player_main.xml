@@ -172,13 +172,31 @@ android:layout_height="fill_parent"
 					android:layout_marginTop="15px"
 					android:layout_marginBottom="15px" />
 					
-					<ImageButton
-					android:id="@+id/play"  
-					android:layout_width="0px" 
-					android:layout_height="fill_parent" 
-					android:layout_weight="1"
-					android:src="@drawable/play_bkgnd"
-					android:background="#00000000"/>
+					<FrameLayout
+				    	android:layout_width="0dip" 
+						android:layout_height="fill_parent" 
+						android:layout_weight="1"
+					    >
+						<ImageButton
+							android:id="@+id/play"  
+							android:layout_width="fill_parent" 
+							android:layout_height="fill_parent" 
+							android:src="@drawable/play_bkgnd"
+							android:background="#00000000">
+							
+						</ImageButton>
+						<TextView
+						    android:id="@+id/playback_speed"  
+							android:textColor="#ffffff"
+							android:layout_width="wrap_content" 
+							android:layout_height="wrap_content" 
+							android:layout_gravity="right|bottom"
+							android:layout_marginBottom="11dip"
+							android:layout_marginRight="4dip"
+							android:textSize="10sp"
+							android:text="2.00x"
+						    />
+					</FrameLayout>
 					
 					<!--  android:src="@drawable/play" -->
 					
@@ -186,6 +204,8 @@ android:layout_height="fill_parent"
 					android:layout_width="1px"
 					android:layout_marginTop="15px"
 					android:layout_marginBottom="15px" />
+					
+					
 					<ImageButton
 					android:id="@+id/next_sentence"  
 					android:layout_width="0px" 
@@ -240,6 +260,18 @@ android:layout_height="fill_parent"
 	    				<!--  android:background="@drawable/repeat_bkgnd"-->
 	    				
 						</ToggleButton>
+						
+						<TextView
+						    android:id="@+id/repeat_counter"  
+							android:textColor="#ffffff"
+							android:layout_width="wrap_content" 
+							android:layout_height="wrap_content" 
+							android:layout_gravity="right|bottom"
+							android:layout_marginBottom="11dip"
+							android:layout_marginRight="4dip"
+							android:textSize="10sp"
+							android:text="00/20"
+						    />
 					</FrameLayout>
 					
 					<LinearLayout style="@style/VerticalDividerForList"

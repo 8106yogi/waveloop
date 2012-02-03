@@ -55,20 +55,14 @@ public class PlaylistActivity extends Activity {
     ImportProgressDialog importDialog;
     int pos;
     
-    public static final String WAVEPATH = "/data/data/com.androidhuman.app/files/";   
+    //public static final String WAVEPATH = "/data/data/com.androidhuman.app/files/";   
     //public static final String ORDER_ASC = "title_key asc";
     
     
     public void onCreate(Bundle savedInstanceState) {
-    	
     	super.onCreate(savedInstanceState);
     	
-    	
-    	
     	setContentView(R.layout.playlist_activity);
-    	
-    	
-    	
     	
     	dba = new DbAdapter(this); //어댑터 객체 생성.
     	dbh = dba.new DatabaseHelper(this);	//오픈헬퍼 객체 생성.

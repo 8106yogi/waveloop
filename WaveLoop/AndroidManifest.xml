@@ -49,6 +49,12 @@
                   android:windowSoftInputMode="stateAlwaysHidden"
                   android:configChanges="orientation|keyboard">
         </activity>
+        
+		<service android:name=".WaveLoopPlayerService">
+            <intent-filter>
+                <action android:name="WaveLoopPlayerService" />
+            </intent-filter>
+        </service>
                 
     </application>
 </manifest>
