@@ -68,7 +68,7 @@ public class ImportProgressDialog extends ProgressDialog {
 		
 		// 프로그레스 다이얼로그 초기설정
 		setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        setTitle("오디오 파일을 가져옵니다.");
+        setTitle(context.getResources().getString(R.string.import_file));
         setMessage("");
         setCancelable(true);
         setOnCancelListener(

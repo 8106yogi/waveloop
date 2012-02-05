@@ -14,7 +14,7 @@
 	        android:layout_width="0dip"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
-	        android:hint="검색어를 입력하세요."
+	        android:hint="@string/search_hint"
 	        android:inputType="text"
 	        android:maxLines="1"
 	    />
@@ -50,7 +50,7 @@
 		android:layout_marginBottom="2dip"
 		android:layout_weight="1"
 		android:onClick="mOnClick2"
-		android:text="추가"
+		android:text="@string/add_button"
 		
 		/>
 		
@@ -63,7 +63,7 @@
 		android:layout_marginBottom="2dip"
 		android:layout_weight="1"
 		android:onClick="mOnClick2"
-		android:text="취소"
+		android:text="@string/cancel_button"
 		/>
 
 	</LinearLayout>
