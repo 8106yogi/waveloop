@@ -21,20 +21,26 @@ public class WaveLoopActivity extends TabActivity {
     	TabHost tabHost = getTabHost();
 
     	tabHost.addTab(tabHost.newTabSpec("tab_test1")
-    	  	.setIndicator("재생목록", getResources().getDrawable(R.drawable.ic_tab_playlist))    	  	
+    	  	.setIndicator(
+    	  			getResources().getString(R.string.tab_playlist), 
+    	  			getResources().getDrawable(R.drawable.ic_tab_playlist))    	  	
     	    //.setContent(R.id.view1)
     	  	.setContent( new Intent(this, PlaylistActivity.class) )
     	    
     	);
     	
     	tabHost.addTab(tabHost.newTabSpec("tab_test2")
-    	   	.setIndicator("문장노트", getResources().getDrawable(R.drawable.ic_tab_sentencenote))
+    	   	.setIndicator(
+    	   			getResources().getString(R.string.tab_favorites),
+    	   			getResources().getDrawable(R.drawable.ic_tab_sentencenote))
     	    .setContent( new Intent(this, SentenceNoteActivity.class) )
     	);
     	
     	
     	tabHost.addTab(tabHost.newTabSpec("tab_test3")
-        	   	.setIndicator("도움말", getResources().getDrawable(R.drawable.ic_tab_info))
+        	   	.setIndicator(
+        	   			getResources().getString(R.string.tab_option),
+        	   			getResources().getDrawable(R.drawable.ic_tab_info))
         	  	.setContent( new Intent(this, OptionActivity.class) )
         	  	
         );

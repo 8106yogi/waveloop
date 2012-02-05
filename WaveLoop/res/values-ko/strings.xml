@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, waveloop_main!</string>
+    <string name="app_name">WaveLoop</string>
+    <string name="add_button_help">\'추가하기\' 버튼을 눌러 \n재생 목록을 추가할 수 있습니다.</string>
+    <string name="add_button">추가</string>
+    <string name="adding_button">추가하기</string><string name="save_button">저장</string><string name="cancel_button">취소</string>
+    <string name="search_hint">검색어를 입력하세요.</string>
+    
+    <string name="tab_playlist">재생목록</string>
+    <string name="tab_favorites">문장노트</string>
+    <string name="tab_option">도움말</string>
+    <string name="import_file">오디오 파일을 가져옵니다.</string>
+    <string-array name="import_result">
+        <item >성공적으로 추가되었습니다.</item>
+        <item >잘못된 파일입니다.</item>
+        <item >파일을 찾을 수 없습니다.</item>
+        <item >작업이 중단되었습니다.</item>
+        <item >알 수 없는 에러가 발생했습니다.</item>
+    </string-array>
+    
+</resources>

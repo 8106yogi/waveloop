@@ -2,6 +2,7 @@ package com.swssm.waveloop;
 
 import java.util.*;
 
+import com.swssm.waveloop.ImportProgressDialog.EFinishResult;
 import com.swssm.waveloop.R;
 import com.swssm.waveloop.DbAdapter.DatabaseHelper;
 import com.swssm.waveloop.ImportProgressDialog.FinishLoading;
@@ -302,32 +303,12 @@ public class addActivity extends Activity {
    }
    */
    	
-	   private void showLoadingResultMessage( ImportProgressDialog.EFinishResult result )
-		{
-			String message;
-			switch(result)
-			{
-			case eFR_OK:
-				message = "성공적으로 추가되었습니다.";
-				break;
-			case eFR_FILEERROR:
-				message = "잘못된 파일입니다.";
-				break;
-			case eFR_FILENOTFOUNDERROR:
-				message = "파일을 찾을 수 없습니다.";
-				break;
-			case eFR_SUSPEND:
-				message = "작업이 중단되었습니다.";
-				break;
-			case eFR_EXCEPTION:
-				message = "알 수 없는 에러가 발생했습니다.";
-				break;
-			default:
-				message = "알 수 없는 에러가 발생했습니다.";
-				break;
-			}
-			Toast.makeText( getApplicationContext(), message, Toast.LENGTH_SHORT ).show();
-	  }
+    private void showLoadingResultMessage( ImportProgressDialog.EFinishResult result )
+	{
+		String[] messages = getResources().getStringArray(R.array.import_result);
+		Toast.makeText( getApplicationContext(), 
+				messages[result.ordinal()], Toast.LENGTH_SHORT ).show();
+	}
 
 	
 	private class SoundAdapter2 extends ArrayAdapter<Sound> implements Filterable {		

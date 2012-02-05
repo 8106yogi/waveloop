@@ -2,4 +2,22 @@
 <resources>
     <string name="hello">Hello World, waveloop_main!</string>
     <string name="app_name">WaveLoop</string>
+    <string name="add_button_help">You can add audio files to playlist\nby pressing this \'Adding\' button.</string>
+    <string name="add_button">Add</string>
+    <string name="adding_button">Adding</string>
+    <string name="save_button">Save</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="search_hint">Search</string>
+    
+    <string name="tab_playlist">playlist</string>
+    <string name="tab_favorites">favorites</string>
+    <string name="tab_option">help</string>
+    <string name="import_file">Import audio files.</string>
+    <string-array name="import_result">
+        <item >Import files successfully.</item>
+        <item >Unsupported file.</item>
+        <item >Cannot find a file.</item>
+        <item >Importing is suspend.</item>
+        <item >Unexpected error occurred.</item>
+    </string-array>
 </resources>
