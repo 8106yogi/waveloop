@@ -20,4 +20,7 @@
         <item >Importing is suspend.</item>
         <item >Unexpected error occurred.</item>
     </string-array>
+    <string name="option_playback">Playback options</string>
+    <string name="option_repeat">Repeat options</string>
+    <string name="option_gesture">Gesture mode</string>
 </resources>
