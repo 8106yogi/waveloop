@@ -76,7 +76,8 @@ public class player_main extends Activity {
     
     private GestureLibrary mLibrary;
     
-    private int mStartSegmentIndex;
+    private int mStartSegmentIndex = 0;
+    private int mEndSegmentIndex = 0;
     
     GestureOverlayView gestures;
     FrameLayout frame;
@@ -250,6 +251,8 @@ public class player_main extends Activity {
         	mDataRowID = intent.getIntExtra("오디오파일경로", 0);
         	
         	mStartSegmentIndex = intent.getIntExtra("start_segment_index", 0);
+        	mEndSegmentIndex = intent.getIntExtra("end_segment_index", 0);
+        	
          	DbAdapter dba = new DbAdapter(getBaseContext());
          	dba.open();
          	Cursor cursor = dba.fetchBook(mDataRowID);
@@ -542,9 +545,10 @@ public class player_main extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        menu.add(0,1,0,"재생 옵션");
-        menu.add(0,2,0,"구간반복 옵션");
-        menu.add(0,3,0,"제스쳐").setIcon(R.drawable.ic_gesturebuilder);
+        menu.add(0,1,0, getResources().getString(R.string.option_playback));
+        menu.add(0,2,0, getResources().getString(R.string.option_repeat));
+        menu.add(0,3,0, getResources().getString(R.string.option_gesture))
+        	.setIcon(R.drawable.ic_gesturebuilder);
         //menu.add(0,2,0,"번역").setIcon(android.R.drawable.ic_menu_preferences);
 
         return true;
@@ -562,7 +566,7 @@ public class player_main extends Activity {
         	PlayerOptionDialog.ShowRepeatOption(this);
         	return true;
         case 3:
-        	showToastMessage("제스쳐모드");
+        	showToastMessage( getResources().getString(R.string.option_gesture) );
         	
             gestures.setVisibility(View.VISIBLE);
             gestures.addOnGesturePerformedListener(mListener);

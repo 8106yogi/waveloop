@@ -4,7 +4,9 @@
     <string name="app_name">WaveLoop</string>
     <string name="add_button_help">\'추가하기\' 버튼을 눌러 \n재생 목록을 추가할 수 있습니다.</string>
     <string name="add_button">추가</string>
-    <string name="adding_button">추가하기</string><string name="save_button">저장</string><string name="cancel_button">취소</string>
+    <string name="adding_button">추가하기</string>
+    <string name="save_button">저장</string>
+    <string name="cancel_button">취소</string>
     <string name="search_hint">검색어를 입력하세요.</string>
     
     <string name="tab_playlist">재생목록</string>
@@ -18,5 +20,8 @@
         <item >작업이 중단되었습니다.</item>
         <item >알 수 없는 에러가 발생했습니다.</item>
     </string-array>
+    <string name="option_playback">재생 옵션</string>
+    <string name="option_repeat">구간반복 옵션</string>
+    <string name="option_gesture">제스쳐 모드</string>
     
 </resources>
