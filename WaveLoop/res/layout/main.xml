@@ -30,23 +30,77 @@ android:layout_weight="1"
 	    
 		android:layout_height="0dip"
 		android:layout_width="fill_parent"
-		android:background="@android:drawable/bottom_bar">
+		android:orientation="horizontal"
+		android:gravity="center"
+		android:padding="10dip"
+		android:background="#ff444444">
 	
-		    
-		<TextView 
-		    android:id="@+id/now_playing"
-			android:layout_height="wrap_content"
-			android:layout_width="fill_parent"
-			android:layout_marginLeft="6dip"
-			android:layout_marginRight="6dip"
-			android:layout_marginTop="6dip"
-			android:layout_marginBottom="2dip"
-			android:text="now playing..."
-			android:textSize="16sp">
+	    <FrameLayout
+	        android:layout_height="fill_parent"
+			android:layout_width="0dip"
+			android:layout_weight="1">
+	        
+	        <ImageButton
+				android:id="@+id/now_playing_btn"  
+				android:layout_width="fill_parent" 
+				android:layout_height="fill_parent" 
+				
+				android:background="#00000000">
+				
+			</ImageButton>
+	    
+			<LinearLayout 
+	    
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				
+				android:orientation="vertical"
+				android:gravity="center" >
+				
+			    <TextView 
+				    android:id="@+id/now_playing"
+					android:layout_height="wrap_content"
+					android:layout_width="fill_parent"
+					android:text="Now playing..."
+					android:textSize="12sp"
+					android:textColor="#ffffffff">
+				
+				</TextView>
+				
+				<TextView 
+				    android:id="@+id/now_playing"
+					android:layout_height="wrap_content"
+					android:layout_width="fill_parent"
+					android:text="Title title title title title title title"
+					android:textSize="14sp"
+					android:textColor="#ffffffff">
+				
+				</TextView>
+				
+				<TextView 
+				    android:id="@+id/now_playing"
+					android:layout_height="wrap_content"
+					android:layout_width="fill_parent"
+					android:text="artist artist"
+					android:textSize="10sp"
+					android:textColor="#ffffffff">
+				
+				</TextView>
+			</LinearLayout>
+		</FrameLayout>
 		
-		</TextView>
-	
-</LinearLayout>
+	    
+	    
+		<ImageButton
+			android:id="@+id/play"  
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" 
+			android:src="@drawable/play_bkgnd"
+			android:background="#00000000">
+			
+		</ImageButton>
+				
+	</LinearLayout>
 
 </LinearLayout>
 

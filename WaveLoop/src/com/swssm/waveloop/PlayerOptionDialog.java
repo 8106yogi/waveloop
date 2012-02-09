@@ -45,7 +45,7 @@ public class PlayerOptionDialog {
     			// 재생속도 변경!
     			GlobalOptions.playbackSpeed = (seekBar.getProgress() + 50)*10;
     			UpdateSpeedButtonText(resetButton);
-    			UpdatePlayerSpeed(); 
+    			UpdatePlayerSpeed();
     		}
 
 			@Override
