@@ -186,6 +186,7 @@ android:layout_height="fill_parent"
 							
 						</ImageButton>
 						<TextView
+						    android:visibility="invisible"
 						    android:id="@+id/playback_speed"  
 							android:textColor="#ffffff"
 							android:layout_width="wrap_content" 
@@ -262,6 +263,7 @@ android:layout_height="fill_parent"
 						</ToggleButton>
 						
 						<TextView
+						    android:visibility="invisible"
 						    android:id="@+id/repeat_counter"  
 							android:textColor="#ffffff"
 							android:layout_width="wrap_content" 

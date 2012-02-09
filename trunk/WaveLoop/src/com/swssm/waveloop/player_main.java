@@ -34,6 +34,9 @@ public class player_main extends Activity {
     ImageButton mRepeatPrevBtn;
     ImageButton mRepeatNextBtn;
     
+    TextView mPlaybackSpeed;
+    TextView mRepeatCounter;
+    
     long mMediaDBID;
     long mDataRowID;
     TextView mArtist;
@@ -219,6 +222,12 @@ public class player_main extends Activity {
          mRepeatNextBtn = (ImageButton)findViewById(R.id.next_area);
          mRepeatNextBtn.setOnClickListener(mClickRepeatNext);
          mRepeatNextBtn.setEnabled(false);
+         
+         mPlaybackSpeed = (TextView)findViewById(R.id.playback_speed);
+         mPlaybackSpeed.setText( String.format("%.2fx", GlobalOptions.playbackSpeed ) );
+         
+         mRepeatCounter = (TextView) findViewById(R.id.repeat_counter);
+         mRepeatCounter.setText("");
          
          
          // 완료 리스너, 시크바 변경 리스너 등록
