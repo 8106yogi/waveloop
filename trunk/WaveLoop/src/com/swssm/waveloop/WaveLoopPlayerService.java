@@ -3,10 +3,15 @@ package com.swssm.waveloop;
 import com.swssm.waveloop.audio.OSLESMediaPlayer;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 
 public class WaveLoopPlayerService extends Service {
 	
@@ -54,16 +59,21 @@ public class WaveLoopPlayerService extends Service {
 		mPlayer = new OSLESMediaPlayer();
 		mPlayer.createEngine();
 		
+		//registerCallListener();
 		
 	}
 	public void onDestroy()
 	{
 		super.onDestroy();
-		mInstance = null;
+		
+		//unregisterCallListener();
 		
 		mPlayer.releaseAudioPlayer();
 		mPlayer.releaseEngine();
 		mPlayer = null;
+		
+		mInstance = null;
+		
 		
 	}
 	
@@ -130,8 +140,61 @@ public class WaveLoopPlayerService extends Service {
 	}
 	
 	
+	PhoneStateListener phoneStateListener = new PhoneStateListener() {
+		private boolean isPlaying = false;
+		private int prevState = TelephonyManager.CALL_STATE_IDLE;
+	    @Override
+	    public void onCallStateChanged(int state, String incomingNumber) {
+	    	if(state == prevState)
+	    		return;
+	    	prevState = state;
+	    	
+	        if (state == TelephonyManager.CALL_STATE_RINGING) {
+	            //Incoming call: Pause music
+	        	isPlaying = isPlaying(); 
+	        	if( isPlaying )
+	        		pause();
+	        	
+	        } else if(state == TelephonyManager.CALL_STATE_IDLE) {
+	            //Not in call: Play music
+	        	if( isPlaying ) {
+	        		play();
+	        		isPlaying = false;
+	        	}
+	        		
+	        } else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
+	            //A call is dialing, active or on hold
+	        	// ?
+	        	
+	        }
+	        super.onCallStateChanged(state, incomingNumber);
+	    }
+	};
+	
+	private void registerCallListener()
+	{
+		TelephonyManager mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+		if(mgr != null) {
+		    mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+		}
+	}
+	
+	private void unregisterCallListener()
+	{
+		TelephonyManager mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+		if(mgr != null) {
+		    mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+		}
+	}
 	
 	
+	public class OutgoingCallReceiver extends BroadcastReceiver {
+	    public void onReceive(Context context, Intent intent) {
+	        if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
+	            //Log.i("CallTest", "Outgoing Call");
+	        }
+	    }
+	}
 	
 	
 }
