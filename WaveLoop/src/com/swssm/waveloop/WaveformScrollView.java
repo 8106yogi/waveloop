@@ -188,6 +188,7 @@ public class WaveformScrollView extends HorizontalScrollView {
 	private int mCurrentSegmentIndex;
 	private View[]	mWaveformSemgnets;
 	
+	/*
 	private void updateCurrentSegmentColor() {
 		int segIndex = mSentenceSegmentList.getCurrentSentenceIndex(getScrollX()/2, 0);
 		
@@ -203,7 +204,7 @@ public class WaveformScrollView extends HorizontalScrollView {
 			}
 		
 		
-	}
+	}*/
 	
 
 	@Override
@@ -283,6 +284,7 @@ public class WaveformScrollView extends HorizontalScrollView {
 		return !mScroller.isFinished();
 	}
 
+	/*
 	public void setmWaveformSemgnets(View[] mWaveformSemgnets) {
 		this.mWaveformSemgnets = mWaveformSemgnets;
 	}
@@ -290,7 +292,7 @@ public class WaveformScrollView extends HorizontalScrollView {
 
 	public View[] getmWaveformSemgnets() {
 		return mWaveformSemgnets;
-	}
+	}*/
 
 	
 }
