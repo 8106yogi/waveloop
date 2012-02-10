@@ -473,7 +473,7 @@ public class player_main extends Activity {
 				outerLayout.addView(rulerLayout);
 				outerLayout.addView(innerLayout);
 				mWaveformLayout.addView(outerLayout);
-				mWaveformView.setmWaveformSemgnets(mWaveformSemgnets);
+				//mWaveformView.setmWaveformSemgnets(mWaveformSemgnets);
 				mWaveformView.setSentenceSegmentList(sentenceSegmentList);
 				mProgress.setMax( nFrameGainsCount*2 );
 				
