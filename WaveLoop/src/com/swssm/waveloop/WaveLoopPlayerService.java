@@ -15,6 +15,26 @@ import android.util.Log;
 
 public class WaveLoopPlayerService extends Service {
 	
+	
+	
+	public class AudioInfo {
+		public int mediaId;
+		public String title;
+		public String artist;
+		public String album;
+		public String path;
+		
+		public AudioInfo(int mediaId, String title, String artist, String album, String path)
+		{
+			this.mediaId = mediaId;
+			this.title = title;
+			this.artist = artist;
+			this.album = album;
+			this.path = path;
+		}
+	}
+	
+	
 	static {
 		System.loadLibrary("audio-tools");
 	}
