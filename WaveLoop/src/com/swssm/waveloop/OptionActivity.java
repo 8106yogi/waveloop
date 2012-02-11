@@ -12,8 +12,12 @@ public class OptionActivity extends Activity {
 	    	setContentView(R.layout.option_activity);
 	}
 	
-	 public void onDestroy(){
+	public void onDestroy() {
 	    	super.onDestroy();
 	    	
-	    }
+	}
+	 
+	public void onBackPressed() {
+		this.getParent().onBackPressed();
+	}
 }

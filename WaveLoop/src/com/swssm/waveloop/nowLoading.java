@@ -14,12 +14,8 @@ public class nowLoading extends Activity {
         setContentView(R.layout.nowloading);
         
         GlobalOptions.load(this);
-        startService(new Intent( this, WaveLoopPlayerService.class));
-        
         
         mHandler.sendEmptyMessage(0);
-        //getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-	
 	}
 	
 	

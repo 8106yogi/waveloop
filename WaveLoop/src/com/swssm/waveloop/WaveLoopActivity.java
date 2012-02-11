@@ -1,10 +1,14 @@
 package com.swssm.waveloop;
 
+import java.io.File;
+
 import com.swssm.waveloop.R;
 
 import android.app.*;
 import android.content.*;
+import android.database.Cursor;
 import android.os.*;
+import android.view.View;
 import android.widget.*;
  
 public class WaveLoopActivity extends TabActivity {
@@ -13,6 +17,8 @@ public class WaveLoopActivity extends TabActivity {
     static {
     	System.loadLibrary("audio-tools");
     }
+    
+    ComponentName mService;
     
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -45,7 +51,7 @@ public class WaveLoopActivity extends TabActivity {
         	  	
         );
     	
-    	
+    	mService = startService(new Intent( this, WaveLoopPlayerService.class));
 
     	
     }
@@ -74,7 +80,24 @@ public class WaveLoopActivity extends TabActivity {
 		
 	}
 
-    
+	public void onBackPressed()
+	{
+		new AlertDialog.Builder(this)
+    	.setTitle("WaveLoop를 종료하시겠습니까?")
+    	.setIcon(android.R.drawable.ic_dialog_alert)
+    	.setCancelable(false)
+    	.setPositiveButton("종료", new DialogInterface.OnClickListener(){
+    		public void onClick(DialogInterface dialog, int which){
+    			Intent intent = new Intent();
+    			intent.setComponent(mService);
+    		    stopService(intent);
+    		    
+    			finish();
+    		}
+    	} )
+    	.setNegativeButton("취소", null)
+    	.show();
+	}
     
    
     

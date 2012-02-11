@@ -214,15 +214,21 @@ public class SentenceNoteActivity extends Activity {
        
 	}
   
-	public void onResume(){
+	public void onResume() {
     	super.onResume();
     	refreshListFromDB();
     }
 	
-	 public void onDestroy(){
-	    	super.onDestroy();
-	    	dba.close();
-	    }
+	public void onDestroy() {
+		super.onDestroy();
+		dba.close();
+	}
+	 
+	@Override 
+	public void onBackPressed()
+	{
+		this.getParent().onBackPressed();
+	}
 	
 	private int getMediaDBIndex( int sentenceRowId )
  	{
