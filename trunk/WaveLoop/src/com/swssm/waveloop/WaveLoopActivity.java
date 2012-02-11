@@ -82,11 +82,13 @@ public class WaveLoopActivity extends TabActivity {
 
 	public void onBackPressed()
 	{
+		
 		new AlertDialog.Builder(this)
-    	.setTitle("WaveLoop를 종료하시겠습니까?")
+    	.setTitle( getResources().getString(R.string.alert_quit_message) )
     	.setIcon(android.R.drawable.ic_dialog_alert)
     	.setCancelable(false)
-    	.setPositiveButton("종료", new DialogInterface.OnClickListener(){
+    	.setPositiveButton( getResources().getString(R.string.quit_button)
+    			, new DialogInterface.OnClickListener(){
     		public void onClick(DialogInterface dialog, int which){
     			Intent intent = new Intent();
     			intent.setComponent(mService);
@@ -95,7 +97,7 @@ public class WaveLoopActivity extends TabActivity {
     			finish();
     		}
     	} )
-    	.setNegativeButton("취소", null)
+    	.setNegativeButton(getResources().getString(R.string.cancel_button), null)
     	.show();
 	}
     

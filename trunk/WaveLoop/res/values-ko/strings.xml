@@ -23,5 +23,7 @@
     <string name="option_playback">재생 옵션</string>
     <string name="option_repeat">구간반복 옵션</string>
     <string name="option_gesture">제스쳐 모드</string>
+    <string name="alert_quit_message">WaveLoop를 종료하시겠습니까?</string>
+    <string name="quit_button">종료</string>
     
 </resources>
