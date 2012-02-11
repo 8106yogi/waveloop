@@ -63,7 +63,7 @@ public class WaveLoopPlayerService extends Service {
 	@Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        return START_STICKY;// service가 강제 종료 되면 자동으로 다시 시작
+        return START_NOT_STICKY;// service가 강제 종료 되면 자동으로 다시 시작
     }
 	
 	public void onStart(Intent intent, int startId)

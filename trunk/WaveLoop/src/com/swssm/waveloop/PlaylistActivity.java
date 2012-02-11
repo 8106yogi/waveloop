@@ -445,5 +445,11 @@ public class PlaylistActivity extends Activity {
     	}
     	
     }
+    
+    @Override 
+    public void onBackPressed()
+    {
+    	this.getParent().onBackPressed();
+    }
    
 }
