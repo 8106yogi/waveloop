@@ -16,22 +16,13 @@ import android.util.Log;
 public class WaveLoopPlayerService extends Service {
 	
 	
+	private OSLESMediaPlayer mPlayer;
+	private AudioInfo mAudioInfo;
+
 	
-	public class AudioInfo {
-		public int mediaId;
-		public String title;
-		public String artist;
-		public String album;
-		public String path;
-		
-		public AudioInfo(int mediaId, String title, String artist, String album, String path)
-		{
-			this.mediaId = mediaId;
-			this.title = title;
-			this.artist = artist;
-			this.album = album;
-			this.path = path;
-		}
+	
+	public AudioInfo getAudioInfo() {
+		return mAudioInfo;
 	}
 	
 	
@@ -44,7 +35,7 @@ public class WaveLoopPlayerService extends Service {
 		return mInstance;
 	}
 	
-	private OSLESMediaPlayer mPlayer;
+	
 	
 	/*
 	public class LocalBinder extends Binder {
@@ -97,12 +88,14 @@ public class WaveLoopPlayerService extends Service {
 		
 	}
 	
-	public void createPlayer(String path) {
-		mPlayer.createAudioPlayer(path);
+	public void createPlayer(AudioInfo audioInfo) {
+		mAudioInfo = audioInfo;
+		mPlayer.createAudioPlayer(mAudioInfo.path);
 	}
 	
 	public void releasePlayer() {
 		mPlayer.releaseAudioPlayer();
+		mAudioInfo = null;
 	}
 	
 	public void play() {
