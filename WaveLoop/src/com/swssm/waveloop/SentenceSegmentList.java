@@ -216,6 +216,11 @@ public class SentenceSegmentList {
 
 		return mSegmentList[prevIndex].startOffset;
 	}
+	
+	public int getSize()
+	{
+		return mSegmentList.length;
+	}
 
 	
 	

@@ -8,11 +8,15 @@ public class PlayerProxy {
 	{
 		return WaveLoopPlayerService.getInstance();
 	}
-	static void createPlayer(String path) {
-		instance().createPlayer(path);
+	static void createPlayer(AudioInfo audioInfo) {
+		instance().createPlayer(audioInfo);
 	}
 	static void releasePlayer() {
 		instance().releasePlayer();
+	}
+	
+	static AudioInfo getAudioInfo() {
+		return instance().getAudioInfo();
 	}
 	
 	static void play() {

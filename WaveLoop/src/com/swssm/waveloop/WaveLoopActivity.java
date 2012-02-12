@@ -86,7 +86,7 @@ public class WaveLoopActivity extends TabActivity {
 		new AlertDialog.Builder(this)
     	.setTitle( getResources().getString(R.string.alert_quit_message) )
     	.setIcon(android.R.drawable.ic_dialog_alert)
-    	.setCancelable(false)
+    	//.setCancelable(false)
     	.setPositiveButton( getResources().getString(R.string.quit_button)
     			, new DialogInterface.OnClickListener(){
     		public void onClick(DialogInterface dialog, int which){

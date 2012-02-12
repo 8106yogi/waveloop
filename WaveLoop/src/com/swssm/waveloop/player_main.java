@@ -4,8 +4,6 @@ import java.io.*;
 import java.util.*;
 
 import com.swssm.waveloop.R;
-import com.swssm.waveloop.audio.OSLESMediaPlayer;
-
 
 import android.app.*;
 import android.content.*;
@@ -51,10 +49,10 @@ public class player_main extends Activity {
     String mFilepath;
     String mWavePath;
     WaveformScrollView mWaveformView;
-    LinearLayout mWaveformLayout;
-    static View[]	mWaveformSemgnets;
+    static LinearLayout mWaveformLayout;
+    View[]	mWaveformSemgnets;
     //String strMediaDBIndex;
-    WaveLoopActivity wla;
+    //WaveLoopActivity wla;
 
     HorizontalScrollView hv;
 
@@ -178,6 +176,7 @@ public class player_main extends Activity {
         
          // 웨이브폼 스크롤뷰 추가
          mWaveformView = (WaveformScrollView)findViewById(R.id.WaveformScrollView);
+         //if(mWaveformLayout == null)
          mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
          
          //mWaveformView.setOSLESPlayer(mOSLESPlayer);
@@ -253,10 +252,10 @@ public class player_main extends Activity {
          gestures = (GestureOverlayView)findViewById(R.id.gestures);
          
          
-         // 인텐트로 출력할 파일 결정하는 코드 아래로 옮김.
-         Intent intent = getIntent();
-         if (intent != null)
-         {
+        // 인텐트로 출력할 파일 결정하는 코드 아래로 옮김.
+        Intent intent = getIntent();
+        if (intent != null)
+        {
         	mDataRowID = intent.getIntExtra("오디오파일경로", 0);
         	
         	mStartSegmentIndex = intent.getIntExtra("start_segment_index", 0);
@@ -271,20 +270,22 @@ public class player_main extends Activity {
          	mWavePath = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_WAVEPATH));
          	strMediaDBIndex = cursor.getString(cursor.getColumnIndex(DbAdapter.KEY_MEDIA_DB_ID));
          	dba.close();
-         	//mMediaDBID = Long.parseLong(strMediaDBIndex);
+         	
+         	mMediaDBID = Long.parseLong(strMediaDBIndex);
          	
          	setAudioInfoUIFromMediaDB(strMediaDBIndex);
-         }
+        }
 
          
-         // 첫 곡 읽기 및 준비
-         if (LoadMedia() == false) {
-             //Toast.makeText(this, "파일을 읽을 수 없습니다.", Toast.LENGTH_LONG).show();
-        	 showToastMessage("파일을 읽을 수 없습니다.");
-        	 finish();
-         }
-        
-        //if(mWaveformSemgnets == null) 
+        // 첫 곡 읽기 및 준비
+        if (LoadMedia() == false) {
+            //Toast.makeText(this, "파일을 읽을 수 없습니다.", Toast.LENGTH_LONG).show();
+        	//showToastMessage("파일을 읽을 수 없습니다.");
+        	//finish();
+        	//mWaveformLayout.removeAllViews();
+        	
+        }
+        //else
         new Thread(new Runnable()
         {
         	public void run()
@@ -326,11 +327,7 @@ public class player_main extends Activity {
         	         	
         	         	fileInputStream.close();
         	         	
-        	         	//addSideView();
         	         	
-        	         	
-        	         	//int widthSum = 0;
-        	         	//int widthSum2 = 0;
     					SentenceSegment[] segs = sentenceSegmentList.getSegments();
     					
     					mWaveformSemgnets = new View[segs.length];
@@ -664,18 +661,25 @@ public class player_main extends Activity {
     // 항상 준비 상태여야 한다.
     boolean LoadMedia() {
 
-    	//if(mOSLESPlayer != null)
+    	boolean isLoad = false;
+    	AudioInfo curAudioInfo = PlayerProxy.getAudioInfo();
+    	if(curAudioInfo == null || curAudioInfo.mediaId != mMediaDBID)
     	{
-    		PlayerProxy.releasePlayer();
-            PlayerProxy.createPlayer(mFilepath);
-            
-            PlayerProxy.setRate( GlobalOptions.playbackSpeed );
-            PlayerProxy.seekTo(0);
-            PlayerProxy.pause();
+    		AudioInfo audioInfo = new AudioInfo();
+    		audioInfo.mediaId = mMediaDBID;
+    		audioInfo.title = (String) mTitle.getText();
+    		audioInfo.album = (String) mAlbum.getText();
+    		audioInfo.path = mFilepath;
     		
+    		PlayerProxy.releasePlayer();
+    		PlayerProxy.createPlayer( audioInfo );
+    		PlayerProxy.pause();
+    		isLoad = true;
     	}
- 
-         return true;
+    	
+    	PlayerProxy.setRate( GlobalOptions.playbackSpeed );
+        
+         return isLoad;
     }
 
    
@@ -1013,8 +1017,8 @@ public class player_main extends Activity {
         	
         	if(mLoopStartIndex == mLoopFinishIndex) {
         		mLoopFinishIndex+=2;
-        		if(mLoopFinishIndex >= mWaveformSemgnets.length)
-        			mLoopFinishIndex = mWaveformSemgnets.length-1;
+        		if(mLoopFinishIndex >= sentenceSegmentList.getSize())
+        			mLoopFinishIndex = sentenceSegmentList.getSize()-1;
         	} else if(mLoopCenterIndex > mLoopStartIndex) {
         		mLoopStartIndex+=2;
         		if(mLoopStartIndex > mLoopCenterIndex)
@@ -1022,8 +1026,8 @@ public class player_main extends Activity {
         	} else if(mLoopCenterIndex < mLoopFinishIndex) {
         		
         		mLoopFinishIndex+=2;
-        		if(mLoopFinishIndex >= mWaveformSemgnets.length)
-        			mLoopFinishIndex = mWaveformSemgnets.length-1;
+        		if(mLoopFinishIndex >= sentenceSegmentList.getSize())
+        			mLoopFinishIndex = sentenceSegmentList.getSize()-1;
         	}
         	
         	redrawRepeatArea(true);
