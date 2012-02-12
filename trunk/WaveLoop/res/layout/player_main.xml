@@ -96,15 +96,15 @@ android:layout_height="fill_parent"
 		android:layout_height="wrap_content" 
 		android:id="@+id/WaveformScrollView" 
 		>
+			<!-- 	 
 		   	<LinearLayout 
 		   	android:id="@+id/WaveformScrollViewLayout" 
 		   	android:layout_width="match_parent" 
 		   	android:layout_height="match_parent" 
 		   	android:orientation="horizontal"
-		   	>
-		   		
-		    
+		   	> 
 		   	</LinearLayout>
+		   	 -->
 		</com.swssm.waveloop.WaveformScrollView>
 		
 		<com.swssm.waveloop.WaveformCenterlineView

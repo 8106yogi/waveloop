@@ -122,10 +122,16 @@ public class WaveformScrollView extends HorizontalScrollView {
 	    public boolean onFling(MotionEvent e1, MotionEvent e2, float vX, float vY) {
 	    	//Log.d("gd", "onFling");
 	    	
-	        mScroller.fling(getScrollX(), getScrollY(),
-	                -(int)vX, -(int)vY, 0, 
-	                (int)mWaveformLinearLayout.getMeasuredWidth(), 0, (int)mWaveformLinearLayout.getMeasuredHeight());
-	        invalidate(); // don't remember if it's needed
+	    	View childView = WaveformScrollView.this.getChildAt(0);
+	    	if( childView != null )
+	    	{
+	    		mScroller.fling(getScrollX(), getScrollY(),
+		                -(int)vX, -(int)vY, 
+		                0, (int)childView.getMeasuredWidth(), 
+		                0, (int)childView.getMeasuredHeight());
+		        invalidate(); // don't remember if it's needed
+	    	}
+	        
 	        return true;
 	    }
 
@@ -160,6 +166,7 @@ public class WaveformScrollView extends HorizontalScrollView {
 	}
 	
 	
+	
 	@Override
 	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
 		// 시크바를 직접 컨트롤중이 아니라면, 스크롤바 변화에 따라 시크바를 따라가게 한다.
@@ -172,7 +179,8 @@ public class WaveformScrollView extends HorizontalScrollView {
 			if( mIsWaveformTouched == true ||
 				mIsWaveformTouched == false && mScroller.isFinished() == false )
 			{
-				double position = (double)this.getScrollX()/(double)(mWaveformLinearLayout.getMeasuredWidth()-getMeasuredWidth())*(double)PlayerProxy.getDuration();
+				
+				double position = (double)this.getScrollX()/(double)(getChildAt(0).getMeasuredWidth()-getMeasuredWidth())*(double)PlayerProxy.getDuration();
 				//if( mOSLESPlayer != null )
 				{
 					Log.i("player", "onScrollChanged : seekTo");
