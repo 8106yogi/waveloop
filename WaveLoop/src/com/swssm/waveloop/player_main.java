@@ -48,12 +48,12 @@ public class player_main extends Activity {
     String mWavePath;
     WaveformScrollView mWaveformView;
     static LinearLayout mWaveformLayout;
-    View[]	mWaveformSemgnets;
+    static View[] mWaveformSemgnets;
     //String strMediaDBIndex;
     
     HorizontalScrollView hv;
     
-    SentenceSegmentList sentenceSegmentList;
+    static SentenceSegmentList sentenceSegmentList;
     
     ProgressDialog mLoadingDialog;
     
@@ -170,9 +170,9 @@ public class player_main extends Activity {
         
          // 웨이브폼 스크롤뷰 추가
          mWaveformView = (WaveformScrollView)findViewById(R.id.WaveformScrollView);
-         mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
+         //mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
          
-         mWaveformView.setInnerLayout(mWaveformLayout);
+         //mWaveformView.setInnerLayout(mWaveformLayout);
          mWaveformView.setHorizontalScrollBarEnabled(false);
          mWaveformView.setSeekBar( (SeekBar)findViewById(R.id.progress) );
          mWaveformView.setOnTouchListener(mOnScrollViewTouchListener);
@@ -275,18 +275,26 @@ public class player_main extends Activity {
         	//finish();
         	//mWaveformLayout.removeAllViews();
         	
+        	if(mWaveformLayout != null)
+        		mWaveformView.addView(mWaveformLayout);
+        	
+        	mProgress.setMax( sentenceSegmentList.getWidth()*2 );
+        	
+        	if( PlayerProxy.isPlaying() )
+        		mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
+        	
+        	
+        	
         }
-        //else
+        else
         new Thread(new Runnable()
         {
         	public void run()
         	{
         		
         		 // 파형 정보와 문장정보 파일을 읽어들이는 과정을 쓰레드로 처리 필요.
-        		mLoadingHandler.post( new Runnable()
-        		{
-        			public void run()
-        			{
+        		mLoadingHandler.post( new Runnable() {
+        			public void run() {
         				mLoadingDialog = ProgressDialog.show( player_main.this, "", "파일을 읽고 있습니다...", true );
         			}
         		});
@@ -332,7 +340,7 @@ public class player_main extends Activity {
             	         	mWaveformSemgnets[i] = segmentView;
     					}
     					
-        	         	createWaveView(nFrameGainsCount);
+        	         	createWaveView();
     					
         			} catch (StreamCorruptedException e) {
         				// TODO Auto-generated catch block
@@ -348,9 +356,8 @@ public class player_main extends Activity {
                  	
                  	// 파일 작성 완료.
         			
-        			mLoadingHandler.post( new Runnable()
-            		{
-            			public void run()
+        			mLoadingHandler.post( new Runnable() {
+            			public void run() 
             			{
             				mLoadingDialog.dismiss();
             				mLoadingDialog = null;
@@ -370,7 +377,7 @@ public class player_main extends Activity {
         
     }
 
-    public void createWaveView(final int nFrameGainsCount)
+    public void createWaveView()
     {
     	mLoadingHandler.post( new Runnable() {
      		private void addSideView() {
@@ -391,7 +398,7 @@ public class player_main extends Activity {
 				rulerLayout.setOrientation(LinearLayout.HORIZONTAL);
 				rulerLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) );
 				
-				int length = nFrameGainsCount;
+				int length = sentenceSegmentList.getWidth();
 				while(length > 0) {
 					int width = (length > 50)?50:length; 
 					rulerLayout.addView(new WaveformRulerView(player_main.this, width));
@@ -414,6 +421,11 @@ public class player_main extends Activity {
      		}
      		
 			public void run() {
+				
+				mWaveformLayout = new LinearLayout(player_main.this);
+				mWaveformLayout.setOrientation(LinearLayout.HORIZONTAL);
+				mWaveformLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) );
+				
 				addSideView();
 				
 				final LinearLayout rulerLayout = addRulerView();
@@ -426,16 +438,22 @@ public class player_main extends Activity {
 				
 				outerLayout.addView(rulerLayout);
 				outerLayout.addView(innerLayout);
+				//mWaveformLayout = outerLayout;
 				mWaveformLayout.addView(outerLayout);
+				mWaveformView.addView(mWaveformLayout);
+				
 				//mWaveformView.setmWaveformSemgnets(mWaveformSemgnets);
-				mWaveformView.setSentenceSegmentList(sentenceSegmentList);
-				mProgress.setMax( nFrameGainsCount*2 );
+				//mWaveformView.setSentenceSegmentList(sentenceSegmentList);
+				
+				
+				//mProgress.setMax( nFrameGainsCount*2 );
+				mProgress.setMax( sentenceSegmentList.getWidth()*2 );
 				
 				addSideView();
 				
 				
-				mWaveformView.post(new Runnable() {
-				    public void run() {
+				//mWaveformView.post(new Runnable() {
+				//    public void run() {
 				    	final int startOffset = sentenceSegmentList.getCurrentStartOffsetByIndex(mStartSegmentIndex);
 				    	mWaveformView.scrollTo(startOffset*2, 0);
 				    	
@@ -443,8 +461,8 @@ public class player_main extends Activity {
 				    	Log.i("player", "onScrollChanged : waveform load");
 				    	PlayerProxy.seekTo((int)position);
 				    	
-				    } 
-				});
+				//    } 
+				//});
 				
 			}
 		});
@@ -599,6 +617,8 @@ public class player_main extends Activity {
     // 액티비티 종료시 재생 강제 종료
     public void onDestroy() {
         super.onDestroy();
+        
+        mWaveformView.removeAllViews();
         
         mScrollHandler.removeMessages(0);
         mRepeatDelayHandler.removeMessages(0);
@@ -892,8 +912,9 @@ public class player_main extends Activity {
     
     private int getSentencesTotalLength()
     {
-    	// UI상의 실제 길이. 나중엔 sentenceSegmentList에서 미리 계산해두고 얻어와야 할듯.
-    	return (mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth());
+    	if(mWaveformLayout != null)     	// UI상의 실제 길이. 나중엔 sentenceSegmentList에서 미리 계산해두고 얻어와야 할듯.
+    		return (mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth());
+    	return mWaveformView.getMeasuredWidth();
     }
     
     private int calcPositionByOffset(int offset)
@@ -1061,7 +1082,7 @@ public class player_main extends Activity {
     			if(isActivityBackground == false)
     			{
     				
-    				int newPos = (int)((double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth()) * getPlayerCurrentRate() );
+    				int newPos = (int)((double)(getSentencesTotalLength()) * getPlayerCurrentRate() );
     				int currentPos = mWaveformView.getScrollX();
     				int nextPos = currentPos;
     				nextPos += (newPos-currentPos)/2;

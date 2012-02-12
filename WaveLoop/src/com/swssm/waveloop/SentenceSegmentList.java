@@ -221,6 +221,18 @@ public class SentenceSegmentList {
 	{
 		return mSegmentList.length;
 	}
+	
+	public int getWidth()
+	{
+		if(mSegmentList != null) 
+		{
+			SentenceSegment seg = mSegmentList[mSegmentList.length-1]; 
+			return seg.startOffset + seg.size;
+		}
+		
+		return 0;
+		 
+	}
 
 	
 	
