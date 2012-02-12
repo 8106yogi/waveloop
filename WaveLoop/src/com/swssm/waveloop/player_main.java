@@ -21,10 +21,8 @@ import android.widget.*;
 
 public class player_main extends Activity {
     
-	//static OSLESMediaPlayer mOSLESPlayer;
-    //static MediaPlayer mPlayer;
     static ImageButton mPlayBtn; 
-    //Button mPlay2Btn;
+
     ImageButton mNextBtn;
     ImageButton mPrevBtn;
     ImageButton mBookmarkBtn;
@@ -52,14 +50,10 @@ public class player_main extends Activity {
     static LinearLayout mWaveformLayout;
     View[]	mWaveformSemgnets;
     //String strMediaDBIndex;
-    //WaveLoopActivity wla;
-
+    
     HorizontalScrollView hv;
-
     
     SentenceSegmentList sentenceSegmentList;
-
-
     
     ProgressDialog mLoadingDialog;
     
@@ -176,11 +170,8 @@ public class player_main extends Activity {
         
          // 웨이브폼 스크롤뷰 추가
          mWaveformView = (WaveformScrollView)findViewById(R.id.WaveformScrollView);
-         //if(mWaveformLayout == null)
          mWaveformLayout = (LinearLayout)findViewById(R.id.WaveformScrollViewLayout);
          
-         //mWaveformView.setOSLESPlayer(mOSLESPlayer);
-         //mWaveformView.setMediaPlayer(mPlayer);
          mWaveformView.setInnerLayout(mWaveformLayout);
          mWaveformView.setHorizontalScrollBarEnabled(false);
          mWaveformView.setSeekBar( (SeekBar)findViewById(R.id.progress) );
@@ -336,40 +327,12 @@ public class player_main extends Activity {
     					for(int i = 0; i < segs.length; ++i )
     					{
     						SentenceSegment segment = segs[i];
-    						/*
-    						final LinearLayout ll = new LinearLayout(player_main.this);
-    						ll.setOrientation(LinearLayout.HORIZONTAL);
-    						ll.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) );
-    						
-    						//widthSum2 += segment.size;
-    						// 너무 길어지면 스크롤 퍼포먼스에 영향을 미쳐서 1000픽셀 길이로 잘라냄.
-    						int count = 0;
-            	         	for( int innerOffset = 0; innerOffset < segment.size; innerOffset+=1000 )
-            	         	{
-            	         		int width = ((innerOffset+1000)<segment.size)?1000:segment.size-innerOffset;
-            	         		WaveformView waveformView = new WaveformView(player_main.this);
-            		         	waveformView.setData(frameGains, segment.startOffset+innerOffset, 
-            		         			segment.startOffset+innerOffset + width, 250 );
-            		         	//widthSum += width;
-            		         	ll.addView( waveformView );
-            		         	count++;
-            	         	}
-            	         	*/
-    						
     						WaveformSegmentView segmentView = new WaveformSegmentView(player_main.this);
     						segmentView.createWaveformView(frameGains, segment);
             	         	mWaveformSemgnets[i] = segmentView;
-            	         	
     					}
     					
-    					
-    					
         	         	createWaveView(nFrameGainsCount);
-    					
-    					
-    					//addSideView();
-    					
-    					
     					
         			} catch (StreamCorruptedException e) {
         				// TODO Auto-generated catch block
@@ -392,11 +355,9 @@ public class player_main extends Activity {
             				mLoadingDialog.dismiss();
             				mLoadingDialog = null;
             				
-            				//if(mOSLESPlayer != null)
-            				{
-            					PlayerProxy.play();
-            					mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
-            				}
+        					PlayerProxy.play();
+        					mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
+        				
             			}
             		});
         			
@@ -406,13 +367,9 @@ public class player_main extends Activity {
         		 
         	 }
          } ).start();
-
-         //dialog.hide();
-        //this.hf = (RealViewSwitcher)findViewById(R.id.ButtonScrollView);
-        
-        
         
     }
+
     public void createWaveView(final int nFrameGainsCount)
     {
     	mLoadingHandler.post( new Runnable() {
@@ -482,9 +439,6 @@ public class player_main extends Activity {
 				    	final int startOffset = sentenceSegmentList.getCurrentStartOffsetByIndex(mStartSegmentIndex);
 				    	mWaveformView.scrollTo(startOffset*2, 0);
 				    	
-				    	//double position = (double)(startOffset*2)/(double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth())*(double)mPlayer.getDuration();
-				    	//mPlayer.seekTo((int)position);
-				    	
 				    	double position = (double)(startOffset*2)/(double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth())*(double)PlayerProxy.getDuration();
 				    	Log.i("player", "onScrollChanged : waveform load");
 				    	PlayerProxy.seekTo((int)position);
@@ -541,14 +495,13 @@ public class player_main extends Activity {
 				
 			} 
 			
-			//int cur = mPlayer.getCurrentPosition(); 
  			mArtist.setText(artist);
 		    mTitle.setText(title);
 		    mAlbum.setText(album);
-		    //mCurtime.setText(cur);
+
 		    String strTime = String.format("%02d:%02d" , tMin, tSec);
 		    mTotaltime.setText(strTime);
-		    //mTotaltime.setText(cur);
+		    
 		}
 		
 	}
@@ -805,8 +758,6 @@ public class player_main extends Activity {
     	int position = calcPositionByOffset(offset*2);
     	Log.i("player", "processPrev");
     	PlayerProxy.seekTo(position);
-    	//PlayerProxy.pause();
-    	//PlayerProxy.play();
     	
     }
     
@@ -839,11 +790,9 @@ public class player_main extends Activity {
     	// 현재 문장을 가져온다.
     	SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
     	int segIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2, 0);
-    	int sametime=0;
     	
     	if( seg.isSilence )
     	{
-    		//Toast.makeText(player_main.this, "문장만 추가 가능합니다.", Toast.LENGTH_SHORT).show();
     		showToastMessage("문장만 추가 가능합니다.");
     		return;
     	}
@@ -880,10 +829,7 @@ public class player_main extends Activity {
      	
     	// 뷰를 업데이트.
      	
-     	
-     	//Toast.makeText(player_main.this, "문장노트에 추가되었습니다.", Toast.LENGTH_SHORT).show();
      	showToastMessage("문장노트에 추가되었습니다.");
-     	
      	
     }
     
@@ -953,7 +899,6 @@ public class player_main extends Activity {
     private int calcPositionByOffset(int offset)
     {
     	// 픽셀 단위 오프셋으로부터 플레이어 seek position을 계산.
-    	//return (int)((double)(offset)/(double)(getSentencesTotalLength())*(double)mPlayer.getDuration());
     	return (int)((double)(offset)/(double)(getSentencesTotalLength())*(double)PlayerProxy.getDuration());
     	
     }
@@ -1041,20 +986,14 @@ public class player_main extends Activity {
 	// 재생 정지. 재시작을 위해 미리 준비해 놓는다.
 	Button.OnClickListener mClickStop = new View.OnClickListener() {
         public void onClick(View v) {
-             //mPlayer.stop();
         	PlayerProxy.stop();
-             //mPlayBtn.setText("Play");
-             //mProgress.setProgress(0);
-             
         }
    };
    
    View.OnTouchListener mOnScrollViewTouchListener = new View.OnTouchListener() {
 	   	public boolean onTouch(View v, MotionEvent event) {
-	   		//if (mPlayer.isPlaying() == true) {
 	   		if(PlayerProxy.isPlaying() == true) {
 	   			PlayerProxy.pause();
-	   			//mPlayer.pause();
             	mPlayBtn.setImageResource(R.drawable.play_bkgnd);
 			}
 			return false;
@@ -1096,11 +1035,7 @@ public class player_main extends Activity {
     //1초에 한 번씩 재생시간 갱신   
    Handler mPlaytimeHandler = new Handler() {
         public void handleMessage(Message msg) {
-            //if(PlayerProxy == null) return;
             if(PlayerProxy.isPlaying()) {
-        	//if (mPlayer == null) return;
-            //if (mPlayer.isPlaying()) {
-            	//int cur =  mPlayer.getCurrentPosition()/1000;
             	int cur =  PlayerProxy.getPosition()/1000;
            	 	int cMin = cur/60;
                 int cSec = cur%60;
@@ -1114,23 +1049,14 @@ public class player_main extends Activity {
     
     public double getPlayerCurrentRate()
     {
-    	//Log.i("curRate", "" + PlayerProxy.getPosition()+"/"+PlayerProxy.getDuration() );
-    	//return ((double)mPlayer.getCurrentPosition() / (double)mPlayer.getDuration());
     	return ((double)PlayerProxy.getPosition() / (double)PlayerProxy.getDuration());
     }
     
     // 0.016초에 한번꼴로 재생 위치 갱신
     Handler mScrollHandler = new Handler() {
     	public void handleMessage(Message msg) {
-    		//if (mPlayer == null) return;
-			//if (mPlayer.isPlaying()) {
     		//Log.i("curRate", "test" );
-    		//if(PlayerProxy == null) return;
-    		//if(PlayerProxy.isPlaying()) 
     		{
-				//int duration = mPlayer.getDuration();
-				//int width = mWaveformLayout.getMeasuredWidth();
-				
     			// 액티비티가 활성화되어있을 때만 스크롤해주기.
     			if(isActivityBackground == false)
     			{
@@ -1179,7 +1105,6 @@ public class player_main extends Activity {
 
     Handler mRepeatDelayHandler = new Handler() {
     	public void handleMessage(Message msg) {
-    		//if( PlayerProxy != null )
     		PlayerProxy.play();
     	}
     };
