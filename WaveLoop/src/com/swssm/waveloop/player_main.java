@@ -640,6 +640,7 @@ public class player_main extends Activity {
     	{
     		AudioInfo audioInfo = new AudioInfo();
     		audioInfo.mediaId = mMediaDBID;
+    		audioInfo.dataRowId = mDataRowID;
     		audioInfo.title = (String) mTitle.getText();
     		audioInfo.album = (String) mAlbum.getText();
     		audioInfo.path = mFilepath;

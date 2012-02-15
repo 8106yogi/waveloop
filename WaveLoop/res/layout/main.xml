@@ -27,16 +27,16 @@ android:layout_weight="1"
 </FrameLayout>
 
 	<LinearLayout 
-	    
+	    android:id="@+id/now_playing_main"
 		android:layout_height="0dip"
 		android:layout_width="fill_parent"
 		android:orientation="horizontal"
 		android:gravity="center"
-		android:padding="10dip"
+		android:padding="2dip"
 		android:background="#ff444444">
 	
 	    <FrameLayout
-	        android:layout_height="fill_parent"
+	        android:layout_height="wrap_content"
 			android:layout_width="0dip"
 			android:layout_weight="1">
 	        
@@ -62,23 +62,23 @@ android:layout_weight="1"
 					android:layout_height="wrap_content"
 					android:layout_width="fill_parent"
 					android:text="Now playing..."
-					android:textSize="12sp"
+					android:textSize="10sp"
 					android:textColor="#ffffffff">
 				
 				</TextView>
 				
 				<TextView 
-				    android:id="@+id/now_playing"
+				    android:id="@+id/now_playing_title"
 					android:layout_height="wrap_content"
 					android:layout_width="fill_parent"
 					android:text="Title title title title title title title"
-					android:textSize="14sp"
+					android:textSize="10sp"
 					android:textColor="#ffffffff">
 				
 				</TextView>
 				
 				<TextView 
-				    android:id="@+id/now_playing"
+				    android:id="@+id/now_playing_artist"
 					android:layout_height="wrap_content"
 					android:layout_width="fill_parent"
 					android:text="artist artist"
@@ -92,9 +92,9 @@ android:layout_weight="1"
 	    
 	    
 		<ImageButton
-			android:id="@+id/play"  
-			android:layout_width="wrap_content" 
-			android:layout_height="wrap_content" 
+			android:id="@+id/now_playing_playbtn"  
+			android:layout_width="0dip" 
+			android:layout_height="0dip" 
 			android:src="@drawable/play_bkgnd"
 			android:background="#00000000">
 			

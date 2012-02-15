@@ -18,6 +18,14 @@ public class WaveLoopActivity extends TabActivity {
     	System.loadLibrary("audio-tools");
     }
     
+    
+    LinearLayout mNowPlayingMain;
+    ImageButton mNowPlayingBtn;
+    TextView mNowPlayingTitle;
+    TextView mNowPlayingArtist;
+    ImageButton mNowPlayingPlayBtn;
+	
+    
     ComponentName mService;
     
     public void onCreate(Bundle savedInstanceState) {
@@ -51,8 +59,69 @@ public class WaveLoopActivity extends TabActivity {
         	  	
         );
     	
+    	
+    	
+    	mNowPlayingMain = (LinearLayout)findViewById(R.id.now_playing_main);
+    	mNowPlayingBtn = (ImageButton)findViewById(R.id.now_playing_btn);
+    	mNowPlayingTitle = (TextView)findViewById(R.id.now_playing_title);
+    	mNowPlayingArtist = (TextView)findViewById(R.id.now_playing_artist);
+    	mNowPlayingPlayBtn = (ImageButton)findViewById(R.id.now_playing_playbtn);
+    	
+    	
     	mService = startService(new Intent( this, WaveLoopPlayerService.class));
 
+    	
+    }
+    
+    public void onStart() {
+    	super.onStart();
+    	
+    	if(PlayerProxy.instance() == null) {
+    		mNowPlayingMain.setEnabled(false);
+    		//mNowPlayingMain.setVisibility(View.INVISIBLE);
+    		return;
+    	}
+    	
+    	final AudioInfo audioInfo = PlayerProxy.getAudioInfo();
+    	if( audioInfo != null )
+    	{
+    		mNowPlayingMain.setEnabled(true);
+    		//mNowPlayingMain.setVisibility(View.VISIBLE);
+    		mNowPlayingTitle.setText(audioInfo.title);
+    		mNowPlayingArtist.setText(audioInfo.artist);
+    		
+    		mNowPlayingPlayBtn.setImageResource( (PlayerProxy.isPlaying())?
+					R.drawable.pause_bkgnd : R.drawable.play_bkgnd);
+		
+    		mNowPlayingPlayBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if(PlayerProxy.isPlaying())
+						PlayerProxy.pause();
+					else
+						PlayerProxy.play();
+					
+					mNowPlayingPlayBtn.setImageResource( (PlayerProxy.isPlaying())?
+							R.drawable.pause_bkgnd : R.drawable.play_bkgnd);
+				
+				}
+			});
+    		
+    		mNowPlayingBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+	        	   	Intent i = new Intent(WaveLoopActivity.this, player_main.class); 
+	        		i.putExtra("오디오파일경로", (int)audioInfo.dataRowId );
+	        		startActivity(i);
+				}
+			});
+    	}
+    	else
+    	{
+    		mNowPlayingMain.setEnabled(false);
+    		//mNowPlayingMain.setVisibility(View.INVISIBLE);
+    	}
+    	
     	
     }
 
