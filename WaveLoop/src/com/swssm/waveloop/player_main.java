@@ -71,6 +71,7 @@ public class player_main extends Activity {
     
     private GestureLibrary mLibrary;
     
+    private boolean mPlayFromNote = false;
     private int mStartSegmentIndex = 0;
     private int mEndSegmentIndex = 0;
     
@@ -155,7 +156,9 @@ public class player_main extends Activity {
         
         //mPlayer = new MediaPlayer();
         
+        mPlayFromNote = false;
         mStartSegmentIndex = 0;
+        mEndSegmentIndex = 0;
         mIsLoop = false;
         mLoopCount = 0;
         mIsLoop = false;
@@ -249,6 +252,7 @@ public class player_main extends Activity {
         {
         	mDataRowID = intent.getIntExtra("오디오파일경로", 0);
         	
+        	mPlayFromNote = intent.getBooleanExtra("play_from_note", false);
         	mStartSegmentIndex = intent.getIntExtra("start_segment_index", 0);
         	mEndSegmentIndex = intent.getIntExtra("end_segment_index", 0);
         	
@@ -282,6 +286,18 @@ public class player_main extends Activity {
         	
         	if( PlayerProxy.isPlaying() )
         		mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
+        	
+
+        	if( mPlayFromNote == true )
+        	{
+            	// 초기 시작 위치로 이동.
+    	    	final int startOffset = sentenceSegmentList.getCurrentStartOffsetByIndex(mStartSegmentIndex);
+    	    	mWaveformView.scrollTo(startOffset*2, 0);
+    	    	
+    	    	double position = (double)(startOffset*2)/(double)(sentenceSegmentList.getWidth()*2)*(double)PlayerProxy.getDuration();
+    	    	PlayerProxy.seekTo((int)position);
+        		
+        	}
         	
         	
         	
@@ -400,7 +416,7 @@ public class player_main extends Activity {
 				
 				int length = sentenceSegmentList.getWidth();
 				while(length > 0) {
-					int width = (length > 50)?50:length; 
+					int width = (length > 50)?50:length;
 					rulerLayout.addView(new WaveformRulerView(player_main.this, width));
 					length -= 50;
 				}
@@ -451,29 +467,37 @@ public class player_main extends Activity {
 				
 				addSideView();
 				
-				
-				//mWaveformView.post(new Runnable() {
-				//    public void run() {
-				    	final int startOffset = sentenceSegmentList.getCurrentStartOffsetByIndex(mStartSegmentIndex);
-				    	mWaveformView.scrollTo(startOffset*2, 0);
+
+				if( mPlayFromNote == true )
+	        	{
+	            	// 초기 시작 위치로 이동.
+	    	    	final int startOffset = sentenceSegmentList.getCurrentStartOffsetByIndex(mStartSegmentIndex);
+	    	    	mWaveformView.scrollTo(startOffset*2, 0);
+	    	    	double position = (double)(startOffset*2)/(double)(sentenceSegmentList.getWidth()*2)*(double)PlayerProxy.getDuration();
+	    	    	
+	    	    	PlayerProxy.seekTo((int)position);
+	        		
+	        	}
+
 				    	
-				    	double position = (double)(startOffset*2)/(double)(mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth())*(double)PlayerProxy.getDuration();
-				    	Log.i("player", "onScrollChanged : waveform load");
-				    	PlayerProxy.seekTo((int)position);
-				    	
-				//    } 
-				//});
+
 				
 			}
 		});
     }
-    private boolean isActivityBackground = false;  
-    public void OnPause()
+    private boolean isActivityBackground = true;
+    
+    @Override
+    public void onPause()
     {
+    	super.onPause();
     	isActivityBackground = true;
     }
-    public void OnResume()
+    
+    @Override
+    public void onResume()
     {
+    	super.onResume();
     	isActivityBackground = false;
     }
     
@@ -913,8 +937,15 @@ public class player_main extends Activity {
     
     private int getSentencesTotalLength()
     {
+    	/*
     	if(mWaveformLayout != null)     	// UI상의 실제 길이. 나중엔 sentenceSegmentList에서 미리 계산해두고 얻어와야 할듯.
     		return (mWaveformLayout.getMeasuredWidth()-mWaveformView.getMeasuredWidth());
+    	return mWaveformView.getMeasuredWidth();
+    	*/
+    	
+    	if(sentenceSegmentList != null)
+    		return sentenceSegmentList.getWidth()*2;
+    	
     	return mWaveformView.getMeasuredWidth();
     }
     
