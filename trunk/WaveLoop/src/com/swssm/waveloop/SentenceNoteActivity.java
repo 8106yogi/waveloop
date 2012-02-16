@@ -328,7 +328,9 @@ public class SentenceNoteActivity extends Activity {
 				        	
 				        	Intent i = new Intent(SentenceNoteActivity.this, player_main.class); 
 				        	i.putExtra("오디오파일경로", dataRowID );
+				        	i.putExtra("play_from_note", true);
 				        	i.putExtra("start_segment_index", s.getStartIndex() );
+				        	i.putExtra("end_segment_index", s.getStartIndex() );
 				        	startActivity(i);
 							
 						}
