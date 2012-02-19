@@ -296,7 +296,9 @@ public class player_main extends Activity {
     	    	
     	    	double position = (double)(startOffset*2)/(double)(sentenceSegmentList.getWidth()*2)*(double)PlayerProxy.getDuration();
     	    	PlayerProxy.seekTo((int)position);
-        		
+    	    	PlayerProxy.play();
+				mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
+        		// 문장노트에서 재생시엔 바로 재생을 시킨다.
         	}
         	
         	
