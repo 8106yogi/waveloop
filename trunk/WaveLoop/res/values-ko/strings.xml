@@ -25,5 +25,6 @@
     <string name="option_gesture">제스쳐 모드</string>
     <string name="alert_quit_message">WaveLoop를 종료하시겠습니까?</string>
     <string name="quit_button">종료</string>
+    <string name="note_message_help">이곳에 메모를 작성해 주세요.</string>
     
 </resources>
