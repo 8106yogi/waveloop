@@ -21,7 +21,7 @@
     android:layout_weight="1" 
     android:gravity="top"
     android:background="#ffffff00" 
-    android:hint="문장노트 메모장입니다.">
+    android:hint="@string/note_message_help">
         
         <requestFocus></requestFocus>
     </EditText>
@@ -132,7 +132,7 @@
 		android:layout_marginBottom="2dip"
 		android:layout_weight="1"
 		android:onClick="mOnClickSaveCancel"
-		android:text="저장"
+		android:text="@string/save_button"
 		
 		/>
 		
@@ -145,7 +145,7 @@
 		android:layout_marginBottom="2dip"
 		android:layout_weight="1"
 		android:onClick="mOnClickSaveCancel"
-		android:text="취소"
+		android:text="@string/cancel_button"
 		/>
 
 	</LinearLayout>
