@@ -18,6 +18,7 @@ public class WaveLoopPlayerService extends Service {
 	
 	private OSLESMediaPlayer mPlayer;
 	private AudioInfo mAudioInfo;
+	private boolean mIsPlaying = false;
 
 	
 	
@@ -70,14 +71,14 @@ public class WaveLoopPlayerService extends Service {
 		mPlayer = new OSLESMediaPlayer();
 		mPlayer.createEngine();
 		
-		//registerCallListener();
+		registerCallListener();
 		
 	}
 	public void onDestroy()
 	{
 		super.onDestroy();
 		
-		//unregisterCallListener();
+		unregisterCallListener();
 		
 		mPlayer.releaseAudioPlayer();
 		mPlayer.releaseEngine();
@@ -154,32 +155,43 @@ public class WaveLoopPlayerService extends Service {
 	
 	
 	PhoneStateListener phoneStateListener = new PhoneStateListener() {
-		private boolean isPlaying = false;
+		
 		private int prevState = TelephonyManager.CALL_STATE_IDLE;
 	    @Override
 	    public void onCallStateChanged(int state, String incomingNumber) {
 	    	if(state == prevState)
 	    		return;
-	    	prevState = state;
 	    	
-	        if (state == TelephonyManager.CALL_STATE_RINGING) {
-	            //Incoming call: Pause music
-	        	isPlaying = isPlaying(); 
-	        	if( isPlaying )
+	    	switch(state)
+	    	{
+	    	case TelephonyManager.CALL_STATE_RINGING:
+	    		//Incoming call: Pause music
+	        	//Log.i("CallTest", "CALL_STATE_RINGING : Incoming Call");
+	        	mIsPlaying = isPlaying(); 
+	        	if( mIsPlaying )
 	        		pause();
-	        	
-	        } else if(state == TelephonyManager.CALL_STATE_IDLE) {
-	            //Not in call: Play music
-	        	if( isPlaying ) {
+	    		break;
+	    	case TelephonyManager.CALL_STATE_IDLE:
+	    		//Not in call: Play music
+	        	//Log.i("CallTest", "CALL_STATE_IDLE");
+	        	if( mIsPlaying ) {
 	        		play();
-	        		isPlaying = false;
+	        		mIsPlaying = false;
 	        	}
-	        		
-	        } else if(state == TelephonyManager.CALL_STATE_OFFHOOK) {
-	            //A call is dialing, active or on hold
-	        	// ?
-	        	
-	        }
+	    		break;
+	    	case TelephonyManager.CALL_STATE_OFFHOOK:
+	    		//A call is dialing, active or on hold
+	        	//Log.i("CallTest", "CALL_STATE_OFFHOOK");
+	        	if(prevState == TelephonyManager.CALL_STATE_IDLE)// 울리다 받은게 아니라면. : 내가 거는 거라면.
+	        	{
+	        		mIsPlaying = isPlaying(); 
+		        	if( mIsPlaying )
+		        		pause();
+	        	}
+	    		break;
+	    	}
+	        
+	        prevState = state;
 	        super.onCallStateChanged(state, incomingNumber);
 	    }
 	};
@@ -200,14 +212,16 @@ public class WaveLoopPlayerService extends Service {
 		}
 	}
 	
-	
+	/*
 	public class OutgoingCallReceiver extends BroadcastReceiver {
 	    public void onReceive(Context context, Intent intent) {
 	        if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
-	            //Log.i("CallTest", "Outgoing Call");
+	            Log.i("CallTest", "Outgoing Call");
+	           
+	        	
 	        }
 	    }
-	}
+	}*/
 	
 	
 }
