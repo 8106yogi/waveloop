@@ -26,7 +26,7 @@ public class WaveLoopActivity extends TabActivity {
     ImageButton mNowPlayingPlayBtn;
 	
     
-    ComponentName mService;
+    ComponentName mService = null;
     
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
@@ -67,9 +67,11 @@ public class WaveLoopActivity extends TabActivity {
     	mNowPlayingArtist = (TextView)findViewById(R.id.now_playing_artist);
     	mNowPlayingPlayBtn = (ImageButton)findViewById(R.id.now_playing_playbtn);
     	
-    	
-    	mService = startService(new Intent( this, WaveLoopPlayerService.class));
-
+    	if(mService == null)
+    	{
+    		Intent i = new Intent( this, WaveLoopPlayerService.class);
+    		mService = startService(i);
+    	}
     	
     }
     
@@ -162,6 +164,7 @@ public class WaveLoopActivity extends TabActivity {
     			Intent intent = new Intent();
     			intent.setComponent(mService);
     		    stopService(intent);
+    		    mService = null;
     		    
     			finish();
     		}
