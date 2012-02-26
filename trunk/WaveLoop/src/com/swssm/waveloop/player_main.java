@@ -698,6 +698,7 @@ public class player_main extends Activity {
     		audioInfo.dataRowId = mDataRowID;
     		audioInfo.title = (String) mTitle.getText();
     		audioInfo.album = (String) mAlbum.getText();
+    		audioInfo.artist = (String) mArtist.getText();
     		audioInfo.path = mFilepath;
     		
     		PlayerProxy.releasePlayer();

@@ -8,6 +8,8 @@ import android.app.*;
 import android.content.*;
 import android.database.Cursor;
 import android.os.*;
+import android.provider.MediaStore.Audio;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
  
@@ -19,10 +21,12 @@ public class WaveLoopActivity extends TabActivity {
     }
     
     
+    LinearLayout mWaveLoopMain;
     LinearLayout mNowPlayingMain;
     ImageButton mNowPlayingBtn;
     TextView mNowPlayingTitle;
     TextView mNowPlayingArtist;
+    TextView mNowPlayingAlbum;
     ImageButton mNowPlayingPlayBtn;
 	
     
@@ -59,12 +63,15 @@ public class WaveLoopActivity extends TabActivity {
         	  	
         );
     	
-    	
+    	mWaveLoopMain = (LinearLayout)findViewById(R.id.waveloop_main);
     	
     	mNowPlayingMain = (LinearLayout)findViewById(R.id.now_playing_main);
     	mNowPlayingBtn = (ImageButton)findViewById(R.id.now_playing_btn);
-    	mNowPlayingTitle = (TextView)findViewById(R.id.now_playing_title);
+    	
     	mNowPlayingArtist = (TextView)findViewById(R.id.now_playing_artist);
+    	mNowPlayingAlbum = (TextView)findViewById(R.id.now_playing_album);
+    	mNowPlayingTitle = (TextView)findViewById(R.id.now_playing_title);
+    	
     	mNowPlayingPlayBtn = (ImageButton)findViewById(R.id.now_playing_playbtn);
     	
     	if(mService == null)
@@ -75,22 +82,31 @@ public class WaveLoopActivity extends TabActivity {
     	
     }
     
-    public void onStart() {
-    	super.onStart();
+    public void onResume() {
+    	super.onResume();
+    	
+    	//Log.i("WaveLoop", "onStart");
     	
     	if(PlayerProxy.instance() == null) {
-    		mNowPlayingMain.setEnabled(false);
+    		//mNowPlayingMain.setEnabled(false);
     		//mNowPlayingMain.setVisibility(View.INVISIBLE);
+    		
+    		mWaveLoopMain.removeView(mNowPlayingMain);
     		return;
     	}
     	
     	final AudioInfo audioInfo = PlayerProxy.getAudioInfo();
     	if( audioInfo != null )
     	{
-    		mNowPlayingMain.setEnabled(true);
+    		mWaveLoopMain.removeView(mNowPlayingMain);
+    		mWaveLoopMain.addView(mNowPlayingMain);
+    		
+    		//mNowPlayingMain.setEnabled(true);
     		//mNowPlayingMain.setVisibility(View.VISIBLE);
-    		mNowPlayingTitle.setText(audioInfo.title);
+    		
     		mNowPlayingArtist.setText(audioInfo.artist);
+    		mNowPlayingAlbum.setText(audioInfo.album);
+    		mNowPlayingTitle.setText(audioInfo.title);
     		
     		mNowPlayingPlayBtn.setImageResource( (PlayerProxy.isPlaying())?
 					R.drawable.pause_bkgnd : R.drawable.play_bkgnd);
@@ -120,18 +136,15 @@ public class WaveLoopActivity extends TabActivity {
     	}
     	else
     	{
-    		mNowPlayingMain.setEnabled(false);
+    		mWaveLoopMain.removeView(mNowPlayingMain);
+    		//mNowPlayingMain.setEnabled(false);
     		//mNowPlayingMain.setVisibility(View.INVISIBLE);
     	}
     	
     	
     }
 
-     
-   public void onResume(){
-	   super.onResume();
-	   //refreshListFromDB();
-   }
+    
    
    //액티비티 종료시 재생 강제 종료
    public void onDestroy() {
