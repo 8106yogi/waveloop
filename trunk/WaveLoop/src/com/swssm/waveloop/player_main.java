@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.*;
 
 import com.swssm.waveloop.R;
+import com.swssm.waveloop.WaveLoopPlayerService;
+import com.swssm.waveloop.WaveLoopPlayerService.PlayerServiceListener;
 
 import android.app.*;
 import android.content.*;
@@ -287,6 +289,11 @@ public class player_main extends Activity {
         	if( PlayerProxy.isPlaying() )
         		mPlayBtn.setImageResource(R.drawable.pause_bkgnd);
         	
+        	if( PlayerProxy.isRepeat() )
+        	{
+        		PlayerProxy.setRepeat(false, 0, 0);
+        		clearRepeatArea();
+        	}
 
         	if( mPlayFromNote == true )
         	{
@@ -392,6 +399,26 @@ public class player_main extends Activity {
         		 
         	 }
          } ).start();
+        
+        
+        
+        
+        
+        // PlayerListener 등록
+        PlayerProxy.setPlayerListener( new PlayerServiceListener() {
+
+			@Override
+			public void onRepeatCount(int count) {
+
+				if(count <= 0)
+				{
+					mRepeatBtn.setChecked(false);
+					processRepeat();
+				}
+				
+			}
+        	
+        });
         
     }
 
@@ -654,6 +681,8 @@ public class player_main extends Activity {
     	    mLoadingDialog.dismiss();
     	    mLoadingDialog = null;
         }
+        
+        PlayerProxy.setPlayerListener(null);
 
     }
 
@@ -679,7 +708,7 @@ public class player_main extends Activity {
     	
     	PlayerProxy.setRate( GlobalOptions.playbackSpeed );
         
-         return isLoad;
+        return isLoad;
     }
 
    
@@ -883,31 +912,34 @@ public class player_main extends Activity {
 
     void processRepeat()
     {
+    	Log.i("WaveLoop", "processRepeat()");
+    	
     	boolean isLoop = mRepeatBtn.isChecked();
     	if(isLoop) {
     		// 문장인지 확인하고 
     		SentenceSegment seg = sentenceSegmentList.getCurrentSentenceByOffset(mWaveformView.getScrollX()/2);
     		if(seg.isSilence) {
-    			//Toast.makeText(getApplicationContext(), "문장만 구간반복이 가능합니다.", Toast.LENGTH_SHORT).show();
     			showToastMessage("문장만 구간반복이 가능합니다.");
     			mRepeatBtn.setChecked(false);
     			return;
     		}
     	}
-    	else{
-    		//mRepeatBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.repeat_bkgnd)); 
-    	}
+    	
     	
         mIsLoop = isLoop;
         mRepeatPrevBtn.setEnabled(mIsLoop);
         mRepeatNextBtn.setEnabled(mIsLoop);
  
         // 현재 위치 지정.
-        if(mIsLoop) {
+        if(mIsLoop)
+        {
+        	/*
         	if(GlobalOptions.repeatCount == 0)
         		mLoopCount = Integer.MAX_VALUE;
         	else
         		mLoopCount = GlobalOptions.repeatCount;
+        	*/
+        	
         	
         	mLoopCenterIndex = sentenceSegmentList.getCurrentSentenceIndex(mWaveformView.getScrollX()/2, 0);
             mLoopFinishIndex = mLoopCenterIndex;
@@ -918,21 +950,30 @@ public class player_main extends Activity {
             
             mProgress.setEnabled(false);
         	//mWaveformView.setEnabled(false);
+            
         }
         else
         {
         	redrawRepeatArea(false);
 
         	mProgress.setEnabled(true);
+        	
+        	PlayerProxy.setRepeat(mIsLoop, mLoopStartPos, mLoopFinishPos);
         	//mWaveformView.setEnabled(true);
         	
         }
         
     }
     
+    private void clearRepeatArea()
+    {
+    	for(int i = 0; i < mWaveformSemgnets.length; ++i )
+			mWaveformSemgnets[i].setBackgroundColor( 0x00000000 );
+    }
+    
     private void redrawRepeatArea( boolean isLoop )
     {
-		for(int i = mLoopStartIndex; i < mLoopFinishIndex+1; ++i )
+		for(int i = mLoopStartIndex; i <= mLoopFinishIndex; ++i )
 			mWaveformSemgnets[i].setBackgroundColor( (isLoop)?0xFFffff00:0x00000000 );
     }
     
@@ -969,7 +1010,7 @@ public class player_main extends Activity {
     	mLoopStartPos = calcPositionByOffset(startOffset*2) - RepeatMargin;
     	mLoopFinishPos = calcPositionByOffset(finishOffset*2) + RepeatMargin;
     	
-    	//PlayerProxy.setLoop(mLoopStartPos, mLoopFinishPos);
+    	PlayerProxy.setRepeat(mIsLoop, mLoopStartPos, mLoopFinishPos);
     	
     }
     
@@ -1126,6 +1167,7 @@ public class player_main extends Activity {
     			}
     			
 				//updateCurrentSegmentColor();
+    			/*
 				if( mIsLoop == true )
 				{
 					int currentPosition = PlayerProxy.getPosition();
@@ -1149,6 +1191,7 @@ public class player_main extends Activity {
 						
 					}
 				}
+				*/
               
 			}
     		

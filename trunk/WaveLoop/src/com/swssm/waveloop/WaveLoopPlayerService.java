@@ -9,9 +9,12 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+
 
 public class WaveLoopPlayerService extends Service {
 	
@@ -20,6 +23,20 @@ public class WaveLoopPlayerService extends Service {
 	private AudioInfo mAudioInfo;
 	private boolean mIsPlaying = false;
 
+	private PlayerServiceListener mPlayerListener;
+	
+	private boolean mIsRepeat;
+	private int mLoopCount;
+	private int mRepeatStartPos;// ms
+	private int mRepeatFinishPos;// ms
+	
+	
+	public interface PlayerServiceListener {
+		public void onRepeatCount(int count);
+	}
+	
+	
+	
 	
 	
 	public AudioInfo getAudioInfo() {
@@ -68,6 +85,7 @@ public class WaveLoopPlayerService extends Service {
 	{
 		super.onCreate();
 		mInstance = this;
+		mPlayerListener = null;
 		mPlayer = new OSLESMediaPlayer();
 		mPlayer.createEngine();
 		
@@ -83,7 +101,7 @@ public class WaveLoopPlayerService extends Service {
 		mPlayer.releaseAudioPlayer();
 		mPlayer.releaseEngine();
 		mPlayer = null;
-		
+		mPlayerListener = null;
 		mInstance = null;
 		
 		
@@ -92,11 +110,18 @@ public class WaveLoopPlayerService extends Service {
 	public void createPlayer(AudioInfo audioInfo) {
 		mAudioInfo = audioInfo;
 		mPlayer.createAudioPlayer(mAudioInfo.path);
+		
+		mIsRepeat = false;
+		mRepeatStartPos = 0;
+		mRepeatFinishPos = 0;
+		mPlayerListener = null;
 	}
 	
 	public void releasePlayer() {
 		mPlayer.releaseAudioPlayer();
 		mAudioInfo = null;
+		
+		mPlayerListener = null;
 	}
 	
 	public void play() {
@@ -152,6 +177,89 @@ public class WaveLoopPlayerService extends Service {
 		
 		return false;
 	}
+	
+	public boolean isRepeat() {
+		return mIsRepeat;
+	}
+	
+	public void setPlayerListener(PlayerServiceListener listener) {
+		mPlayerListener = listener;
+	}
+	
+	
+	
+	
+	public void setRepeat( boolean isRepeat, int startPos, int endPos )
+	{
+		mIsRepeat = isRepeat;
+		//mLoopCount = Integer.MAX_VALUE;
+		
+		mRepeatStartPos = startPos;
+		mRepeatFinishPos = endPos;
+		
+		mLoopCount = (GlobalOptions.repeatCount == 0)?
+				Integer.MAX_VALUE:GlobalOptions.repeatCount;
+		
+		
+		if(mIsRepeat)
+			mRepeatHandler.sendEmptyMessage(0);
+		else
+		{
+			mRepeatDelayHandler.removeMessages(0);
+			mRepeatHandler.removeMessages(0);
+		}
+		
+	}
+	
+	
+	
+	// 0.016초에 한번꼴로 재생 위치 갱신
+    Handler mRepeatHandler = new Handler() {
+    	public void handleMessage(Message msg) {
+    		//Log.i("curRate", "test" );
+
+    		
+			//updateCurrentSegmentColor();
+			if( mIsRepeat == true &&
+				PlayerProxy.isPlaying() == true )
+			{
+				int currentPosition = PlayerProxy.getPosition();
+				if(currentPosition < mRepeatStartPos || currentPosition > mRepeatFinishPos )
+				{
+					Log.i("player", "Loop");
+					PlayerProxy.seekTo(mRepeatStartPos+1);
+					
+					if(mLoopCount != Integer.MAX_VALUE)
+						mLoopCount--;
+
+					if(mLoopCount < 0)
+						setRepeat(false, 0, 0);
+					
+					if(mPlayerListener != null)
+						mPlayerListener.onRepeatCount(mLoopCount);
+					
+					PlayerProxy.pause();
+					mRepeatDelayHandler.sendEmptyMessageDelayed(0, GlobalOptions.repeatDelayTime);
+					
+					
+				}
+			}
+              
+    		
+			mRepeatHandler.sendEmptyMessageDelayed(0,16);
+		}
+		
+    };
+    
+    Handler mRepeatDelayHandler = new Handler() {
+    	public void handleMessage(Message msg) {
+    		PlayerProxy.play();
+    	}
+    };
+    
+    
+    
+    
 	
 	
 	PhoneStateListener phoneStateListener = new PhoneStateListener() {

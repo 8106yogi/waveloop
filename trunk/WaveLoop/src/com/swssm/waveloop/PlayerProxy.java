@@ -1,5 +1,7 @@
 package com.swssm.waveloop;
 
+import com.swssm.waveloop.WaveLoopPlayerService.PlayerServiceListener;
+
 
 public class PlayerProxy {
 	
@@ -52,6 +54,19 @@ public class PlayerProxy {
 	static int getRate() {
 		return instance().getRate();
 	}
+	
+	static void setRepeat( boolean isRepeat, int startPos, int endPos ) {
+		instance().setRepeat(isRepeat, startPos, endPos );
+	}
+	
+	static boolean isRepeat() {
+		return instance().isRepeat();
+	}
+	
+	static void setPlayerListener(PlayerServiceListener listener) {
+		instance().setPlayerListener(listener);
+	}
+	
 	
 }
 
